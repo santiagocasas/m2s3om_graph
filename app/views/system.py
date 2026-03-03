@@ -1,5 +1,6 @@
 import os
 
+import requests
 import streamlit as st
 
 
@@ -19,6 +20,89 @@ def _env_rows() -> dict[str, str]:
     }
 
 
+def _normalize_base_url(base_url: str) -> str:
+    return base_url.rstrip("/") + "/"
+
+
+@st.cache_data(ttl=300)
+def _fetch_blablador_models_cached(
+    base_url: str, api_key: str
+) -> tuple[list[str], str | None]:
+    if not api_key.strip():
+        return [], "BLABLADOR_API_KEY is missing"
+    try:
+        response = requests.get(
+            f"{_normalize_base_url(base_url)}models",
+            headers={"Authorization": f"Bearer {api_key}"},
+            timeout=10,
+        )
+        response.raise_for_status()
+        payload = response.json()
+    except Exception as exc:
+        return [], str(exc)
+
+    items = payload.get("data") if isinstance(payload, dict) else None
+    if not isinstance(items, list):
+        return [], "Unexpected /models response"
+    models: list[str] = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        model_id = item.get("id")
+        if isinstance(model_id, str) and model_id.strip():
+            models.append(model_id.strip())
+    models = sorted(set(models))
+    if not models:
+        return [], "No model IDs returned"
+    return models, None
+
+
+def _render_model_selector(use_sidebar: bool) -> None:
+    rows = _env_rows()
+    target = st.sidebar if use_sidebar else st
+    key_prefix = "sidebar" if use_sidebar else "main"
+
+    target.markdown("### Blablador Model")
+    target.caption("Select model for mapping extraction runs")
+
+    if target.button("Refresh model list", key=f"{key_prefix}_refresh_models"):
+        _fetch_blablador_models_cached.clear()
+
+    models, error = _fetch_blablador_models_cached(
+        rows["BLABLADOR_BASE_URL"],
+        os.getenv("BLABLADOR_API_KEY", ""),
+    )
+    default_model = st.session_state.get(
+        "selected_blablador_model",
+        rows["KAIGRAPH_LLM_MODEL"],
+    )
+
+    selected = default_model
+    if models:
+        if selected not in models:
+            selected = selected if isinstance(selected, str) and selected else models[0]
+            if selected not in models:
+                selected = models[0]
+        selected = target.selectbox(
+            "Active model",
+            options=models,
+            index=models.index(selected),
+            key=f"{key_prefix}_blablador_model",
+        )
+    else:
+        selected = target.text_input(
+            "Active model",
+            value=str(default_model),
+            key=f"{key_prefix}_blablador_model_manual",
+        )
+        if error:
+            target.caption(f"Model list unavailable: {error}")
+
+    st.session_state["selected_blablador_model"] = selected
+    os.environ["KAIGRAPH_LLM_MODEL"] = selected
+    target.write(f"Using model: `{selected}`")
+
+
 def render_sidebar() -> None:
     rows = _env_rows()
     st.sidebar.markdown("### System")
@@ -28,7 +112,7 @@ def render_sidebar() -> None:
         f"Namespace/DB: `{rows['KAIGRAPH_DB_NS']}/{rows['KAIGRAPH_DB_NAME']}`"
     )
     st.sidebar.write(f"Blablador key: `{rows['BLABLADOR_API_KEY']}`")
-    st.sidebar.write(f"Model: `{rows['KAIGRAPH_LLM_MODEL']}`")
+    _render_model_selector(use_sidebar=True)
 
     with st.sidebar.expander("Full runtime variables", expanded=False):
         st.write(f"`KAIGRAPH_USE_SURREAL={rows['KAIGRAPH_USE_SURREAL']}`")
