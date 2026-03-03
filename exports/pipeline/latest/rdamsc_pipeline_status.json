@@ -1,0 +1,1174 @@
+{
+  "rdamsc_c1": {
+    "crosswalk_id": "rdamsc_c1",
+    "msc_id": "msc:c1",
+    "name": "abcd-access-biological_TO_darwin-core",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T13:07:21.497573+00:00",
+    "result": {
+      "ok": true,
+      "step": "skipped_ready"
+    }
+  },
+  "rdamsc_c2": {
+    "crosswalk_id": "rdamsc_c2",
+    "msc_id": "msc:c2",
+    "name": "csdgm-extensions-for_TO_iso-19115",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T13:07:21.487234+00:00",
+    "result": {
+      "ok": true,
+      "step": "skipped_ready"
+    }
+  },
+  "rdamsc_c28": {
+    "crosswalk_id": "rdamsc_c28",
+    "msc_id": "msc:c28",
+    "name": "marc-machine-readable_TO_mods-metadata-object",
+    "status": "failed_parse",
+    "label": "failed: parse/extract",
+    "updated_at": "2026-03-03T12:55:42.363250+00:00",
+    "result": {
+      "ok": false,
+      "reason": "no_rules_extracted",
+      "crosswalk_id": "rdamsc_c28",
+      "inserted_rules": 0,
+      "artifact_documents": 2,
+      "artifact_chunks": 87,
+      "artifacts": [
+        "http://www.loc.gov/standards/mods/v3/mods-mapping-3-6.html",
+        "http://www.loc.gov/standards/mods/v3/MARC21slim_MODS3-6_XSLT2-0.xsl"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://www.loc.gov/standards/mods/v3/mods-mapping-3-6.html",
+          "extension": ".html",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://www.loc.gov/standards/mods/v3/mods-mapping-3-6.html",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 47941
+        },
+        {
+          "url": "http://www.loc.gov/standards/mods/v3/MARC21slim_MODS3-6_XSLT2-0.xsl",
+          "extension": ".xsl",
+          "location_type": "library (XML)",
+          "status": "fetched",
+          "resolved_url": "http://www.loc.gov/standards/mods/v3/MARC21slim_MODS3-6_XSLT2-0.xsl",
+          "content_type": "application/xslt+xml",
+          "text_chars": 200000
+        }
+      ],
+      "strategy": "llm"
+    }
+  },
+  "rdamsc_c24": {
+    "crosswalk_id": "rdamsc_c24",
+    "msc_id": "msc:c24",
+    "name": "spase-data-model_TO_dublin-core",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T12:57:55.201808+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c24",
+      "inserted_rules": 13,
+      "total_rules": 13,
+      "artifact_documents": 2,
+      "artifact_chunks": 3,
+      "artifacts": [
+        "https://spase-group.org/tools/stylesheet/oai.xsl",
+        "https://web.archive.org/web/20150907175700/http://www.spase-group.org/tools/stylesheet/oai/"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "https://spase-group.org/tools/stylesheet/oai.xsl",
+          "extension": ".xsl",
+          "location_type": "library (XML)",
+          "status": "fetched",
+          "resolved_url": "https://spase-group.org/tools/stylesheet/oai.xsl",
+          "content_type": "application/xml",
+          "text_chars": 2770
+        },
+        {
+          "url": "https://web.archive.org/web/20150907175700/http://www.spase-group.org/tools/stylesheet/oai/",
+          "extension": "(none)",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://web.archive.org/web/20150907175700/http://www.spase-group.org/tools/stylesheet/oai/",
+          "content_type": "text/html",
+          "text_chars": 2956
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c24.sssom.tsv"
+    }
+  },
+  "rdamsc_c38": {
+    "crosswalk_id": "rdamsc_c38",
+    "msc_id": "msc:c38",
+    "name": "CiteDCAT-AP (DataCite profile of DCAT-AP)",
+    "status": "failed_parse",
+    "label": "failed: parse/extract",
+    "updated_at": "2026-03-03T12:46:24.910824+00:00",
+    "result": {
+      "ok": false,
+      "reason": "no_rules_extracted",
+      "crosswalk_id": "rdamsc_c38",
+      "inserted_rules": 0,
+      "artifact_documents": 2,
+      "artifact_chunks": 29,
+      "artifacts": [
+        "https://ec-jrc.github.io/datacite-to-dcat-ap/",
+        "https://github.com/ec-jrc/datacite-to-dcat-ap"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "https://ec-jrc.github.io/datacite-to-dcat-ap/",
+          "extension": "(none)",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://ec-jrc.github.io/datacite-to-dcat-ap/",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 68257
+        },
+        {
+          "url": "https://github.com/ec-jrc/datacite-to-dcat-ap",
+          "extension": "(none)",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://github.com/ec-jrc/datacite-to-dcat-ap",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 12936
+        }
+      ],
+      "strategy": "llm"
+    }
+  },
+  "rdamsc_c37": {
+    "crosswalk_id": "rdamsc_c37",
+    "msc_id": "msc:c37",
+    "name": "MARC (Machine-Readable Cataloging) to CIDOC CRM",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T12:47:29.778498+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c37",
+      "inserted_rules": 49,
+      "total_rules": 49,
+      "artifact_documents": 1,
+      "artifact_chunks": 70,
+      "artifacts": [
+        "https://www.cidoc-crm.org/sites/default/files/UNIMARCB_CRM.zip"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "https://www.cidoc-crm.org/sites/default/files/UNIMARCB_CRM.zip",
+          "extension": ".zip",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/UNIMARCB_CRM.zip",
+          "content_type": "application/zip",
+          "text_chars": 200000
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c37.sssom.tsv"
+    }
+  },
+  "rdamsc_c36": {
+    "crosswalk_id": "rdamsc_c36",
+    "msc_id": "msc:c36",
+    "name": "EAD to CIDOC CRM",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T12:48:31.966628+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c36",
+      "inserted_rules": 14,
+      "total_rules": 14,
+      "artifact_documents": 2,
+      "artifact_chunks": 92,
+      "artifacts": [
+        "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-ead2crm-mapping-060728v0_2-final.doc",
+        "https://www.cidoc-crm.org/sites/default/files/ead.rtf"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-ead2crm-mapping-060728v0_2-final.doc",
+          "extension": ".doc",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-ead2crm-mapping-060728v0_2-final.doc",
+          "content_type": "application/msword",
+          "text_chars": 62219
+        },
+        {
+          "url": "https://www.cidoc-crm.org/sites/default/files/ead.rtf",
+          "extension": ".rtf",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/ead.rtf",
+          "content_type": "application/rtf",
+          "text_chars": 200000
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c36.sssom.tsv"
+    }
+  },
+  "rdamsc_c35": {
+    "crosswalk_id": "rdamsc_c35",
+    "msc_id": "msc:c35",
+    "name": "Dublin Core to CIDOC CRM",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T12:50:11.430304+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c35",
+      "inserted_rules": 41,
+      "total_rules": 41,
+      "artifact_documents": 3,
+      "artifact_chunks": 110,
+      "artifacts": [
+        "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-DC2CRMmapping-060728v0_2-final.doc",
+        "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.pdf",
+        "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.rtf"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-DC2CRMmapping-060728v0_2-final.doc",
+          "extension": ".doc",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-DC2CRMmapping-060728v0_2-final.doc",
+          "content_type": "application/msword",
+          "text_chars": 75736
+        },
+        {
+          "url": "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.pdf",
+          "extension": ".pdf",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.pdf",
+          "content_type": "application/pdf",
+          "text_chars": 130916
+        },
+        {
+          "url": "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.rtf",
+          "extension": ".rtf",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.rtf",
+          "content_type": "application/rtf",
+          "text_chars": 103927
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c35.sssom.tsv"
+    }
+  },
+  "rdamsc_c34": {
+    "crosswalk_id": "rdamsc_c34",
+    "msc_id": "msc:c34",
+    "name": "MIDAS-Heritage to CIDOC CRM",
+    "status": "failed_parse",
+    "label": "failed: parse/extract",
+    "updated_at": "2026-03-03T12:51:21.833804+00:00",
+    "result": {
+      "ok": false,
+      "reason": "no_rules_extracted",
+      "crosswalk_id": "rdamsc_c34",
+      "inserted_rules": 0,
+      "artifact_documents": 1,
+      "artifact_chunks": 39,
+      "artifacts": [
+        "https://www.cidoc-crm.org/sites/default/files/midas_map.xls"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "https://www.cidoc-crm.org/sites/default/files/midas_map.xls",
+          "extension": ".xls",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/midas_map.xls",
+          "content_type": "application/vnd.ms-excel",
+          "text_chars": 111653
+        }
+      ],
+      "strategy": "llm"
+    }
+  },
+  "rdamsc_c33": {
+    "crosswalk_id": "rdamsc_c33",
+    "msc_id": "msc:c33",
+    "name": "LIDO to CIDOC CRM",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T12:52:00.488788+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c33",
+      "inserted_rules": 1,
+      "total_rules": 1,
+      "artifact_documents": 1,
+      "artifact_chunks": 2,
+      "artifacts": [
+        "https://cidoc-crm.org/Resources/mappings-between-lido-v1.0-and-cidoc-crm-v6.0-in-x3ml-ver.1"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "https://cidoc-crm.org/Resources/mappings-between-lido-v1.0-and-cidoc-crm-v6.0-in-x3ml-ver.1",
+          "extension": ".1",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://cidoc-crm.org/Resources/mappings-between-lido-v1.0-and-cidoc-crm-v6.0-in-x3ml-ver.1",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 5178
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c33.sssom.tsv"
+    }
+  },
+  "rdamsc_c32": {
+    "crosswalk_id": "rdamsc_c32",
+    "msc_id": "msc:c32",
+    "name": "dublin-core_TO_rif-cs-registry",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T12:52:44.534647+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c32",
+      "inserted_rules": 8,
+      "total_rules": 8,
+      "artifact_documents": 1,
+      "artifact_chunks": 7,
+      "artifacts": [
+        "https://www.ands.org.au/__data/assets/file/0004/397237/dublincore-rifcs.zip"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "https://www.ands.org.au/__data/assets/file/0004/397237/dublincore-rifcs.zip",
+          "extension": ".zip",
+          "location_type": "library (XML)",
+          "status": "fetched",
+          "resolved_url": "https://www.ands.org.au/__data/assets/file/0004/397237/dublincore-rifcs.zip",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 19017
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c32.sssom.tsv"
+    }
+  },
+  "rdamsc_c31": {
+    "crosswalk_id": "rdamsc_c31",
+    "msc_id": "msc:c31",
+    "name": "marine-community-profile_TO_rif-cs-registry",
+    "status": "failed_unreachable",
+    "label": "failed: docs unreachable",
+    "updated_at": "2026-03-03T12:52:45.184961+00:00",
+    "result": {
+      "ok": false,
+      "reason": "artifacts_unreachable",
+      "crosswalk_id": "rdamsc_c31",
+      "skipped": [
+        "https://www.ands.org.au/__data/assets/file/0005/397238/mcp-rifcs.zip"
+      ],
+      "artifact_checks": [
+        {
+          "url": "https://www.ands.org.au/__data/assets/file/0005/397238/mcp-rifcs.zip",
+          "extension": ".zip",
+          "location_type": "library (XML)",
+          "status": "fetch_error",
+          "error": "https://www.ands.org.au/__data/assets/file/0005/397238/mcp-rifcs.zip -> HTTP 403",
+          "http_status": null
+        }
+      ]
+    }
+  },
+  "rdamsc_c30": {
+    "crosswalk_id": "rdamsc_c30",
+    "msc_id": "msc:c30",
+    "name": "iso-19115_TO_rif-cs-registry",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T12:53:12.012315+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c30",
+      "inserted_rules": 15,
+      "total_rules": 15,
+      "artifact_documents": 1,
+      "artifact_chunks": 7,
+      "artifacts": [
+        "https://www.ands.org.au/__data/assets/file/0011/397235/anzlic-rifcs.zip"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "https://www.ands.org.au/__data/assets/file/0011/397235/anzlic-rifcs.zip",
+          "extension": ".zip",
+          "location_type": "library (XML)",
+          "status": "fetched",
+          "resolved_url": "https://www.ands.org.au/__data/assets/file/0011/397235/anzlic-rifcs.zip",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 19017
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c30.sssom.tsv"
+    }
+  },
+  "rdamsc_c29": {
+    "crosswalk_id": "rdamsc_c29",
+    "msc_id": "msc:c29",
+    "name": "mods-metadata-object_TO_marc-machine-readable",
+    "status": "failed_parse",
+    "label": "failed: parse/extract",
+    "updated_at": "2026-03-03T12:54:35.447990+00:00",
+    "result": {
+      "ok": false,
+      "reason": "no_rules_extracted",
+      "crosswalk_id": "rdamsc_c29",
+      "inserted_rules": 0,
+      "artifact_documents": 2,
+      "artifact_chunks": 46,
+      "artifacts": [
+        "http://www.loc.gov/standards/mods/v3/mods2marc-mapping-3-5.html",
+        "http://www.loc.gov/standards/mods/v3/MODS3-4_MARC21slim_XSLT2-0.xsl"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://www.loc.gov/standards/mods/v3/mods2marc-mapping-3-5.html",
+          "extension": ".html",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://www.loc.gov/standards/mods/v3/mods2marc-mapping-3-5.html",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 43840
+        },
+        {
+          "url": "http://www.loc.gov/standards/mods/v3/MODS3-4_MARC21slim_XSLT2-0.xsl",
+          "extension": ".xsl",
+          "location_type": "library (XML)",
+          "status": "fetched",
+          "resolved_url": "http://www.loc.gov/standards/mods/v3/MODS3-4_MARC21slim_XSLT2-0.xsl",
+          "content_type": "application/xslt+xml",
+          "text_chars": 83936
+        }
+      ],
+      "strategy": "llm"
+    }
+  },
+  "rdamsc_c27": {
+    "crosswalk_id": "rdamsc_c27",
+    "msc_id": "msc:c27",
+    "name": "mods-metadata-object_TO_dublin-core",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T12:56:23.611125+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c27",
+      "inserted_rules": 26,
+      "total_rules": 26,
+      "artifact_documents": 2,
+      "artifact_chunks": 13,
+      "artifacts": [
+        "http://www.loc.gov/standards/mods/mods-dcsimple.html",
+        "http://www.loc.gov/standards/mods/v3/DC_MODS3-5_XSLT2-0.xsl"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://www.loc.gov/standards/mods/mods-dcsimple.html",
+          "extension": ".html",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://www.loc.gov/standards/mods/mods-dcsimple.html",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 6428
+        },
+        {
+          "url": "http://www.loc.gov/standards/mods/v3/DC_MODS3-5_XSLT2-0.xsl",
+          "extension": ".xsl",
+          "location_type": "library (XML)",
+          "status": "fetched",
+          "resolved_url": "http://www.loc.gov/standards/mods/v3/DC_MODS3-5_XSLT2-0.xsl",
+          "content_type": "application/xslt+xml",
+          "text_chars": 28715
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c27.sssom.tsv"
+    }
+  },
+  "rdamsc_c26": {
+    "crosswalk_id": "rdamsc_c26",
+    "msc_id": "msc:c26",
+    "name": "dublin-core_TO_mods-metadata-object",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T12:57:24.049186+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c26",
+      "inserted_rules": 36,
+      "total_rules": 36,
+      "artifact_documents": 2,
+      "artifact_chunks": 10,
+      "artifacts": [
+        "http://www.loc.gov/standards/mods/dcsimple-mods.html",
+        "http://www.loc.gov/standards/mods/v3/MODS3-5_DC_XSLT2-0.xsl"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://www.loc.gov/standards/mods/dcsimple-mods.html",
+          "extension": ".html",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://www.loc.gov/standards/mods/dcsimple-mods.html",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 13546
+        },
+        {
+          "url": "http://www.loc.gov/standards/mods/v3/MODS3-5_DC_XSLT2-0.xsl",
+          "extension": ".xsl",
+          "location_type": "library (XML)",
+          "status": "fetched",
+          "resolved_url": "http://www.loc.gov/standards/mods/v3/MODS3-5_DC_XSLT2-0.xsl",
+          "content_type": "application/xslt+xml",
+          "text_chars": 12944
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c26.sssom.tsv"
+    }
+  },
+  "rdamsc_c23": {
+    "crosswalk_id": "rdamsc_c23",
+    "msc_id": "msc:c23",
+    "name": "oecd-minimum-data_TO_abcd-access-biological",
+    "status": "failed_parse",
+    "label": "failed: parse/extract",
+    "updated_at": "2026-03-03T12:58:06.522086+00:00",
+    "result": {
+      "ok": false,
+      "reason": "no_rules_extracted",
+      "crosswalk_id": "rdamsc_c23",
+      "inserted_rules": 0,
+      "artifact_documents": 1,
+      "artifact_chunks": 2,
+      "artifacts": [
+        "http://www.bgbm.org/tdwg/codata/Schema/ABCD_1.30/OECD-MDS-2-ABCD130.pdf"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://www.bgbm.org/tdwg/codata/Schema/ABCD_1.30/OECD-MDS-2-ABCD130.pdf",
+          "extension": ".pdf",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://www.bgbm.org/tdwg/codata/Schema/ABCD_1.30/OECD-MDS-2-ABCD130.pdf",
+          "content_type": "application/pdf",
+          "text_chars": 5200
+        }
+      ],
+      "strategy": "llm"
+    }
+  },
+  "rdamsc_c22": {
+    "crosswalk_id": "rdamsc_c22",
+    "msc_id": "msc:c22",
+    "name": "netcdf-attribute-convention_TO_iso-19115",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T12:59:09.056925+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c22",
+      "inserted_rules": 47,
+      "total_rules": 47,
+      "artifact_documents": 2,
+      "artifact_chunks": 56,
+      "artifacts": [
+        "http://wiki.esipfed.org/index.php/Attribute_Convention_for_Data_Discovery_Mappings",
+        "https://raw.githubusercontent.com/Unidata/threddsIso/master/src/main/resources/xsl/nciso/UnidataDD2MI.xsl"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://wiki.esipfed.org/index.php/Attribute_Convention_for_Data_Discovery_Mappings",
+          "extension": "(none)",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://wiki.esipfed.org/index.php/Attribute_Convention_for_Data_Discovery_Mappings",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 25544
+        },
+        {
+          "url": "https://github.com/Unidata/threddsIso/raw/master/src/main/resources/xsl/nciso/UnidataDD2MI.xsl",
+          "extension": ".xsl",
+          "location_type": "library (XML)",
+          "status": "fetched",
+          "resolved_url": "https://raw.githubusercontent.com/Unidata/threddsIso/master/src/main/resources/xsl/nciso/UnidataDD2MI.xsl",
+          "content_type": "text/plain; charset=utf-8",
+          "text_chars": 133908
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c22.sssom.tsv"
+    }
+  },
+  "rdamsc_c21": {
+    "crosswalk_id": "rdamsc_c21",
+    "msc_id": "msc:c21",
+    "name": "marc-machine-readable_TO_dublin-core",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T13:00:05.244837+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c21",
+      "inserted_rules": 83,
+      "total_rules": 83,
+      "artifact_documents": 1,
+      "artifact_chunks": 3,
+      "artifacts": [
+        "http://www.loc.gov/marc/marc2dc.html"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://www.loc.gov/marc/marc2dc.html",
+          "extension": ".html",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://www.loc.gov/marc/marc2dc.html",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 8049
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c21.sssom.tsv"
+    }
+  },
+  "rdamsc_c20": {
+    "crosswalk_id": "rdamsc_c20",
+    "msc_id": "msc:c20",
+    "name": "iso-19115_TO_ddi-data-documentation",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T13:01:21.482355+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c20",
+      "inserted_rules": 40,
+      "total_rules": 40,
+      "artifact_documents": 1,
+      "artifact_chunks": 35,
+      "artifacts": [
+        "http://web.archive.org/web/20110523210427/http://www.gogeo.ac.uk/files/GoGeo%20to%20DDI%20to%20ISO%20mapping.pdf"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://web.archive.org/web/20110523210427/http://www.gogeo.ac.uk/files/GoGeo%20to%20DDI%20to%20ISO%20mapping.pdf",
+          "extension": ".pdf",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://web.archive.org/web/20110523210427/http://www.gogeo.ac.uk/files/GoGeo%20to%20DDI%20to%20ISO%20mapping.pdf",
+          "content_type": "application/pdf",
+          "text_chars": 100413
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c20.sssom.tsv"
+    }
+  },
+  "rdamsc_c19": {
+    "crosswalk_id": "rdamsc_c19",
+    "msc_id": "msc:c19",
+    "name": "isa-tab_TO_mage-tab",
+    "status": "failed_parse",
+    "label": "failed: parse/extract",
+    "updated_at": "2026-03-03T13:02:07.080764+00:00",
+    "result": {
+      "ok": false,
+      "reason": "no_rules_extracted",
+      "crosswalk_id": "rdamsc_c19",
+      "inserted_rules": 0,
+      "artifact_documents": 1,
+      "artifact_chunks": 4,
+      "artifacts": [
+        "https://github.com/ISA-tools/MAGEtoISAconverter/"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "https://github.com/ISA-tools/MAGEtoISAconverter/",
+          "extension": "(none)",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://github.com/ISA-tools/MAGEtoISAconverter/",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 10913
+        }
+      ],
+      "strategy": "llm"
+    }
+  },
+  "rdamsc_c18": {
+    "crosswalk_id": "rdamsc_c18",
+    "msc_id": "msc:c18",
+    "name": "hispid-herbarium-information_TO_abcd-access-biological",
+    "status": "failed_parse",
+    "label": "failed: parse/extract",
+    "updated_at": "2026-03-03T13:03:32.224206+00:00",
+    "result": {
+      "ok": false,
+      "reason": "no_rules_extracted",
+      "crosswalk_id": "rdamsc_c18",
+      "inserted_rules": 0,
+      "artifact_documents": 1,
+      "artifact_chunks": 46,
+      "artifacts": [
+        "http://www.bgbm.org/tdwg/codata/Schema/Mappings/HISPID3.htm"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://www.bgbm.org/tdwg/codata/Schema/Mappings/HISPID3.htm",
+          "extension": ".htm",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://www.bgbm.org/tdwg/codata/Schema/Mappings/HISPID3.htm",
+          "content_type": "text/html",
+          "text_chars": 131953
+        }
+      ],
+      "strategy": "llm"
+    }
+  },
+  "rdamsc_c17": {
+    "crosswalk_id": "rdamsc_c17",
+    "msc_id": "msc:c17",
+    "name": "fgdccsdgm-federal-geographic_TO_iso-19115",
+    "status": "failed_unreachable",
+    "label": "failed: docs unreachable",
+    "updated_at": "2026-03-03T13:03:53.320798+00:00",
+    "result": {
+      "ok": false,
+      "reason": "artifacts_unreachable",
+      "crosswalk_id": "rdamsc_c17",
+      "skipped": [
+        "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/CSDGM-to-ISO-Crosswalk-V1.xls",
+        "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/csdgm2iso19115-2.xslt"
+      ],
+      "artifact_checks": [
+        {
+          "url": "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/CSDGM-to-ISO-Crosswalk-V1.xls",
+          "extension": ".xls",
+          "location_type": "document",
+          "status": "fetch_error",
+          "error": "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/CSDGM-to-ISO-Crosswalk-V1.xls -> ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
+          "http_status": null
+        },
+        {
+          "url": "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/csdgm2iso19115-2.xslt",
+          "extension": ".xslt",
+          "location_type": "library (XML)",
+          "status": "fetch_error",
+          "error": "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/csdgm2iso19115-2.xslt -> ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
+          "http_status": null
+        }
+      ]
+    }
+  },
+  "rdamsc_c16": {
+    "crosswalk_id": "rdamsc_c16",
+    "msc_id": "msc:c16",
+    "name": "fgdccsdgm-federal-geographic_TO_dif-directory-interchange",
+    "status": "failed_unreachable",
+    "label": "failed: docs unreachable",
+    "updated_at": "2026-03-03T13:03:54.011295+00:00",
+    "result": {
+      "ok": false,
+      "reason": "artifacts_unreachable",
+      "crosswalk_id": "rdamsc_c16",
+      "skipped": [
+        "http://gcmd.nasa.gov/add/standards/fgdc_to_dif.html"
+      ],
+      "artifact_checks": [
+        {
+          "url": "http://gcmd.nasa.gov/add/standards/fgdc_to_dif.html",
+          "extension": ".html",
+          "location_type": "document",
+          "status": "fetch_error",
+          "error": "http://gcmd.nasa.gov/add/standards/fgdc_to_dif.html -> HTTPConnectionPool(host='gcmd.nasa.gov', port=80): Max retries exceeded with url: /add/standards/fgdc_to_dif.html (Caused by NameResolutionError(\"HTTPConnection(host='gcmd.nasa.gov', port=80): Failed to resolve 'gcmd.nasa.gov' ([Errno -3] Temporary failure in name resolution)\")); https://gcmd.nasa.gov/add/standards/fgdc_to_dif.html -> HTTPSConnectionPool(host='gcmd.nasa.gov', port=443): Max retries exceeded with url: /add/standards/fgdc_to_dif.html (Caused by NameResolutionError(\"HTTPSConnection(host='gcmd.nasa.gov', port=443): Failed to resolve 'gcmd.nasa.gov' ([Errno -3] Temporary failure in name resolution)\"))",
+          "http_status": null
+        }
+      ]
+    }
+  },
+  "rdamsc_c15": {
+    "crosswalk_id": "rdamsc_c15",
+    "msc_id": "msc:c15",
+    "name": "fgdccsdgm-biological-data_TO_iso-19115",
+    "status": "failed_unreachable",
+    "label": "failed: docs unreachable",
+    "updated_at": "2026-03-03T13:04:14.713942+00:00",
+    "result": {
+      "ok": false,
+      "reason": "artifacts_unreachable",
+      "crosswalk_id": "rdamsc_c15",
+      "skipped": [
+        "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/Biological-to-ISO-Crosswalk-V1.xls",
+        "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/bio2iso19115-2.xslt"
+      ],
+      "artifact_checks": [
+        {
+          "url": "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/Biological-to-ISO-Crosswalk-V1.xls",
+          "extension": ".xls",
+          "location_type": "document",
+          "status": "fetch_error",
+          "error": "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/Biological-to-ISO-Crosswalk-V1.xls -> ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
+          "http_status": null
+        },
+        {
+          "url": "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/bio2iso19115-2.xslt",
+          "extension": ".xslt",
+          "location_type": "library (XML)",
+          "status": "fetch_error",
+          "error": "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/bio2iso19115-2.xslt -> ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
+          "http_status": null
+        }
+      ]
+    }
+  },
+  "rdamsc_c14": {
+    "crosswalk_id": "rdamsc_c14",
+    "msc_id": "msc:c14",
+    "name": "eurisco-descriptors_TO_abcd-access-biological",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T13:05:02.135619+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c14",
+      "inserted_rules": 33,
+      "total_rules": 33,
+      "artifact_documents": 1,
+      "artifact_chunks": 8,
+      "artifacts": [
+        "http://www.bgbm.org/tdwg/codata/Schema/Mappings/EURISCO-2-ABCD.pdf"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://www.bgbm.org/tdwg/codata/Schema/Mappings/EURISCO-2-ABCD.pdf",
+          "extension": ".pdf",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://www.bgbm.org/tdwg/codata/Schema/Mappings/EURISCO-2-ABCD.pdf",
+          "content_type": "application/pdf",
+          "text_chars": 20464
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c14.sssom.tsv"
+    }
+  },
+  "rdamsc_c13": {
+    "crosswalk_id": "rdamsc_c13",
+    "msc_id": "msc:c13",
+    "name": "eml-ecological-metadata_TO_iso-19115",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T13:06:34.772812+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c13",
+      "inserted_rules": 37,
+      "total_rules": 37,
+      "artifact_documents": 1,
+      "artifact_chunks": 6,
+      "artifacts": [
+        "https://github.com/gbif/eml-profile/raw/master/eml2iso19139.xsl"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "https://github.com/gbif/eml-profile/raw/master/eml2iso19139.xsl",
+          "extension": ".xsl",
+          "location_type": "library (XML)",
+          "status": "fetched",
+          "resolved_url": "https://github.com/gbif/eml-profile/raw/master/eml2iso19139.xsl",
+          "content_type": "text/plain; charset=utf-8",
+          "text_chars": 16849
+        }
+      ],
+      "strategy": "llm",
+      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c13.sssom.tsv"
+    }
+  },
+  "rdamsc_c12": {
+    "crosswalk_id": "rdamsc_c12",
+    "msc_id": "msc:c12",
+    "name": "dublin-core_TO_prov",
+    "status": "failed_unreachable",
+    "label": "failed: docs unreachable",
+    "updated_at": "2026-03-03T13:06:35.775183+00:00",
+    "result": {
+      "ok": false,
+      "reason": "artifacts_unreachable",
+      "crosswalk_id": "rdamsc_c12",
+      "skipped": [
+        "http://www.w3.org/TR/prov-dc/"
+      ],
+      "artifact_checks": [
+        {
+          "url": "http://www.w3.org/TR/prov-dc/",
+          "extension": "(none)",
+          "location_type": "document",
+          "status": "fetch_error",
+          "error": "http://www.w3.org/TR/prov-dc/ -> HTTP 403; https://www.w3.org/TR/prov-dc/ -> HTTP 403",
+          "http_status": null
+        }
+      ]
+    }
+  },
+  "rdamsc_c11": {
+    "crosswalk_id": "rdamsc_c11",
+    "msc_id": "msc:c11",
+    "name": "dublin-core_TO_marc-machine-readable",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T13:06:35.912770+00:00",
+    "result": {
+      "ok": true,
+      "backfilled_rules": 60,
+      "step": "kg_backfill"
+    }
+  },
+  "rdamsc_c10": {
+    "crosswalk_id": "rdamsc_c10",
+    "msc_id": "msc:c10",
+    "name": "dif-directory-interchange_TO_iso-19115",
+    "status": "failed_unreachable",
+    "label": "failed: docs unreachable",
+    "updated_at": "2026-03-03T13:06:36.460012+00:00",
+    "result": {
+      "ok": false,
+      "reason": "artifacts_unreachable",
+      "crosswalk_id": "rdamsc_c10",
+      "skipped": [
+        "http://gcmd.nasa.gov/add/standards/difiso.html"
+      ],
+      "artifact_checks": [
+        {
+          "url": "http://gcmd.nasa.gov/add/standards/difiso.html",
+          "extension": ".html",
+          "location_type": "document",
+          "status": "fetch_error",
+          "error": "http://gcmd.nasa.gov/add/standards/difiso.html -> HTTPConnectionPool(host='gcmd.nasa.gov', port=80): Max retries exceeded with url: /add/standards/difiso.html (Caused by NameResolutionError(\"HTTPConnection(host='gcmd.nasa.gov', port=80): Failed to resolve 'gcmd.nasa.gov' ([Errno -3] Temporary failure in name resolution)\")); https://gcmd.nasa.gov/add/standards/difiso.html -> HTTPSConnectionPool(host='gcmd.nasa.gov', port=443): Max retries exceeded with url: /add/standards/difiso.html (Caused by NameResolutionError(\"HTTPSConnection(host='gcmd.nasa.gov', port=443): Failed to resolve 'gcmd.nasa.gov' ([Errno -3] Temporary failure in name resolution)\"))",
+          "http_status": null
+        }
+      ]
+    }
+  },
+  "rdamsc_c9": {
+    "crosswalk_id": "rdamsc_c9",
+    "msc_id": "msc:c9",
+    "name": "dif-directory-interchange_TO_dublin-core",
+    "status": "failed_unreachable",
+    "label": "failed: docs unreachable",
+    "updated_at": "2026-03-03T13:06:37.018682+00:00",
+    "result": {
+      "ok": false,
+      "reason": "artifacts_unreachable",
+      "crosswalk_id": "rdamsc_c9",
+      "skipped": [
+        "http://gcmd.nasa.gov/add/standards/dublin_to_dif.html"
+      ],
+      "artifact_checks": [
+        {
+          "url": "http://gcmd.nasa.gov/add/standards/dublin_to_dif.html",
+          "extension": ".html",
+          "location_type": "document",
+          "status": "fetch_error",
+          "error": "http://gcmd.nasa.gov/add/standards/dublin_to_dif.html -> HTTPConnectionPool(host='gcmd.nasa.gov', port=80): Max retries exceeded with url: /add/standards/dublin_to_dif.html (Caused by NameResolutionError(\"HTTPConnection(host='gcmd.nasa.gov', port=80): Failed to resolve 'gcmd.nasa.gov' ([Errno -3] Temporary failure in name resolution)\")); https://gcmd.nasa.gov/add/standards/dublin_to_dif.html -> HTTPSConnectionPool(host='gcmd.nasa.gov', port=443): Max retries exceeded with url: /add/standards/dublin_to_dif.html (Caused by NameResolutionError(\"HTTPSConnection(host='gcmd.nasa.gov', port=443): Failed to resolve 'gcmd.nasa.gov' ([Errno -3] Temporary failure in name resolution)\"))",
+          "http_status": null
+        }
+      ]
+    }
+  },
+  "rdamsc_c8": {
+    "crosswalk_id": "rdamsc_c8",
+    "msc_id": "msc:c8",
+    "name": "ddi-data-documentation_TO_dublin-core",
+    "status": "failed_unreachable",
+    "label": "failed: docs unreachable",
+    "updated_at": "2026-03-03T13:06:38.932279+00:00",
+    "result": {
+      "ok": false,
+      "reason": "artifacts_unreachable",
+      "crosswalk_id": "rdamsc_c8",
+      "skipped": [
+        "http://www.ddialliance.org/resources/ddi-profiles/dc"
+      ],
+      "artifact_checks": [
+        {
+          "url": "http://www.ddialliance.org/resources/ddi-profiles/dc",
+          "extension": "(none)",
+          "location_type": "document",
+          "status": "fetch_error",
+          "error": "http://www.ddialliance.org/resources/ddi-profiles/dc -> HTTP 404; https://www.ddialliance.org/resources/ddi-profiles/dc -> HTTP 404",
+          "http_status": null
+        }
+      ]
+    }
+  },
+  "rdamsc_c7": {
+    "crosswalk_id": "rdamsc_c7",
+    "msc_id": "msc:c7",
+    "name": "datacite-metadata-schema_TO_oecd-dataset-metadata",
+    "status": "failed_unreachable",
+    "label": "failed: docs unreachable",
+    "updated_at": "2026-03-03T13:06:39.729476+00:00",
+    "result": {
+      "ok": false,
+      "reason": "artifacts_unreachable",
+      "crosswalk_id": "rdamsc_c7",
+      "skipped": [
+        "http://schema.datacite.org/meta/kernel-2.2/doc/DataCite-MetadataKernel_v2.2.pdf"
+      ],
+      "artifact_checks": [
+        {
+          "url": "http://schema.datacite.org/meta/kernel-2.2/doc/DataCite-MetadataKernel_v2.2.pdf",
+          "extension": ".pdf",
+          "location_type": "document",
+          "status": "fetch_error",
+          "error": "http://schema.datacite.org/meta/kernel-2.2/doc/DataCite-MetadataKernel_v2.2.pdf -> HTTP 404; https://schema.datacite.org/meta/kernel-2.2/doc/DataCite-MetadataKernel_v2.2.pdf -> HTTP 404",
+          "http_status": null
+        }
+      ]
+    }
+  },
+  "rdamsc_c6": {
+    "crosswalk_id": "rdamsc_c6",
+    "msc_id": "msc:c6",
+    "name": "datacite-metadata-schema_TO_idf-international-doi",
+    "status": "failed_unreachable",
+    "label": "failed: docs unreachable",
+    "updated_at": "2026-03-03T13:06:40.349767+00:00",
+    "result": {
+      "ok": false,
+      "reason": "artifacts_unreachable",
+      "crosswalk_id": "rdamsc_c6",
+      "skipped": [
+        "http://schema.datacite.org/meta/kernel-2.2/doc/DataCite-MetadataKernel_v2.2.pdf"
+      ],
+      "artifact_checks": [
+        {
+          "url": "http://schema.datacite.org/meta/kernel-2.2/doc/DataCite-MetadataKernel_v2.2.pdf",
+          "extension": ".pdf",
+          "location_type": "document",
+          "status": "fetch_error",
+          "error": "http://schema.datacite.org/meta/kernel-2.2/doc/DataCite-MetadataKernel_v2.2.pdf -> HTTP 404; https://schema.datacite.org/meta/kernel-2.2/doc/DataCite-MetadataKernel_v2.2.pdf -> HTTP 404",
+          "http_status": null
+        }
+      ]
+    }
+  },
+  "rdamsc_c5": {
+    "crosswalk_id": "rdamsc_c5",
+    "msc_id": "msc:c5",
+    "name": "DataCite to Dublin Core Mapping 4.4",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-03T13:06:40.410920+00:00",
+    "result": {
+      "ok": true,
+      "backfilled_rules": 24,
+      "step": "kg_backfill"
+    }
+  },
+  "rdamsc_c4": {
+    "crosswalk_id": "rdamsc_c4",
+    "msc_id": "msc:c4",
+    "name": "datacite-metadata-schema_TO_ddi-data-documentation",
+    "status": "failed_unreachable",
+    "label": "failed: docs unreachable",
+    "updated_at": "2026-03-03T13:06:41.074332+00:00",
+    "result": {
+      "ok": false,
+      "reason": "artifacts_unreachable",
+      "crosswalk_id": "rdamsc_c4",
+      "skipped": [
+        "http://schema.datacite.org/meta/kernel-2.2/doc/DataCite-MetadataKernel_v2.2.pdf"
+      ],
+      "artifact_checks": [
+        {
+          "url": "http://schema.datacite.org/meta/kernel-2.2/doc/DataCite-MetadataKernel_v2.2.pdf",
+          "extension": ".pdf",
+          "location_type": "document",
+          "status": "fetch_error",
+          "error": "http://schema.datacite.org/meta/kernel-2.2/doc/DataCite-MetadataKernel_v2.2.pdf -> HTTP 404; https://schema.datacite.org/meta/kernel-2.2/doc/DataCite-MetadataKernel_v2.2.pdf -> HTTP 404",
+          "http_status": null
+        }
+      ]
+    }
+  },
+  "rdamsc_c3": {
+    "crosswalk_id": "rdamsc_c3",
+    "msc_id": "msc:c3",
+    "name": "darwin-core_TO_abcd-access-biological",
+    "status": "failed_parse",
+    "label": "failed: parse/extract",
+    "updated_at": "2026-03-03T13:07:21.476395+00:00",
+    "result": {
+      "ok": false,
+      "reason": "no_rules_extracted",
+      "crosswalk_id": "rdamsc_c3",
+      "inserted_rules": 0,
+      "artifact_documents": 1,
+      "artifact_chunks": 3,
+      "artifacts": [
+        "http://rs.tdwg.org/dwc/terms/history/dwctoabcd/"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://rs.tdwg.org/dwc/terms/history/dwctoabcd/",
+          "extension": "(none)",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://rs.tdwg.org/dwc/terms/history/dwctoabcd/",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 7160
+        }
+      ],
+      "strategy": "llm"
+    }
+  }
+}

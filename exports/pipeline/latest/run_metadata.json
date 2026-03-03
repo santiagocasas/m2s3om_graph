@@ -1,0 +1,38 @@
+{
+  "generated_at": "2026-03-03T13:59:34.015645+00:00",
+  "command": "scripts/rdamsc_pipeline_stats.py freeze --status-file .local/rdamsc_pipeline_status.json --output-dir exports/pipeline/latest --sssom-dir exports/sssom --pipeline-log .local/bootstrap_rdamsc.log --plots",
+  "status_file_used": "/home/casas/AI/kaigraph/.local/rdamsc_pipeline_status.json",
+  "status_file_copied_to": "/home/casas/AI/kaigraph/exports/pipeline/latest/rdamsc_pipeline_status.json",
+  "pipeline_log_source": "/home/casas/AI/kaigraph/.local/bootstrap_rdamsc.log",
+  "pipeline_log_mode": "placeholder",
+  "git": {
+    "repo_root": "/home/casas/AI/kaigraph",
+    "commit": "f920e70c0636b3490d1e3c79afe698163414a264",
+    "commit_short": "f920e70",
+    "commit_date": "2026-03-03T13:27:42+01:00",
+    "branch": "main",
+    "remote_origin": "",
+    "is_dirty": true
+  },
+  "environment": {
+    "KAIGRAPH_USE_SURREAL": "",
+    "KAIGRAPH_DB_URL": "",
+    "KAIGRAPH_DB_NS": "",
+    "KAIGRAPH_DB_NAME": "",
+    "BLABLADOR_BASE_URL": "",
+    "KAIGRAPH_LLM_MODEL": "",
+    "BLABLADOR_API_KEY_loaded": true
+  },
+  "summary": {
+    "total_crosswalks": 37,
+    "status_counts": {
+      "ready": 18,
+      "failed_unreachable": 11,
+      "failed_parse": 8
+    },
+    "reason_counts": {
+      "artifacts_unreachable": 11,
+      "no_rules_extracted": 8
+    }
+  }
+}

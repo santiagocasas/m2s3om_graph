@@ -1,0 +1,20 @@
+#mapping_set_id: kaigraph:rdamsc_c32
+#mapping_set_version: unknown
+#mapping_set_description: "dublin-core_TO_rif-cs-registry (Dublin Core -> RIF-CS (Registry\
+#  \ Interchange Format \u2013 Collections and Services))"
+#curie_map:
+#  src: https://kaigraph.local/rdamsc_m15/
+#  dst: https://kaigraph.local/rdamsc_m98/
+#  skos: http://www.w3.org/2004/02/skos/core#
+#  semapv: https://w3id.org/semapv/vocab/
+#license: https://creativecommons.org/licenses/by/4.0/
+#mapping_set_source: https://www.ands.org.au/__data/assets/file/0004/397237/dublincore-rifcs.zip
+record_id	subject_id	subject_label	predicate_id	object_id	object_label	mapping_justification	confidence	comment
+331a7c9516847469	src:dc_subject	dc:subject	skos:exactMatch	dst:rif_collection_subject	rif:collection/subject	semapv:ManualMappingCuration	0.450	"{""mapping_type"": ""direct"", ""source_paths"": [""dc:subject""], ""target_paths"": [""rif:collection/subject""], ""transform"": {}, ""semantic_loss"": false, ""ambiguity"": false, ""notes"": ""Relaxed LLM extraction""}"
+4ba34cdf9ff142f2	src:dc_identifier	dc:identifier	skos:exactMatch	dst:rif_collection_identifier	rif:collection/identifier	semapv:ManualMappingCuration	0.450	"{""mapping_type"": ""direct"", ""source_paths"": [""dc:identifier""], ""target_paths"": [""rif:collection/identifier""], ""transform"": {}, ""semantic_loss"": false, ""ambiguity"": false, ""notes"": ""Relaxed LLM extraction""}"
+6a6bff02ee5b779f	src:dc_date	dc:date	skos:exactMatch	dst:rif_collection_date	rif:collection/date	semapv:ManualMappingCuration	0.450	"{""mapping_type"": ""direct"", ""source_paths"": [""dc:date""], ""target_paths"": [""rif:collection/date""], ""transform"": {}, ""semantic_loss"": false, ""ambiguity"": false, ""notes"": ""Relaxed LLM extraction""}"
+84a810d0e7061849	src:dc_publisher	dc:publisher	skos:exactMatch	dst:rif_collection_publisher	rif:collection/publisher	semapv:ManualMappingCuration	0.450	"{""mapping_type"": ""direct"", ""source_paths"": [""dc:publisher""], ""target_paths"": [""rif:collection/publisher""], ""transform"": {}, ""semantic_loss"": false, ""ambiguity"": false, ""notes"": ""Relaxed LLM extraction""}"
+95d57c12b02865de	src:dc_title	dc:title	skos:exactMatch	dst:rif_collection_name	rif:collection/name	semapv:ManualMappingCuration	0.450	"{""mapping_type"": ""direct"", ""source_paths"": [""dc:title""], ""target_paths"": [""rif:collection/name""], ""transform"": {}, ""semantic_loss"": false, ""ambiguity"": false, ""notes"": ""Relaxed LLM extraction""}"
+bae55187ea34ef80	src:dc_rights	dc:rights	skos:exactMatch	dst:rif_collection_rights	rif:collection/rights	semapv:ManualMappingCuration	0.450	"{""mapping_type"": ""direct"", ""source_paths"": [""dc:rights""], ""target_paths"": [""rif:collection/rights""], ""transform"": {}, ""semantic_loss"": false, ""ambiguity"": false, ""notes"": ""Relaxed LLM extraction""}"
+eda9fd57dc0efdf6	src:dc_coverage	dc:coverage	skos:exactMatch	dst:rif_collection_coverage	rif:collection/coverage	semapv:ManualMappingCuration	0.450	"{""mapping_type"": ""direct"", ""source_paths"": [""dc:coverage""], ""target_paths"": [""rif:collection/coverage""], ""transform"": {}, ""semantic_loss"": false, ""ambiguity"": false, ""notes"": ""Relaxed LLM extraction""}"
+fe19f3b59187189a	src:dc_description	dc:description	skos:exactMatch	dst:rif_collection_description	rif:collection/description	semapv:ManualMappingCuration	0.450	"{""mapping_type"": ""direct"", ""source_paths"": [""dc:description""], ""target_paths"": [""rif:collection/description""], ""transform"": {}, ""semantic_loss"": false, ""ambiguity"": false, ""notes"": ""Relaxed LLM extraction""}"

@@ -1,0 +1,102 @@
+{
+  "generated_at": "2026-03-03T13:59:33.051368+00:00",
+  "total_crosswalks": 37,
+  "status_counts": {
+    "ready": 18,
+    "failed_unreachable": 11,
+    "failed_parse": 8
+  },
+  "status_rates": {
+    "ready": 48.65,
+    "failed_unreachable": 29.73,
+    "failed_parse": 21.62
+  },
+  "reason_counts": {
+    "artifacts_unreachable": 11,
+    "no_rules_extracted": 8
+  },
+  "strategy_counts": {
+    "llm": 22
+  },
+  "artifact_checks": {
+    "total": 45,
+    "status_counts": {
+      "fetched": 32,
+      "fetch_error": 13
+    },
+    "fetch_success_rate_pct": 71.11,
+    "extension_fetched": {
+      ".xsl": 7,
+      "(none)": 6,
+      ".html": 5,
+      ".pdf": 4,
+      ".zip": 3,
+      ".doc": 2,
+      ".rtf": 2,
+      ".xls": 1,
+      ".1": 1,
+      ".htm": 1
+    },
+    "extension_errors": {
+      ".html": 3,
+      ".pdf": 3,
+      ".xls": 2,
+      ".xslt": 2,
+      "(none)": 2,
+      ".zip": 1
+    },
+    "location_types": {
+      "document": 33,
+      "library (XML)": 12
+    },
+    "content_types_top": {
+      "text/html; charset=utf-8": 13,
+      "application/xslt+xml": 4,
+      "application/pdf": 4,
+      "text/html": 2,
+      "application/msword": 2,
+      "application/rtf": 2,
+      "text/plain; charset=utf-8": 2,
+      "application/xml": 1,
+      "application/zip": 1,
+      "application/vnd.ms-excel": 1
+    },
+    "text_size_chars": {
+      "min": 2770,
+      "median": 27129,
+      "mean": 59762.03,
+      "p90": 133908,
+      "max": 200000
+    },
+    "hosts_fetched_top": {
+      "www.loc.gov": 9,
+      "www.cidoc-crm.org": 7,
+      "github.com": 3,
+      "www.bgbm.org": 3,
+      "web.archive.org": 2,
+      "www.ands.org.au": 2,
+      "spase-group.org": 1,
+      "ec-jrc.github.io": 1,
+      "cidoc-crm.org": 1,
+      "wiki.esipfed.org": 1
+    },
+    "hosts_error_top": {
+      "service.ncddc.noaa.gov": 4,
+      "gcmd.nasa.gov": 3,
+      "schema.datacite.org": 3,
+      "www.ands.org.au": 1,
+      "www.w3.org": 1,
+      "www.ddialliance.org": 1
+    }
+  },
+  "failed_parse_all_artifacts_fetched": [
+    "msc:c18",
+    "msc:c19",
+    "msc:c23",
+    "msc:c28",
+    "msc:c29",
+    "msc:c3",
+    "msc:c34",
+    "msc:c38"
+  ]
+}

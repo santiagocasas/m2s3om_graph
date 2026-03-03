@@ -92,6 +92,42 @@ SSSOM output directory defaults to:
 
 - `exports/sssom/`
 
+## Freeze pipeline outputs for commit
+
+Use this section to avoid confusion between `pipeline-freeze` and `pipeline-stats`.
+
+If you already ran the pipeline (for example in Streamlit) and want commit-ready outputs,
+run only:
+
+```bash
+make pipeline-freeze
+```
+
+`pipeline-freeze` reads the existing status file and writes:
+
+- `exports/pipeline/latest/` (status JSON copy, stats JSON/CSV, artifact CSV, plots, run metadata, log snapshot)
+- `exports/sssom/GENERATED_FROM_PIPELINE.md`
+- `exports/sssom/generation_manifest.json`
+
+`generation_manifest.json` includes checksums for committed `.sssom.tsv` files plus git/env provenance.
+
+You do **not** need to run `pipeline-stats` after `pipeline-freeze`.
+
+If you need to run the pipeline again before freezing:
+
+```bash
+make pipeline-run-freeze
+```
+
+If you only want refreshed analytics files (no rerun, no SSSOM provenance rewrite), use:
+
+```bash
+make pipeline-stats
+```
+
+About `--force`: it re-ingests crosswalks that are already `ready`.
+Use it only when you intentionally want to regenerate outputs with current pipeline/model behavior.
+
 ## Package layout
 
 - `src/kaigraph/rdamsc`: RDAMSC API sync + artifact ingestion

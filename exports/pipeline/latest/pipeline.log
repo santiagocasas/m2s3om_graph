@@ -1,0 +1,3 @@
+No persisted pipeline runtime log was found at freeze time.
+This snapshot was generated from the pipeline status JSON.
+Expected log path: .local/bootstrap_rdamsc.log
