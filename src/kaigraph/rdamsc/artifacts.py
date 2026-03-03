@@ -1,7 +1,11 @@
 import re
+import shutil
+import subprocess
+import tempfile
 from dataclasses import dataclass
 from html.parser import HTMLParser
 from io import BytesIO
+from pathlib import Path
 from urllib.parse import urlparse
 
 import requests
@@ -41,9 +45,15 @@ _MARKITDOWN = MarkItDown(enable_plugins=False)
 
 
 class ArtifactFetchError(RuntimeError):
-    def __init__(self, message: str, status_code: int | None = None):
+    def __init__(
+        self,
+        message: str,
+        status_code: int | None = None,
+        reason: str = "fetch_error",
+    ):
         super().__init__(message)
         self.status_code = status_code
+        self.reason = reason
 
 
 def _normalize_text(text: str) -> str:
@@ -118,6 +128,60 @@ def _markitdown_convert(content: bytes, *, url: str) -> str:
     return normalized
 
 
+def _soffice_binary() -> str | None:
+    return shutil.which("soffice") or shutil.which("libreoffice")
+
+
+def _convert_legacy_doc_via_soffice(content: bytes, *, url: str) -> str:
+    binary = _soffice_binary()
+    if not binary:
+        raise RuntimeError(
+            "Legacy .doc conversion needs LibreOffice (soffice/libreoffice) installed"
+        )
+
+    with tempfile.TemporaryDirectory(prefix="kaigraph_doc_convert_") as tmp_dir:
+        tmp_path = Path(tmp_dir)
+        source_path = tmp_path / "input.doc"
+        out_dir = tmp_path / "out"
+        out_dir.mkdir(parents=True, exist_ok=True)
+        source_path.write_bytes(content)
+
+        cmd = [
+            binary,
+            "--headless",
+            "--convert-to",
+            "docx",
+            "--outdir",
+            str(out_dir),
+            str(source_path),
+        ]
+        completed = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+        if completed.returncode != 0:
+            raise RuntimeError(
+                "LibreOffice conversion failed: "
+                + (
+                    completed.stderr.strip()
+                    or completed.stdout.strip()
+                    or "unknown error"
+                )
+            )
+
+        converted = out_dir / "input.docx"
+        if not converted.exists():
+            candidates = sorted(out_dir.glob("*.docx"))
+            if not candidates:
+                raise RuntimeError("LibreOffice conversion produced no DOCX output")
+            converted = candidates[0]
+
+        return _markitdown_convert(converted.read_bytes(), url=url + ".docx")
+
+
 def artifact_extension(url: str) -> str:
     suffix = urlparse(url).path.rsplit("/", 1)[-1]
     if "." not in suffix:
@@ -171,15 +235,42 @@ def fetch_artifact_text(
         content_type = (response.headers.get("content-type") or "").lower()
         try:
             text = _markitdown_convert(response.content, url=candidate)
-        except Exception:
+        except Exception as exc:
             is_pdf = "application/pdf" in content_type or _is_pdf_url(candidate)
             is_html = "text/html" in content_type or _is_html_url(candidate)
+            is_doc = artifact_extension(candidate) == ".doc"
+            is_text_like = any(
+                x in content_type
+                for x in (
+                    "text/plain",
+                    "application/xml",
+                    "text/xml",
+                    "application/xslt+xml",
+                )
+            )
+
             if is_pdf:
                 text = _extract_pdf_text(response.content)
             elif is_html:
                 text = _extract_html_text(response.text)
-            else:
+            elif is_doc:
+                try:
+                    text = _convert_legacy_doc_via_soffice(
+                        response.content, url=candidate
+                    )
+                except Exception as doc_exc:
+                    raise ArtifactFetchError(
+                        f"{candidate} -> Legacy .doc conversion failed: {doc_exc}",
+                        reason="conversion_error",
+                    ) from doc_exc
+            elif is_text_like:
                 text = _normalize_text(response.text)
+            else:
+                raise ArtifactFetchError(
+                    f"{candidate} -> MarkItDown conversion failed: {exc}. "
+                    "If this is legacy .doc, install LibreOffice or convert to .docx/.rtf first.",
+                    reason="conversion_error",
+                )
 
         if len(text) > max_chars:
             text = text[:max_chars]
@@ -191,7 +282,7 @@ def fetch_artifact_text(
         )
 
     error_text = "; ".join(errors) if errors else f"Failed to fetch {url}"
-    raise ArtifactFetchError(error_text)
+    raise ArtifactFetchError(error_text, reason="fetch_error")
 
 
 def is_easy_supported_url(url: str) -> bool:

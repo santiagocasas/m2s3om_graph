@@ -174,6 +174,117 @@ def test_ingest_docs_unreachable_is_classified(monkeypatch, tmp_path: Path) -> N
     assert result["reason"] == "artifacts_unreachable"
 
 
+def test_ingest_docs_conversion_error_is_classified_unsupported(
+    monkeypatch, tmp_path: Path
+) -> None:
+    class _DocClient(_FakeClient):
+        def get_mapping_detail(self, mscid: str) -> dict:
+            assert mscid == "msc:c5"
+            return {
+                "mscid": "msc:c5",
+                "locations": [
+                    {
+                        "url": "https://example.org/mapping.doc",
+                        "type": "document",
+                    },
+                    {
+                        "url": "https://example.org/mapping.rtf",
+                        "type": "document",
+                    },
+                ],
+            }
+
+    store = InMemoryCrosswalkStore()
+    _ = sync_rdamsc_catalog(store, client=cast(RDAMSCClient, _DocClient()))
+
+    def _raise_conversion(
+        url: str, timeout: int = 30, max_chars: int = 200_000
+    ) -> ArtifactText:
+        raise ArtifactFetchError("conversion failed", reason="conversion_error")
+
+    monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _raise_conversion)
+
+    result = ingest_rdamsc_crosswalk_docs(
+        store,
+        "rdamsc_c5",
+        tmp_path,
+        client=cast(RDAMSCClient, _DocClient()),
+    )
+    assert result["ok"] is False
+    assert result["reason"] == "artifacts_unsupported"
+    checks = cast(list[dict[str, object]], result["artifact_checks"])
+    assert len(checks) == 2
+    assert all(x.get("status") == "conversion_error" for x in checks)
+
+
+def test_ingest_docs_attempts_non_easy_extensions(monkeypatch, tmp_path: Path) -> None:
+    class _DocClient(_FakeClient):
+        def get_mapping_detail(self, mscid: str) -> dict:
+            assert mscid == "msc:c5"
+            return {
+                "mscid": "msc:c5",
+                "locations": [
+                    {
+                        "url": "https://example.org/mapping.doc",
+                        "type": "document",
+                    },
+                    {
+                        "url": "https://example.org/mapping.rtf",
+                        "type": "document",
+                    },
+                ],
+            }
+
+    store = InMemoryCrosswalkStore()
+    _ = sync_rdamsc_catalog(store, client=cast(RDAMSCClient, _DocClient()))
+    seen: list[str] = []
+
+    def _fake_fetch(
+        url: str, timeout: int = 30, max_chars: int = 200_000
+    ) -> ArtifactText:
+        seen.append(url)
+        return ArtifactText(
+            url=url,
+            content_type="text/markdown",
+            text="fieldA -> fieldB",
+        )
+
+    def _fake_extract(
+        text: str,
+        source_standard: str,
+        target_standard: str,
+        *,
+        max_rules: int = 160,
+    ) -> list[dict[str, object]]:
+        return [
+            {
+                "source_path": "fieldA",
+                "target_path": "fieldB",
+                "mapping_type": "direct",
+                "confidence": 0.7,
+                "notes": "test",
+                "evidence": "fieldA -> fieldB",
+            }
+        ]
+
+    monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
+    monkeypatch.setattr(
+        "kaigraph.rdamsc.ingest.extract_mapping_candidates", _fake_extract
+    )
+
+    result = ingest_rdamsc_crosswalk_docs(
+        store,
+        "rdamsc_c5",
+        tmp_path,
+        client=cast(RDAMSCClient, _DocClient()),
+    )
+    assert result["ok"] is True
+    assert seen == [
+        "https://example.org/mapping.doc",
+        "https://example.org/mapping.rtf",
+    ]
+
+
 def test_datacite_like_ingest_reuses_element_for_same_source_path(
     monkeypatch, tmp_path: Path
 ) -> None:
