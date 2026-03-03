@@ -1,0 +1,35 @@
+[project]
+name = "kaigraph"
+version = "0.1.0"
+description = "Metadata crosswalk mapping toolkit with SurrealDB"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "requests>=2.32.0",
+  "pypdf>=5.4.0",
+  "markitdown[all]>=0.1.0",
+  "pydantic>=2.11.0",
+  "surrealdb>=1.0.4",
+  "pyyaml>=6.0.2",
+  "streamlit>=1.43.0",
+]
+
+[project.scripts]
+kaigraph = "kaigraph.cli.main:main"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.0",
+  "ruff>=0.11.0",
+  "basedpyright>=1.28.0",
+]
+
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kaigraph"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

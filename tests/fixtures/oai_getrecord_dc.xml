@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/">
+  <responseDate>2026-02-20T11:00:00Z</responseDate>
+  <request verb="GetRecord" metadataPrefix="oai_dc" identifier="oai:elib.dlr.de:19460">https://elib.dlr.de/cgi/oai2</request>
+  <GetRecord>
+    <record>
+      <header>
+        <identifier>oai:elib.dlr.de:19460</identifier>
+      </header>
+      <metadata>
+        <oai_dc:dc xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+          <dc:title>Sample DLR dataset title</dc:title>
+          <dc:creator>Doe, Jane</dc:creator>
+          <dc:identifier>10.1234/example-doi</dc:identifier>
+          <dcterms:issued>2024</dcterms:issued>
+          <dcterms:relation>Related report</dcterms:relation>
+        </oai_dc:dc>
+      </metadata>
+    </record>
+  </GetRecord>
+</OAI-PMH>

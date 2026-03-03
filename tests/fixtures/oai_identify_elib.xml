@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2025-12-16T16:33:51Z</responseDate>
+  <request verb="Identify">https://elib.dlr.de/cgi/oai2</request>
+  <Identify>
+    <repositoryName>electronic library</repositoryName>
+    <baseURL>https://elib.dlr.de/cgi/oai2</baseURL>
+    <protocolVersion>2.0</protocolVersion>
+    <adminEmail>elib.support@dlr.de</adminEmail>
+    <earliestDatestamp>2009-04-27T02:41:46Z</earliestDatestamp>
+    <deletedRecord>persistent</deletedRecord>
+    <granularity>YYYY-MM-DDThh:mm:ssZ</granularity>
+  </Identify>
+</OAI-PMH>

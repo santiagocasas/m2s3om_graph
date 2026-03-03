@@ -1,0 +1,180 @@
+{
+  "rdamsc_c22": {
+    "crosswalk_id": "rdamsc_c22",
+    "msc_id": "msc:c22",
+    "name": "netcdf-attribute-convention_TO_iso-19115",
+    "status": "failed_parse",
+    "label": "failed: parse/extract",
+    "updated_at": "2026-03-02T10:48:42.369637+00:00",
+    "result": {
+      "ok": false,
+      "reason": "no_rules_extracted",
+      "crosswalk_id": "rdamsc_c22",
+      "inserted_rules": 0,
+      "artifacts": [
+        "http://wiki.esipfed.org/index.php/Attribute_Convention_for_Data_Discovery_Mappings",
+        "https://raw.githubusercontent.com/Unidata/threddsIso/master/src/main/resources/xsl/nciso/UnidataDD2MI.xsl"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://wiki.esipfed.org/index.php/Attribute_Convention_for_Data_Discovery_Mappings",
+          "extension": "(none)",
+          "supported": true,
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://wiki.esipfed.org/index.php/Attribute_Convention_for_Data_Discovery_Mappings",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 23150
+        },
+        {
+          "url": "https://github.com/Unidata/threddsIso/raw/master/src/main/resources/xsl/nciso/UnidataDD2MI.xsl",
+          "extension": ".xsl",
+          "supported": true,
+          "location_type": "library (XML)",
+          "status": "fetched",
+          "resolved_url": "https://raw.githubusercontent.com/Unidata/threddsIso/master/src/main/resources/xsl/nciso/UnidataDD2MI.xsl",
+          "content_type": "text/plain; charset=utf-8",
+          "text_chars": 134146
+        }
+      ],
+      "strategy": "llm"
+    }
+  },
+  "rdamsc_c36": {
+    "crosswalk_id": "rdamsc_c36",
+    "msc_id": "msc:c36",
+    "name": "EAD to CIDOC CRM",
+    "status": "failed_unsupported",
+    "label": "failed: unsupported docs",
+    "updated_at": "2026-03-02T12:35:32.051054+00:00",
+    "result": {
+      "ok": false,
+      "reason": "artifacts_unsupported",
+      "crosswalk_id": "rdamsc_c36",
+      "skipped": [
+        "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-ead2crm-mapping-060728v0_2-final.doc",
+        "https://www.cidoc-crm.org/sites/default/files/ead.rtf"
+      ],
+      "artifact_checks": [
+        {
+          "url": "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-ead2crm-mapping-060728v0_2-final.doc",
+          "extension": ".doc",
+          "supported": false,
+          "location_type": "document",
+          "status": "unsupported"
+        },
+        {
+          "url": "https://www.cidoc-crm.org/sites/default/files/ead.rtf",
+          "extension": ".rtf",
+          "supported": false,
+          "location_type": "document",
+          "status": "unsupported"
+        }
+      ]
+    }
+  },
+  "rdamsc_c19": {
+    "crosswalk_id": "rdamsc_c19",
+    "msc_id": "msc:c19",
+    "name": "isa-tab_TO_mage-tab",
+    "status": "failed_parse",
+    "label": "failed: parse/extract",
+    "result": {
+      "ok": false,
+      "reason": "no_rules_extracted",
+      "crosswalk_id": "rdamsc_c19",
+      "inserted_rules": 0,
+      "artifacts": [
+        "https://github.com/ISA-tools/MAGEtoISAconverter/"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "https://github.com/ISA-tools/MAGEtoISAconverter/",
+          "extension": "(none)",
+          "supported": true,
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://github.com/ISA-tools/MAGEtoISAconverter/",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 15998
+        }
+      ],
+      "strategy": "llm"
+    }
+  },
+  "rdamsc_c1": {
+    "crosswalk_id": "rdamsc_c1",
+    "msc_id": "msc:c1",
+    "name": "One",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-02T14:28:36.339149+00:00",
+    "result": {
+      "ok": true,
+      "step": "skipped_ready"
+    }
+  },
+  "rdamsc_c2": {
+    "crosswalk_id": "rdamsc_c2",
+    "msc_id": "msc:c2",
+    "name": "Two",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-02T14:28:36.337375+00:00",
+    "result": {
+      "ok": true,
+      "crosswalk_id": "rdamsc_c2",
+      "total_rules": 3
+    }
+  },
+  "rdamsc_c35": {
+    "crosswalk_id": "rdamsc_c35",
+    "msc_id": "msc:c35",
+    "name": "Dublin Core to CIDOC CRM",
+    "status": "failed_parse",
+    "label": "failed: parse/extract",
+    "updated_at": "2026-03-02T13:59:34.428559+00:00",
+    "result": {
+      "ok": false,
+      "reason": "no_rules_extracted",
+      "crosswalk_id": "rdamsc_c35",
+      "inserted_rules": 0,
+      "artifacts": [
+        "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.pdf"
+      ],
+      "skipped": [
+        "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-DC2CRMmapping-060728v0_2-final.doc",
+        "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.rtf"
+      ],
+      "artifact_checks": [
+        {
+          "url": "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-DC2CRMmapping-060728v0_2-final.doc",
+          "extension": ".doc",
+          "supported": false,
+          "location_type": "document",
+          "status": "unsupported"
+        },
+        {
+          "url": "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.pdf",
+          "extension": ".pdf",
+          "supported": true,
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.pdf",
+          "content_type": "application/pdf",
+          "text_chars": 54340
+        },
+        {
+          "url": "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.rtf",
+          "extension": ".rtf",
+          "supported": false,
+          "location_type": "document",
+          "status": "unsupported"
+        }
+      ],
+      "strategy": "llm"
+    }
+  }
+}

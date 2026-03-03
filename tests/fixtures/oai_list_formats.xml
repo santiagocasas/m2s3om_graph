@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/">
+  <responseDate>2026-02-20T11:00:00Z</responseDate>
+  <request verb="ListMetadataFormats">https://elib.dlr.de/cgi/oai2</request>
+  <ListMetadataFormats>
+    <metadataFormat>
+      <metadataPrefix>oai_dc</metadataPrefix>
+      <schema>http://www.openarchives.org/OAI/2.0/oai_dc.xsd</schema>
+      <metadataNamespace>http://www.openarchives.org/OAI/2.0/oai_dc/</metadataNamespace>
+    </metadataFormat>
+    <metadataFormat>
+      <metadataPrefix>datacite</metadataPrefix>
+      <schema>http://schema.datacite.org/meta/kernel-4.4/metadata.xsd</schema>
+      <metadataNamespace>http://datacite.org/schema/kernel-4</metadataNamespace>
+    </metadataFormat>
+  </ListMetadataFormats>
+</OAI-PMH>
