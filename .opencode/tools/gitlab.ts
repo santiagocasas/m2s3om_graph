@@ -21,6 +21,38 @@ async function runGlab(args: string[]) {
   return stdout.trim()
 }
 
+function repoToProjectPath(repo: string): string {
+  let value = repo.trim()
+  value = value.replace(/\.git$/, "")
+
+  // git@host:group/project
+  if (value.startsWith("git@") && value.includes(":")) {
+    value = value.split(":", 2)[1] || value
+  }
+
+  // https://host/group/project
+  value = value.replace(/^https?:\/\//, "")
+
+  // host/group/project -> group/project
+  const parts = value.split("/").filter(Boolean)
+  if (parts.length >= 3 && parts[0].includes(".")) {
+    value = parts.slice(1).join("/")
+  } else {
+    value = parts.join("/")
+  }
+
+  return value.replace(/^\//, "")
+}
+
+function toWikiSlug(title: string): string {
+  return title
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+}
+
 export const createissue = tool({
   description: "Create a GitLab issue using glab CLI",
   args: {
@@ -161,5 +193,120 @@ export const batchcreate = tool({
     }
 
     return JSON.stringify(results, null, 2)
+  },
+})
+
+export const createmr = tool({
+  description: "Create a GitLab merge request using glab CLI",
+  args: {
+    repo: tool.schema
+      .string()
+      .describe(
+        "GitLab repo in format host/group/project, e.g. codebase.helmholtz.cloud/santiago.casascastro/MetadataMappingSssOM",
+      ),
+    source_branch: tool.schema.string().describe("Source branch name"),
+    target_branch: tool.schema
+      .string()
+      .default("main")
+      .describe("Target branch name"),
+    title: tool.schema.string().describe("Merge request title"),
+    description: tool.schema
+      .string()
+      .optional()
+      .describe("Merge request description"),
+    draft: tool.schema
+      .boolean()
+      .default(false)
+      .describe("Create as draft merge request"),
+    remove_source_branch: tool.schema
+      .boolean()
+      .default(false)
+      .describe("Request source branch removal after merge"),
+  },
+  async execute(args) {
+    const cmd = [
+      "mr",
+      "create",
+      "-R",
+      args.repo,
+      "--source-branch",
+      args.source_branch,
+      "--target-branch",
+      args.target_branch,
+      "--title",
+      args.title,
+    ]
+
+    if (args.description && args.description.trim()) {
+      cmd.push("--description", args.description)
+    }
+    if (args.draft) {
+      cmd.push("--draft")
+    }
+    if (args.remove_source_branch) {
+      cmd.push("--remove-source-branch")
+    }
+
+    const output = await runGlab(cmd)
+    return output || "Merge request created."
+  },
+})
+
+export const writewiki = tool({
+  description: "Create or update a GitLab wiki page using glab API",
+  args: {
+    repo: tool.schema
+      .string()
+      .describe(
+        "GitLab repo in format host/group/project, e.g. codebase.helmholtz.cloud/santiago.casascastro/MetadataMappingSssOM",
+      ),
+    title: tool.schema.string().describe("Wiki page title"),
+    content: tool.schema.string().describe("Wiki page markdown content"),
+    slug: tool.schema
+      .string()
+      .optional()
+      .describe("Optional wiki slug; defaults to title-derived slug"),
+  },
+  async execute(args) {
+    const projectPath = repoToProjectPath(args.repo)
+    const project = encodeURIComponent(projectPath)
+    const slug = args.slug?.trim() ? args.slug.trim() : toWikiSlug(args.title)
+    const encodedSlug = encodeURIComponent(slug)
+
+    const createCmd = [
+      "api",
+      "-X",
+      "POST",
+      `projects/${project}/wikis`,
+      "-f",
+      `title=${args.title}`,
+      "--raw-field",
+      `content=${args.content}`,
+    ]
+
+    try {
+      const output = await runGlab(createCmd)
+      return output || "Wiki page created."
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      const exists =
+        message.includes("already been taken") ||
+        message.includes("already exists") ||
+        message.includes("has already been taken")
+      if (!exists) {
+        throw err
+      }
+    }
+
+    const updateCmd = [
+      "api",
+      "-X",
+      "PUT",
+      `projects/${project}/wikis/${encodedSlug}`,
+      "--raw-field",
+      `content=${args.content}`,
+    ]
+    const updated = await runGlab(updateCmd)
+    return updated || "Wiki page updated."
   },
 })
