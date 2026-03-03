@@ -173,6 +173,10 @@ def render() -> None:
         "Website: [rdamsc.bath.ac.uk](https://rdamsc.bath.ac.uk/) | "
         "API docs: [SwaggerHub](https://app.swaggerhub.com/apis-docs/alex-ball/rda-metadata-standards-catalog/2.1.0)"
     )
+    st.info(
+        "Start here: 1) Select a mapping, 2) Generate SSSOM for selected, "
+        "3) Inspect rules and evidence, 4) Export TSV/JSON/CSV."
+    )
 
     status_map = load_pipeline_status()
     crosswalks = _rdamsc_crosswalks()
@@ -205,19 +209,19 @@ def render() -> None:
         )
     )
 
-    if st.button("Refresh RDAMSC catalog (optional)", key="crosswalk_sync_optional"):
-        try:
-            count = sync_rdamsc_catalog(get_store())
-            st.success(f"Catalog refreshed. Synced {count} mappings.")
-            crosswalks = _rdamsc_crosswalks()
-        except Exception as exc:
-            st.error(f"Catalog sync failed: {exc}")
-
     with st.expander("Maintenance (optional)", expanded=False):
         st.caption(
             "Artifacts are converted to markdown via MarkItDown first. "
             "Use these actions only if you want to regenerate artifacts and rules."
         )
+        if st.button("Refresh RDAMSC catalog", key="crosswalk_sync_optional"):
+            try:
+                count = sync_rdamsc_catalog(get_store())
+                st.success(f"Catalog refreshed. Synced {count} mappings.")
+                crosswalks = _rdamsc_crosswalks()
+            except Exception as exc:
+                st.error(f"Catalog sync failed: {exc}")
+
         c1, c2 = st.columns(2)
         if c1.button(
             "Generate missing SSSOM for all", key="crosswalk_ingest_missing_all"
@@ -256,8 +260,11 @@ def render() -> None:
         key="crosswalk_browser_select",
     )
 
-    c1, c2 = st.columns(2)
-    if c1.button("Generate SSSOM for selected", key="crosswalk_generate_selected"):
+    if st.button(
+        "Generate SSSOM for selected",
+        key="crosswalk_generate_selected",
+        type="primary",
+    ):
         try:
             result = _ingest_selected(selected, status_map, force=False)
             if result.get("reason") == "already_ready":
@@ -277,19 +284,21 @@ def render() -> None:
             status_map = load_pipeline_status()
         except Exception as exc:
             st.error(f"Generation failed: {exc}")
-    if c2.button("Force re-ingest selected (advanced)", key="crosswalk_force_selected"):
-        try:
-            result = _ingest_selected(selected, status_map, force=True)
-            if bool(result.get("ok")):
-                st.success(
-                    f"Re-ingested mapping; total rules now {result.get('total_rules', 0)}"
-                )
-            else:
-                st.warning(f"Re-ingestion failed: {result.get('reason')}")
-                _display_artifact_checks(result)
-            status_map = load_pipeline_status()
-        except Exception as exc:
-            st.error(f"Re-ingestion failed: {exc}")
+
+    with st.expander("Selected mapping advanced actions", expanded=False):
+        if st.button("Force re-ingest selected", key="crosswalk_force_selected"):
+            try:
+                result = _ingest_selected(selected, status_map, force=True)
+                if bool(result.get("ok")):
+                    st.success(
+                        f"Re-ingested mapping; total rules now {result.get('total_rules', 0)}"
+                    )
+                else:
+                    st.warning(f"Re-ingestion failed: {result.get('reason')}")
+                    _display_artifact_checks(result)
+                status_map = load_pipeline_status()
+            except Exception as exc:
+                st.error(f"Re-ingestion failed: {exc}")
 
     bundle = get_store().get_crosswalk_bundle(selected.id)
     if bundle is None:
