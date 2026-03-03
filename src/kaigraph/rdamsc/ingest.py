@@ -25,7 +25,6 @@ from .artifacts import (
     ArtifactText,
     artifact_extension,
     fetch_artifact_text,
-    is_easy_supported_url,
 )
 from .llm_extract import extract_mapping_candidates
 from .llm_extract import blablador_enabled, configured_llm_model
@@ -588,20 +587,11 @@ def ingest_rdamsc_crosswalk_docs(
         url = str(loc.get("url", "")).strip()
         if not url:
             continue
-
-        supported = is_easy_supported_url(url)
         check: dict[str, object] = {
             "url": url,
             "extension": artifact_extension(url),
-            "supported": supported,
             "location_type": str(loc.get("type", "")),
         }
-        if not supported:
-            check["status"] = "unsupported"
-            artifact_checks.append(check)
-            skipped.append(url)
-            continue
-
         emit(
             f"[{crosswalk.msc_id}] Fetching artifact: {url} (ext={check['extension']})"
         )
@@ -616,7 +606,7 @@ def ingest_rdamsc_crosswalk_docs(
                 f"[{crosswalk.msc_id}] Fetched OK: {artifact.url} ({len(artifact.text)} chars)"
             )
         except ArtifactFetchError as exc:
-            check["status"] = "fetch_error"
+            check["status"] = exc.reason
             check["error"] = str(exc)
             check["http_status"] = exc.status_code
             emit(f"[{crosswalk.msc_id}] Fetch failed: {url} ({exc})")
@@ -629,12 +619,16 @@ def ingest_rdamsc_crosswalk_docs(
         artifact_checks.append(check)
 
     if not artifacts:
-        had_supported = any(bool(x.get("supported")) for x in artifact_checks)
         had_fetch_errors = any(
             x.get("status") == "fetch_error" for x in artifact_checks
         )
+        had_conversion_errors = any(
+            x.get("status") == "conversion_error" for x in artifact_checks
+        )
         reason = "artifacts_unsupported"
-        if had_supported and had_fetch_errors:
+        if had_fetch_errors and not had_conversion_errors:
+            reason = "artifacts_unreachable"
+        elif had_fetch_errors and had_conversion_errors:
             reason = "artifacts_unreachable"
         return {
             "ok": False,

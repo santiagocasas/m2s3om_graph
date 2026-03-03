@@ -76,8 +76,40 @@ def _display_artifact_checks(result: dict[str, object]) -> None:
     checks = result.get("artifact_checks")
     if not isinstance(checks, list) or not checks:
         return
+
+    status_labels = {
+        "fetched": "Fetched",
+        "fetch_error": "Unreachable",
+        "conversion_error": "Conversion failed",
+        "unsupported": "Unsupported",
+    }
+
+    rows: list[dict[str, object]] = []
+    for item in checks:
+        if not isinstance(item, dict):
+            continue
+        raw_status = str(item.get("status", ""))
+        error = item.get("error")
+        details = ""
+        if error is not None:
+            details = str(error)
+            if len(details) > 200:
+                details = details[:200] + "..."
+        rows.append(
+            {
+                "URL": str(item.get("url", "")),
+                "Extension": str(item.get("extension", "")),
+                "Type": str(item.get("location_type", "")),
+                "Status": status_labels.get(raw_status, raw_status or "Unknown"),
+                "Details": details,
+            }
+        )
+
+    if not rows:
+        return
+
     st.caption("Artifact checks")
-    st.dataframe(checks, use_container_width=True, hide_index=True)
+    st.dataframe(rows, use_container_width=True, hide_index=True)
 
 
 def _ingest_selected(
@@ -183,8 +215,8 @@ def render() -> None:
 
     with st.expander("Maintenance (optional)", expanded=False):
         st.caption(
-            "Supported ingestion formats: PDF, HTML, TXT, XML, XSL, XSLT. "
-            "Use these actions only if you want to regenerate artifacts."
+            "Artifacts are converted to markdown via MarkItDown first. "
+            "Use these actions only if you want to regenerate artifacts and rules."
         )
         c1, c2 = st.columns(2)
         if c1.button(
@@ -287,7 +319,10 @@ def render() -> None:
     st.write(f"DOI: `{bundle.crosswalk.doi or 'n/a'}`")
     st.write(f"Primary document URI: `{bundle.crosswalk.doc_uri or 'n/a'}`")
     st.write(f"Pipeline status: `{status_label(_status_code(selected, status_map))}`")
-    st.write(f"SSSOM file: `{sssom_path}`")
+    if sssom_path.exists():
+        st.write(f"SSSOM file: `{sssom_path}`")
+    else:
+        st.write(f"SSSOM file: not generated yet (`{sssom_path}`)")
     _stats(len(rules), missing_rules, conditional, aggregation)
     st.caption(f"Estimated loss rate: {loss_rate:.1f}%")
 
