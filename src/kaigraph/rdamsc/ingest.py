@@ -387,11 +387,10 @@ def _ingest_with_llm(
     target_standard: StandardRecord,
     merged_markdown: str,
     evidence_doc_uri: str,
+    *,
+    seen_pairs: set[tuple[str, str]] | None = None,
 ) -> int:
-    if not merged_markdown:
-        return 0
-
-    extracted = extract_mapping_candidates(
+    extracted = _extract_llm_candidates(
         merged_markdown,
         source_standard.name,
         target_standard.name,
@@ -404,7 +403,26 @@ def _ingest_with_llm(
         evidence_doc_uri=evidence_doc_uri,
         evidence_source="LLM",
         default_evidence="AI-assisted extraction from mapping documentation",
+        seen_pairs=seen_pairs,
     )
+
+
+def _extract_llm_candidates(
+    merged_markdown: str,
+    source_standard_name: str,
+    target_standard_name: str,
+) -> list[dict[str, object]]:
+    if not merged_markdown:
+        return []
+    return extract_mapping_candidates(
+        merged_markdown,
+        source_standard_name,
+        target_standard_name,
+    )
+
+
+def _candidate_pair_key(source_path: str, target_path: str) -> tuple[str, str]:
+    return (source_path.strip().lower(), target_path.strip().lower())
 
 
 def _ingest_candidate_records(
@@ -416,12 +434,16 @@ def _ingest_candidate_records(
     evidence_doc_uri: str,
     evidence_source: str,
     default_evidence: str,
+    seen_pairs: set[tuple[str, str]] | None = None,
 ) -> int:
     count = 0
     for index, item in enumerate(candidates, start=1):
         source_path = str(item.get("source_path", "")).strip()
         target_path = str(item.get("target_path", "")).strip()
         if not source_path:
+            continue
+        pair_key = _candidate_pair_key(source_path, target_path)
+        if seen_pairs is not None and pair_key in seen_pairs:
             continue
 
         source_element_id = stable_id("element", source_standard.id, source_path)
@@ -486,6 +508,8 @@ def _ingest_candidate_records(
                 snippet=str(evidence_snippet),
             )
         )
+        if seen_pairs is not None:
+            seen_pairs.add(pair_key)
         count += 1
 
     return count
@@ -690,6 +714,7 @@ def ingest_rdamsc_crosswalk_docs(
     evidence_doc_uri = artifacts[0].url if artifacts else (crosswalk.doc_uri or "")
 
     inserted_rules = 0
+    llm_augmented_rules = 0
     deterministic_diagnostics: dict[str, object] | None = None
     artifact_urls = [x.url.lower() for x in artifacts]
     first_url = artifact_urls[0]
@@ -722,6 +747,7 @@ def ingest_rdamsc_crosswalk_docs(
                     f"[{crosswalk.msc_id}] Deterministic generic extraction produced "
                     f"{len(deterministic_candidates)} candidates"
                 )
+                seen_pairs: set[tuple[str, str]] = set()
                 inserted_rules = _ingest_candidate_records(
                     store,
                     crosswalk,
@@ -730,7 +756,24 @@ def ingest_rdamsc_crosswalk_docs(
                     evidence_doc_uri=evidence_doc_uri,
                     evidence_source="DETERMINISTIC",
                     default_evidence="Deterministic extraction from mapping documentation",
+                    seen_pairs=seen_pairs,
                 )
+                llm_augmented_rules = _ingest_with_llm(
+                    store,
+                    crosswalk,
+                    source_standard,
+                    target_standard,
+                    merged_markdown,
+                    evidence_doc_uri,
+                    seen_pairs=seen_pairs,
+                )
+                inserted_rules += llm_augmented_rules
+                if llm_augmented_rules > 0:
+                    strategy = "deterministic_generic_augmented"
+                    emit(
+                        f"[{crosswalk.msc_id}] LLM augmentation added "
+                        f"{llm_augmented_rules} additional rules"
+                    )
             else:
                 strategy = "llm"
                 backend = (
@@ -762,6 +805,7 @@ def ingest_rdamsc_crosswalk_docs(
                 f"[{crosswalk.msc_id}] Running deterministic generic extraction "
                 f"on merged artifact text ({len(deterministic_candidates)} candidates)"
             )
+            seen_pairs: set[tuple[str, str]] = set()
             inserted_rules = _ingest_candidate_records(
                 store,
                 crosswalk,
@@ -770,7 +814,24 @@ def ingest_rdamsc_crosswalk_docs(
                 evidence_doc_uri=evidence_doc_uri,
                 evidence_source="DETERMINISTIC",
                 default_evidence="Deterministic extraction from mapping documentation",
+                seen_pairs=seen_pairs,
             )
+            llm_augmented_rules = _ingest_with_llm(
+                store,
+                crosswalk,
+                source_standard,
+                target_standard,
+                merged_markdown,
+                evidence_doc_uri,
+                seen_pairs=seen_pairs,
+            )
+            inserted_rules += llm_augmented_rules
+            if llm_augmented_rules > 0:
+                strategy = "deterministic_generic_augmented"
+                emit(
+                    f"[{crosswalk.msc_id}] LLM augmentation added "
+                    f"{llm_augmented_rules} additional rules"
+                )
         else:
             backend = (
                 f"Blablador model={configured_llm_model()}"
@@ -812,6 +873,7 @@ def ingest_rdamsc_crosswalk_docs(
             "skipped": skipped,
             "artifact_checks": artifact_checks,
             "strategy": strategy,
+            "llm_augmented_rules": llm_augmented_rules,
             "deterministic_diagnostics": deterministic_diagnostics,
         }
 
@@ -832,6 +894,7 @@ def ingest_rdamsc_crosswalk_docs(
         "skipped": skipped,
         "artifact_checks": artifact_checks,
         "strategy": strategy,
+        "llm_augmented_rules": llm_augmented_rules,
         "deterministic_diagnostics": deterministic_diagnostics,
         "sssom_path": str(out_path),
     }
