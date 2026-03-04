@@ -16,6 +16,7 @@ from kaigraph.db import (
     StandardRecord,
     stable_id,
 )
+from kaigraph.ingest.deterministic import extract_deterministic_candidates
 from kaigraph.ingest.pdf_crosswalk_parser import parse_mapping_page_texts
 from kaigraph.sssom import write_bundle_sssom
 
@@ -31,6 +32,7 @@ from .llm_extract import blablador_enabled, configured_llm_model
 
 _DC_HEADING_RE = re.compile(r"^\s*([A-Za-z][A-Za-z\s]+?)\s+--\s+")
 _MARC_FIELD_RE = re.compile(r"\b(\d{3})\s*([0-9#])([0-9#])?\$([0-9a-z])")
+DETERMINISTIC_GENERIC_MIN_RULES = 8
 
 
 def _slug_term(text: str) -> str:
@@ -394,8 +396,29 @@ def _ingest_with_llm(
         source_standard.name,
         target_standard.name,
     )
+    return _ingest_candidate_records(
+        store,
+        crosswalk,
+        source_standard,
+        extracted,
+        evidence_doc_uri=evidence_doc_uri,
+        evidence_source="LLM",
+        default_evidence="AI-assisted extraction from mapping documentation",
+    )
+
+
+def _ingest_candidate_records(
+    store: CrosswalkStore,
+    crosswalk: CrosswalkRecord,
+    source_standard: StandardRecord,
+    candidates: list[dict[str, object]],
+    *,
+    evidence_doc_uri: str,
+    evidence_source: str,
+    default_evidence: str,
+) -> int:
     count = 0
-    for index, item in enumerate(extracted, start=1):
+    for index, item in enumerate(candidates, start=1):
         source_path = str(item.get("source_path", "")).strip()
         target_path = str(item.get("target_path", "")).strip()
         if not source_path:
@@ -423,7 +446,7 @@ def _ingest_with_llm(
             notes = str(notes)
         evidence_snippet = item.get("evidence")
         if evidence_snippet is None:
-            evidence_snippet = "AI-assisted extraction from mapping documentation"
+            evidence_snippet = default_evidence
 
         transform: dict[str, object]
         if mapping_type == MappingType.MISSING:
@@ -456,7 +479,7 @@ def _ingest_with_llm(
             EvidenceRecord(
                 id=stable_id("evidence", rule.id, "1", str(index)),
                 mapping_rule_id=rule.id,
-                source="LLM",
+                source=evidence_source,
                 doc_uri=evidence_doc_uri,
                 page_number=1,
                 row_id=str(index),
@@ -466,6 +489,18 @@ def _ingest_with_llm(
         count += 1
 
     return count
+
+
+def _deterministic_generic_candidates(
+    merged_markdown: str,
+    *,
+    max_rules: int = 160,
+) -> tuple[list[dict[str, object]], dict[str, object]]:
+    candidates, diagnostics = extract_deterministic_candidates(
+        merged_markdown,
+        max_rules=max_rules,
+    )
+    return [x.to_record() for x in candidates], diagnostics.to_record()
 
 
 def _ingest_loc_dccross_html(
@@ -655,6 +690,7 @@ def ingest_rdamsc_crosswalk_docs(
     evidence_doc_uri = artifacts[0].url if artifacts else (crosswalk.doc_uri or "")
 
     inserted_rules = 0
+    deterministic_diagnostics: dict[str, object] | None = None
     artifact_urls = [x.url.lower() for x in artifacts]
     first_url = artifact_urls[0]
     strategy = "llm"
@@ -677,15 +713,73 @@ def ingest_rdamsc_crosswalk_docs(
             artifacts,
         )
         if inserted_rules == 0:
-            strategy = "llm"
+            deterministic_candidates, deterministic_diagnostics = (
+                _deterministic_generic_candidates(merged_markdown)
+            )
+            if len(deterministic_candidates) >= DETERMINISTIC_GENERIC_MIN_RULES:
+                strategy = "deterministic_generic"
+                emit(
+                    f"[{crosswalk.msc_id}] Deterministic generic extraction produced "
+                    f"{len(deterministic_candidates)} candidates"
+                )
+                inserted_rules = _ingest_candidate_records(
+                    store,
+                    crosswalk,
+                    source_standard,
+                    deterministic_candidates,
+                    evidence_doc_uri=evidence_doc_uri,
+                    evidence_source="DETERMINISTIC",
+                    default_evidence="Deterministic extraction from mapping documentation",
+                )
+            else:
+                strategy = "llm"
+                backend = (
+                    f"Blablador model={configured_llm_model()}"
+                    if blablador_enabled()
+                    else "heuristic fallback (BLABLADOR_API_KEY not set)"
+                )
+                emit(
+                    f"[{crosswalk.msc_id}] Deterministic parsers found "
+                    f"{inserted_rules} rules and generic parser produced "
+                    f"{len(deterministic_candidates)} candidates; "
+                    f"falling back to LLM extraction ({backend})"
+                )
+                inserted_rules = _ingest_with_llm(
+                    store,
+                    crosswalk,
+                    source_standard,
+                    target_standard,
+                    merged_markdown,
+                    evidence_doc_uri,
+                )
+    else:
+        deterministic_candidates, deterministic_diagnostics = (
+            _deterministic_generic_candidates(merged_markdown)
+        )
+        if len(deterministic_candidates) >= DETERMINISTIC_GENERIC_MIN_RULES:
+            strategy = "deterministic_generic"
+            emit(
+                f"[{crosswalk.msc_id}] Running deterministic generic extraction "
+                f"on merged artifact text ({len(deterministic_candidates)} candidates)"
+            )
+            inserted_rules = _ingest_candidate_records(
+                store,
+                crosswalk,
+                source_standard,
+                deterministic_candidates,
+                evidence_doc_uri=evidence_doc_uri,
+                evidence_source="DETERMINISTIC",
+                default_evidence="Deterministic extraction from mapping documentation",
+            )
+        else:
             backend = (
                 f"Blablador model={configured_llm_model()}"
                 if blablador_enabled()
                 else "heuristic fallback (BLABLADOR_API_KEY not set)"
             )
             emit(
-                f"[{crosswalk.msc_id}] Deterministic parser found 0 rules; "
-                f"falling back to LLM extraction ({backend})"
+                f"[{crosswalk.msc_id}] Running LLM extraction on merged artifact text "
+                f"({backend}; deterministic generic candidates={len(deterministic_candidates)})"
             )
             inserted_rules = _ingest_with_llm(
                 store,
@@ -695,23 +789,6 @@ def ingest_rdamsc_crosswalk_docs(
                 merged_markdown,
                 evidence_doc_uri,
             )
-    else:
-        backend = (
-            f"Blablador model={configured_llm_model()}"
-            if blablador_enabled()
-            else "heuristic fallback (BLABLADOR_API_KEY not set)"
-        )
-        emit(
-            f"[{crosswalk.msc_id}] Running LLM extraction on merged artifact text ({backend})"
-        )
-        inserted_rules = _ingest_with_llm(
-            store,
-            crosswalk,
-            source_standard,
-            target_standard,
-            merged_markdown,
-            evidence_doc_uri,
-        )
 
     bundle = store.get_crosswalk_bundle(crosswalk.id)
     if bundle is None:
@@ -735,6 +812,7 @@ def ingest_rdamsc_crosswalk_docs(
             "skipped": skipped,
             "artifact_checks": artifact_checks,
             "strategy": strategy,
+            "deterministic_diagnostics": deterministic_diagnostics,
         }
 
     emit(
@@ -754,6 +832,7 @@ def ingest_rdamsc_crosswalk_docs(
         "skipped": skipped,
         "artifact_checks": artifact_checks,
         "strategy": strategy,
+        "deterministic_diagnostics": deterministic_diagnostics,
         "sssom_path": str(out_path),
     }
 

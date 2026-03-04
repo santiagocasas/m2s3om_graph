@@ -285,6 +285,62 @@ def test_ingest_docs_attempts_non_easy_extensions(monkeypatch, tmp_path: Path) -
     ]
 
 
+def test_ingest_docs_uses_deterministic_generic_when_strong_signal(
+    monkeypatch, tmp_path: Path
+) -> None:
+    store = InMemoryCrosswalkStore()
+    _ = sync_rdamsc_catalog(store, client=cast(RDAMSCClient, _FakeClient()))
+
+    lines = [
+        "ead = E31 Document",
+        "eadheader = E31 Document",
+        "frontmatter = E31 Document",
+        "archdesc = E22 Man-Made Object",
+        "titleproper = E35 Title",
+        "date = E52 Time-Span",
+        "unitdate = E12 Production",
+        "author@type = E55 Type",
+        "publisher = E39 Actor",
+    ]
+
+    def _fake_fetch(
+        url: str, timeout: int = 30, max_chars: int = 200_000
+    ) -> ArtifactText:
+        return ArtifactText(
+            url=url,
+            content_type="application/rtf",
+            text="\n".join(lines),
+        )
+
+    def _should_not_run_llm(
+        text: str,
+        source_standard: str,
+        target_standard: str,
+        *,
+        max_rules: int = 160,
+    ) -> list[dict[str, object]]:
+        raise AssertionError(
+            "LLM fallback should not run for strong deterministic signal"
+        )
+
+    monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
+    monkeypatch.setattr(
+        "kaigraph.rdamsc.ingest.extract_mapping_candidates", _should_not_run_llm
+    )
+
+    result = ingest_rdamsc_crosswalk_docs(
+        store,
+        "rdamsc_c5",
+        tmp_path,
+        client=cast(RDAMSCClient, _FakeClient()),
+    )
+    assert result["ok"] is True
+    assert result["strategy"] == "deterministic_generic"
+    assert cast(int, result["inserted_rules"]) >= 8
+    diagnostics = cast(dict[str, object], result["deterministic_diagnostics"])
+    assert cast(int, diagnostics["candidates_after_dedupe"]) >= 8
+
+
 def test_datacite_like_ingest_reuses_element_for_same_source_path(
     monkeypatch, tmp_path: Path
 ) -> None:
