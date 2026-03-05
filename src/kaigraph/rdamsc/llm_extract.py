@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import time
 
 import requests
 
@@ -13,6 +14,31 @@ def configured_llm_model() -> str:
 
 def blablador_enabled() -> bool:
     return bool(os.getenv("BLABLADOR_API_KEY"))
+
+
+def _int_env(name: str, default: int, *, minimum: int, maximum: int) -> int:
+    raw = os.getenv(name, "").strip()
+    if not raw:
+        return default
+    try:
+        value = int(raw)
+    except ValueError:
+        return default
+    return max(minimum, min(maximum, value))
+
+
+def configured_llm_timeout_s() -> int:
+    return _int_env("KAIGRAPH_LLM_TIMEOUT_S", 60, minimum=5, maximum=300)
+
+
+def configured_llm_retries() -> int:
+    return _int_env("KAIGRAPH_LLM_RETRIES", 2, minimum=0, maximum=6)
+
+
+def configured_llm_max_input_chars() -> int:
+    return _int_env(
+        "KAIGRAPH_LLM_MAX_INPUT_CHARS", 120_000, minimum=2_000, maximum=300_000
+    )
 
 
 def _clean_json_blob(text: str) -> str:
@@ -60,27 +86,78 @@ def _heuristic_extract(text: str, max_rules: int) -> list[dict[str, object]]:
     return out
 
 
-def extract_mapping_candidates(
+def _request_with_retries(
+    url: str,
+    *,
+    headers: dict[str, str],
+    payload: dict[str, object],
+    timeout_s: int,
+    retries: int,
+) -> tuple[requests.Response, int]:
+    errors: list[str] = []
+    for attempt in range(retries + 1):
+        try:
+            response = requests.post(
+                url,
+                headers=headers,
+                json=payload,
+                timeout=timeout_s,
+            )
+            response.raise_for_status()
+            return response, attempt + 1
+        except requests.RequestException as exc:
+            errors.append(str(exc))
+            if attempt >= retries:
+                break
+            time.sleep(0.35 * (attempt + 1))
+    message = errors[-1] if errors else "unknown network error"
+    raise RuntimeError(message)
+
+
+def extract_mapping_candidates_with_meta(
     text: str,
     source_standard: str,
     target_standard: str,
     *,
     max_rules: int = 160,
-) -> list[dict[str, object]]:
+) -> tuple[list[dict[str, object]], dict[str, object]]:
+    diagnostics: dict[str, object] = {
+        "backend": "heuristic",
+        "prompt_chars": 0,
+        "llm_error": None,
+        "candidates_before_validation": 0,
+        "candidates_after_validation": 0,
+        "timeout_s": configured_llm_timeout_s(),
+        "retries": configured_llm_retries(),
+        "max_input_chars": configured_llm_max_input_chars(),
+        "attempts_json": 0,
+        "attempts_relaxed": 0,
+    }
+
     api_key = os.getenv("BLABLADOR_API_KEY")
+    if not api_key:
+        diagnostics["backend"] = "heuristic"
+        diagnostics["llm_error"] = "missing_api_key"
+        heuristic = _heuristic_extract(text, max_rules)
+        diagnostics["candidates_after_validation"] = len(heuristic)
+        return heuristic, diagnostics
+
     base_url = os.getenv(
         "BLABLADOR_BASE_URL",
         "https://api.helmholtz-blablador.fz-juelich.de/v1",
     ).rstrip("/")
 
-    if not api_key:
-        return _heuristic_extract(text, max_rules)
+    max_input_chars = int(diagnostics["max_input_chars"])
+    excerpt = text[:max_input_chars]
+    diagnostics["prompt_chars"] = len(excerpt)
+    timeout_s = int(diagnostics["timeout_s"])
+    retries = int(diagnostics["retries"])
 
     prompt_payload = {
         "source_standard": source_standard,
         "target_standard": target_standard,
         "max_rules": max_rules,
-        "documentation_excerpt": text[:120_000],
+        "documentation_excerpt": excerpt,
         "output_schema": {
             "type": "array",
             "items": {
@@ -113,50 +190,54 @@ def extract_mapping_candidates(
         ],
     }
 
+    out: list[dict[str, object]] = []
     try:
-        response = requests.post(
+        response, attempts = _request_with_retries(
             f"{base_url}/chat/completions",
             headers={"Authorization": f"Bearer {api_key}"},
-            json=payload,
-            timeout=60,
+            payload=payload,
+            timeout_s=timeout_s,
+            retries=retries,
         )
-        response.raise_for_status()
+        diagnostics["attempts_json"] = attempts
         raw = response.json()["choices"][0]["message"]["content"]
         parsed = json.loads(_clean_json_blob(raw))
-        if not isinstance(parsed, list):
-            return _heuristic_extract(text, max_rules)
-    except Exception:
-        return _heuristic_extract(text, max_rules)
-
-    out: list[dict[str, object]] = []
-    for item in parsed:
-        if not isinstance(item, dict):
-            continue
-        source = str(item.get("source_path", "")).strip()
-        target = str(item.get("target_path", "")).strip()
-        if not source:
-            continue
-        mapping_type = _validate_mapping_type(str(item.get("mapping_type", "direct")))
-        try:
-            confidence = float(item.get("confidence", 0.6))
-        except (TypeError, ValueError):
-            confidence = 0.6
-        confidence = max(0.0, min(1.0, confidence))
-        out.append(
-            {
-                "source_path": source,
-                "target_path": target,
-                "mapping_type": mapping_type.value,
-                "confidence": confidence,
-                "notes": str(item.get("notes", "")).strip() or None,
-                "evidence": str(item.get("evidence", "")).strip() or None,
-            }
-        )
-        if len(out) >= max_rules:
-            break
+        if isinstance(parsed, list):
+            diagnostics["candidates_before_validation"] = len(parsed)
+            for item in parsed:
+                if not isinstance(item, dict):
+                    continue
+                source = str(item.get("source_path", "")).strip()
+                target = str(item.get("target_path", "")).strip()
+                if not source:
+                    continue
+                mapping_type = _validate_mapping_type(
+                    str(item.get("mapping_type", "direct"))
+                )
+                try:
+                    confidence = float(item.get("confidence", 0.6))
+                except (TypeError, ValueError):
+                    confidence = 0.6
+                confidence = max(0.0, min(1.0, confidence))
+                out.append(
+                    {
+                        "source_path": source,
+                        "target_path": target,
+                        "mapping_type": mapping_type.value,
+                        "confidence": confidence,
+                        "notes": str(item.get("notes", "")).strip() or None,
+                        "evidence": str(item.get("evidence", "")).strip() or None,
+                    }
+                )
+                if len(out) >= max_rules:
+                    break
+    except Exception as exc:
+        diagnostics["llm_error"] = str(exc)
 
     if out:
-        return out
+        diagnostics["backend"] = "llm_json"
+        diagnostics["candidates_after_validation"] = len(out)
+        return out, diagnostics
 
     relaxed_payload = {
         "model": configured_llm_model(),
@@ -174,21 +255,24 @@ def extract_mapping_candidates(
                 "role": "user",
                 "content": (
                     f"source_standard={source_standard}\n"
-                    f"target_standard={target_standard}\n\n" + text[:120_000]
+                    f"target_standard={target_standard}\n\n" + excerpt
                 ),
             },
         ],
     }
     try:
-        response = requests.post(
+        response, attempts = _request_with_retries(
             f"{base_url}/chat/completions",
             headers={"Authorization": f"Bearer {api_key}"},
-            json=relaxed_payload,
-            timeout=60,
+            payload=relaxed_payload,
+            timeout_s=timeout_s,
+            retries=retries,
         )
-        response.raise_for_status()
+        diagnostics["attempts_relaxed"] = attempts
         raw = str(response.json()["choices"][0]["message"]["content"])
-        for line in raw.splitlines():
+        raw_lines = [line for line in raw.splitlines() if line.strip()]
+        diagnostics["candidates_before_validation"] = len(raw_lines)
+        for line in raw_lines:
             parts = [x.strip() for x in line.split("\t")]
             if len(parts) < 2:
                 continue
@@ -209,9 +293,31 @@ def extract_mapping_candidates(
             )
             if len(out) >= max_rules:
                 break
-    except Exception:
-        return _heuristic_extract(text, max_rules)
+    except Exception as exc:
+        diagnostics["llm_error"] = str(exc)
 
     if out:
-        return out
-    return _heuristic_extract(text, max_rules)
+        diagnostics["backend"] = "llm_relaxed"
+        diagnostics["candidates_after_validation"] = len(out)
+        return out, diagnostics
+
+    diagnostics["backend"] = "heuristic"
+    heuristic = _heuristic_extract(text, max_rules)
+    diagnostics["candidates_after_validation"] = len(heuristic)
+    return heuristic, diagnostics
+
+
+def extract_mapping_candidates(
+    text: str,
+    source_standard: str,
+    target_standard: str,
+    *,
+    max_rules: int = 160,
+) -> list[dict[str, object]]:
+    candidates, _ = extract_mapping_candidates_with_meta(
+        text,
+        source_standard,
+        target_standard,
+        max_rules=max_rules,
+    )
+    return candidates
