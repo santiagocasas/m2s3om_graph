@@ -2,10 +2,10 @@
   "rdamsc_c1": {
     "crosswalk_id": "rdamsc_c1",
     "msc_id": "msc:c1",
-    "name": "abcd-access-biological_TO_darwin-core",
+    "name": "One",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T13:07:21.497573+00:00",
+    "updated_at": "2026-03-04T11:01:42.291959+00:00",
     "result": {
       "ok": true,
       "step": "skipped_ready"
@@ -14,13 +14,14 @@
   "rdamsc_c2": {
     "crosswalk_id": "rdamsc_c2",
     "msc_id": "msc:c2",
-    "name": "csdgm-extensions-for_TO_iso-19115",
+    "name": "Two",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T13:07:21.487234+00:00",
+    "updated_at": "2026-03-04T11:01:42.289884+00:00",
     "result": {
       "ok": true,
-      "step": "skipped_ready"
+      "crosswalk_id": "rdamsc_c2",
+      "total_rules": 3
     }
   },
   "rdamsc_c28": {
@@ -112,14 +113,14 @@
     "crosswalk_id": "rdamsc_c38",
     "msc_id": "msc:c38",
     "name": "CiteDCAT-AP (DataCite profile of DCAT-AP)",
-    "status": "failed_parse",
-    "label": "failed: parse/extract",
-    "updated_at": "2026-03-03T12:46:24.910824+00:00",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-03-05T08:51:22.104101+00:00",
     "result": {
-      "ok": false,
-      "reason": "no_rules_extracted",
+      "ok": true,
       "crosswalk_id": "rdamsc_c38",
-      "inserted_rules": 0,
+      "inserted_rules": 160,
+      "total_rules": 160,
       "artifact_documents": 2,
       "artifact_chunks": 29,
       "artifacts": [
@@ -144,10 +145,23 @@
           "status": "fetched",
           "resolved_url": "https://github.com/ec-jrc/datacite-to-dcat-ap",
           "content_type": "text/html; charset=utf-8",
-          "text_chars": 12936
+          "text_chars": 12253
         }
       ],
-      "strategy": "llm"
+      "strategy": "deterministic_generic",
+      "llm_augmented_rules": 0,
+      "deterministic_diagnostics": {
+        "total_chars": 90855,
+        "normalized_chars": 90009,
+        "total_lines": 951,
+        "extractor_counts": {
+          "assignment": 0,
+          "markdown_table": 233
+        },
+        "candidates_before_dedupe": 233,
+        "candidates_after_dedupe": 160
+      },
+      "sssom_path": "exports/sssom/rdamsc_c38.sssom.tsv"
     }
   },
   "rdamsc_c37": {
@@ -189,12 +203,12 @@
     "name": "EAD to CIDOC CRM",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T12:48:31.966628+00:00",
+    "updated_at": "2026-03-04T11:04:55.225943+00:00",
     "result": {
       "ok": true,
       "crosswalk_id": "rdamsc_c36",
-      "inserted_rules": 14,
-      "total_rules": 14,
+      "inserted_rules": 10,
+      "total_rules": 10,
       "artifact_documents": 2,
       "artifact_chunks": 92,
       "artifacts": [
@@ -222,8 +236,20 @@
           "text_chars": 200000
         }
       ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c36.sssom.tsv"
+      "strategy": "deterministic_generic",
+      "llm_augmented_rules": 0,
+      "deterministic_diagnostics": {
+        "total_chars": 139998,
+        "normalized_chars": 111667,
+        "total_lines": 841,
+        "extractor_counts": {
+          "assignment": 13,
+          "markdown_table": 0
+        },
+        "candidates_before_dedupe": 13,
+        "candidates_after_dedupe": 10
+      },
+      "sssom_path": "exports/sssom/rdamsc_c36.sssom.tsv"
     }
   },
   "rdamsc_c35": {
