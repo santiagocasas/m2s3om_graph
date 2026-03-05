@@ -80,21 +80,28 @@ def test_ingest_docs_generates_rules_and_sssom(monkeypatch, tmp_path: Path) -> N
         target_standard: str,
         *,
         max_rules: int = 160,
-    ) -> list[dict[str, object]]:
-        return [
+    ) -> tuple[list[dict[str, object]], dict[str, object]]:
+        return (
+            [
+                {
+                    "source_path": "title",
+                    "target_path": "dcterms:title",
+                    "mapping_type": "direct",
+                    "confidence": 0.88,
+                    "notes": "auto",
+                    "evidence": "title -> dcterms:title",
+                }
+            ],
             {
-                "source_path": "title",
-                "target_path": "dcterms:title",
-                "mapping_type": "direct",
-                "confidence": 0.88,
-                "notes": "auto",
-                "evidence": "title -> dcterms:title",
-            }
-        ]
+                "backend": "llm_json",
+                "prompt_chars": len(text),
+                "candidates_after_validation": 1,
+            },
+        )
 
     monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
     monkeypatch.setattr(
-        "kaigraph.rdamsc.ingest.extract_mapping_candidates", _fake_extract
+        "kaigraph.rdamsc.ingest.extract_mapping_candidates_with_meta", _fake_extract
     )
 
     result = ingest_rdamsc_crosswalk_docs(
@@ -112,6 +119,7 @@ def test_ingest_docs_generates_rules_and_sssom(monkeypatch, tmp_path: Path) -> N
     assert bundle.rules[0].target_paths == ["dcterms:title"]
     assert len(store.list_artifact_documents("rdamsc_c5")) == 1
     assert len(store.list_artifact_chunks("rdamsc_c5")) >= 1
+    assert cast(dict[str, object], result["llm_diagnostics"])["backend"] == "llm_json"
     assert (tmp_path / "rdamsc_c5.sssom.tsv").exists()
 
 
@@ -134,12 +142,12 @@ def test_ingest_docs_no_rules_does_not_write_sssom(monkeypatch, tmp_path: Path) 
         target_standard: str,
         *,
         max_rules: int = 160,
-    ) -> list[dict[str, object]]:
-        return []
+    ) -> tuple[list[dict[str, object]], dict[str, object]]:
+        return ([], {"backend": "heuristic", "llm_error": "none"})
 
     monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
     monkeypatch.setattr(
-        "kaigraph.rdamsc.ingest.extract_mapping_candidates", _fake_extract
+        "kaigraph.rdamsc.ingest.extract_mapping_candidates_with_meta", _fake_extract
     )
 
     result = ingest_rdamsc_crosswalk_docs(
@@ -255,21 +263,28 @@ def test_ingest_docs_attempts_non_easy_extensions(monkeypatch, tmp_path: Path) -
         target_standard: str,
         *,
         max_rules: int = 160,
-    ) -> list[dict[str, object]]:
-        return [
+    ) -> tuple[list[dict[str, object]], dict[str, object]]:
+        return (
+            [
+                {
+                    "source_path": "fieldA",
+                    "target_path": "fieldB",
+                    "mapping_type": "direct",
+                    "confidence": 0.7,
+                    "notes": "test",
+                    "evidence": "fieldA -> fieldB",
+                }
+            ],
             {
-                "source_path": "fieldA",
-                "target_path": "fieldB",
-                "mapping_type": "direct",
-                "confidence": 0.7,
-                "notes": "test",
-                "evidence": "fieldA -> fieldB",
-            }
-        ]
+                "backend": "llm_json",
+                "prompt_chars": len(text),
+                "candidates_after_validation": 1,
+            },
+        )
 
     monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
     monkeypatch.setattr(
-        "kaigraph.rdamsc.ingest.extract_mapping_candidates", _fake_extract
+        "kaigraph.rdamsc.ingest.extract_mapping_candidates_with_meta", _fake_extract
     )
 
     result = ingest_rdamsc_crosswalk_docs(
@@ -318,29 +333,36 @@ def test_ingest_docs_uses_deterministic_generic_when_strong_signal(
         target_standard: str,
         *,
         max_rules: int = 160,
-    ) -> list[dict[str, object]]:
-        return [
+    ) -> tuple[list[dict[str, object]], dict[str, object]]:
+        return (
+            [
+                {
+                    "source_path": "ead",
+                    "target_path": "E31 Document",
+                    "mapping_type": "direct",
+                    "confidence": 0.91,
+                    "notes": "duplicate of deterministic candidate",
+                    "evidence": "ead = E31 Document",
+                },
+                {
+                    "source_path": "titleproper@pubstatus",
+                    "target_path": "E62 String",
+                    "mapping_type": "conditional",
+                    "confidence": 0.82,
+                    "notes": "augment deterministic output",
+                    "evidence": "titleproper has note: String (PUBSTATUS)",
+                },
+            ],
             {
-                "source_path": "ead",
-                "target_path": "E31 Document",
-                "mapping_type": "direct",
-                "confidence": 0.91,
-                "notes": "duplicate of deterministic candidate",
-                "evidence": "ead = E31 Document",
+                "backend": "llm_json",
+                "prompt_chars": len(text),
+                "candidates_after_validation": 2,
             },
-            {
-                "source_path": "titleproper@pubstatus",
-                "target_path": "E62 String",
-                "mapping_type": "conditional",
-                "confidence": 0.82,
-                "notes": "augment deterministic output",
-                "evidence": "titleproper has note: String (PUBSTATUS)",
-            },
-        ]
+        )
 
     monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
     monkeypatch.setattr(
-        "kaigraph.rdamsc.ingest.extract_mapping_candidates", _fake_llm_extract
+        "kaigraph.rdamsc.ingest.extract_mapping_candidates_with_meta", _fake_llm_extract
     )
 
     result = ingest_rdamsc_crosswalk_docs(

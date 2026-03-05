@@ -27,7 +27,7 @@ from .artifacts import (
     artifact_extension,
     fetch_artifact_text,
 )
-from .llm_extract import extract_mapping_candidates
+from .llm_extract import extract_mapping_candidates_with_meta
 from .llm_extract import blablador_enabled, configured_llm_model
 
 _DC_HEADING_RE = re.compile(r"^\s*([A-Za-z][A-Za-z\s]+?)\s+--\s+")
@@ -389,13 +389,13 @@ def _ingest_with_llm(
     evidence_doc_uri: str,
     *,
     seen_pairs: set[tuple[str, str]] | None = None,
-) -> int:
-    extracted = _extract_llm_candidates(
+) -> tuple[int, dict[str, object]]:
+    extracted, diagnostics = _extract_llm_candidates(
         merged_markdown,
         source_standard.name,
         target_standard.name,
     )
-    return _ingest_candidate_records(
+    inserted = _ingest_candidate_records(
         store,
         crosswalk,
         source_standard,
@@ -405,16 +405,17 @@ def _ingest_with_llm(
         default_evidence="AI-assisted extraction from mapping documentation",
         seen_pairs=seen_pairs,
     )
+    return inserted, diagnostics
 
 
 def _extract_llm_candidates(
     merged_markdown: str,
     source_standard_name: str,
     target_standard_name: str,
-) -> list[dict[str, object]]:
+) -> tuple[list[dict[str, object]], dict[str, object]]:
     if not merged_markdown:
-        return []
-    return extract_mapping_candidates(
+        return [], {"backend": "none", "llm_error": "empty_input", "prompt_chars": 0}
+    return extract_mapping_candidates_with_meta(
         merged_markdown,
         source_standard_name,
         target_standard_name,
@@ -715,6 +716,7 @@ def ingest_rdamsc_crosswalk_docs(
 
     inserted_rules = 0
     llm_augmented_rules = 0
+    llm_diagnostics: dict[str, object] | None = None
     deterministic_diagnostics: dict[str, object] | None = None
     artifact_urls = [x.url.lower() for x in artifacts]
     first_url = artifact_urls[0]
@@ -758,7 +760,7 @@ def ingest_rdamsc_crosswalk_docs(
                     default_evidence="Deterministic extraction from mapping documentation",
                     seen_pairs=seen_pairs,
                 )
-                llm_augmented_rules = _ingest_with_llm(
+                llm_augmented_rules, llm_diagnostics = _ingest_with_llm(
                     store,
                     crosswalk,
                     source_standard,
@@ -787,7 +789,7 @@ def ingest_rdamsc_crosswalk_docs(
                     f"{len(deterministic_candidates)} candidates; "
                     f"falling back to LLM extraction ({backend})"
                 )
-                inserted_rules = _ingest_with_llm(
+                inserted_rules, llm_diagnostics = _ingest_with_llm(
                     store,
                     crosswalk,
                     source_standard,
@@ -816,7 +818,7 @@ def ingest_rdamsc_crosswalk_docs(
                 default_evidence="Deterministic extraction from mapping documentation",
                 seen_pairs=seen_pairs,
             )
-            llm_augmented_rules = _ingest_with_llm(
+            llm_augmented_rules, llm_diagnostics = _ingest_with_llm(
                 store,
                 crosswalk,
                 source_standard,
@@ -842,7 +844,7 @@ def ingest_rdamsc_crosswalk_docs(
                 f"[{crosswalk.msc_id}] Running LLM extraction on merged artifact text "
                 f"({backend}; deterministic generic candidates={len(deterministic_candidates)})"
             )
-            inserted_rules = _ingest_with_llm(
+            inserted_rules, llm_diagnostics = _ingest_with_llm(
                 store,
                 crosswalk,
                 source_standard,
@@ -875,6 +877,7 @@ def ingest_rdamsc_crosswalk_docs(
             "strategy": strategy,
             "llm_augmented_rules": llm_augmented_rules,
             "deterministic_diagnostics": deterministic_diagnostics,
+            "llm_diagnostics": llm_diagnostics,
         }
 
     emit(
@@ -896,6 +899,7 @@ def ingest_rdamsc_crosswalk_docs(
         "strategy": strategy,
         "llm_augmented_rules": llm_augmented_rules,
         "deterministic_diagnostics": deterministic_diagnostics,
+        "llm_diagnostics": llm_diagnostics,
         "sssom_path": str(out_path),
     }
 
