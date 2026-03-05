@@ -1,22 +1,23 @@
 {
-  "generated_at": "2026-03-03T13:59:33.051368+00:00",
+  "generated_at": "2026-03-05T08:51:32.083222+00:00",
   "total_crosswalks": 37,
   "status_counts": {
-    "ready": 18,
+    "ready": 19,
     "failed_unreachable": 11,
-    "failed_parse": 8
+    "failed_parse": 7
   },
   "status_rates": {
-    "ready": 48.65,
+    "ready": 51.35,
     "failed_unreachable": 29.73,
-    "failed_parse": 21.62
+    "failed_parse": 18.92
   },
   "reason_counts": {
     "artifacts_unreachable": 11,
-    "no_rules_extracted": 8
+    "no_rules_extracted": 7
   },
   "strategy_counts": {
-    "llm": 22
+    "llm": 20,
+    "deterministic_generic": 2
   },
   "artifact_checks": {
     "total": 45,
@@ -64,7 +65,7 @@
     "text_size_chars": {
       "min": 2770,
       "median": 27129,
-      "mean": 59762.03,
+      "mean": 59740.69,
       "p90": 133908,
       "max": 200000
     },
@@ -96,7 +97,6 @@
     "msc:c28",
     "msc:c29",
     "msc:c3",
-    "msc:c34",
-    "msc:c38"
+    "msc:c34"
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-03T13:59:34.015645+00:00",
+  "generated_at": "2026-03-05T08:51:33.275214+00:00",
   "command": "scripts/rdamsc_pipeline_stats.py freeze --status-file .local/rdamsc_pipeline_status.json --output-dir exports/pipeline/latest --sssom-dir exports/sssom --pipeline-log .local/bootstrap_rdamsc.log --plots",
   "status_file_used": "/home/casas/AI/kaigraph/.local/rdamsc_pipeline_status.json",
   "status_file_copied_to": "/home/casas/AI/kaigraph/exports/pipeline/latest/rdamsc_pipeline_status.json",
@@ -7,10 +7,10 @@
   "pipeline_log_mode": "placeholder",
   "git": {
     "repo_root": "/home/casas/AI/kaigraph",
-    "commit": "f920e70c0636b3490d1e3c79afe698163414a264",
-    "commit_short": "f920e70",
-    "commit_date": "2026-03-03T13:27:42+01:00",
-    "branch": "main",
+    "commit": "632cb096afd122d5bc4dbbb7b36cdcbcd777c273",
+    "commit_short": "632cb09",
+    "commit_date": "2026-03-04T12:02:40+01:00",
+    "branch": "feat/deterministic-generic-issue-6",
     "remote_origin": "",
     "is_dirty": true
   },
@@ -26,13 +26,13 @@
   "summary": {
     "total_crosswalks": 37,
     "status_counts": {
-      "ready": 18,
+      "ready": 19,
       "failed_unreachable": 11,
-      "failed_parse": 8
+      "failed_parse": 7
     },
     "reason_counts": {
       "artifacts_unreachable": 11,
-      "no_rules_extracted": 8
+      "no_rules_extracted": 7
     }
   }
 }

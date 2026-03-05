@@ -2,17 +2,17 @@
 
 These SSSOM files were generated from the RDAMSC pipeline and frozen for commit.
 
-- Generated at (UTC): `2026-03-03T13:59:34.016594+00:00`
-- Commit: `f920e70` (main)
+- Generated at (UTC): `2026-03-05T08:51:33.279529+00:00`
+- Commit: `632cb09` (feat/deterministic-generic-issue-6)
 - Dirty working tree at freeze time: `True`
 - Pipeline status source: `/home/casas/AI/kaigraph/.local/rdamsc_pipeline_status.json`
 - Frozen analytics snapshot: `/home/casas/AI/kaigraph/exports/pipeline/latest`
-- SSSOM files included: `17`
+- SSSOM files included: `18`
 
 ## Summary
 - Total crosswalks: `37`
-- Status counts: `{'ready': 18, 'failed_unreachable': 11, 'failed_parse': 8}`
-- Failure reasons: `{'artifacts_unreachable': 11, 'no_rules_extracted': 8}`
+- Status counts: `{'ready': 19, 'failed_unreachable': 11, 'failed_parse': 7}`
+- Failure reasons: `{'artifacts_unreachable': 11, 'no_rules_extracted': 7}`
 
 ## Reproducibility
 - See `generation_manifest.json` in this directory for checksums and metadata.
