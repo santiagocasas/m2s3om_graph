@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import cast
 
 from kaigraph.db import CrosswalkRecord, InMemoryCrosswalkStore
-from kaigraph.rdamsc.pipeline import run_bootstrap_pipeline
+from kaigraph.rdamsc.pipeline import resolve_crosswalk_status, run_bootstrap_pipeline
 
 
 def test_pipeline_continues_when_one_mapping_raises(
@@ -82,3 +82,51 @@ def test_pipeline_survives_catalog_sync_failure(monkeypatch, tmp_path: Path) -> 
     result = run_bootstrap_pipeline(store, tmp_path, logger=logs.append)
     assert result["synced"] == 0
     assert any("Catalog sync failed" in line for line in logs)
+
+
+def test_resolve_status_does_not_keep_stale_ready_without_sssom(tmp_path: Path) -> None:
+    store = InMemoryCrosswalkStore()
+    crosswalk = CrosswalkRecord(
+        id="rdamsc_c1",
+        name="One",
+        source_standard_id="s1",
+        target_standard_id="t1",
+        msc_id="msc:c1",
+    )
+
+    status = resolve_crosswalk_status(
+        store,
+        crosswalk,
+        tmp_path,
+        {
+            "rdamsc_c1": {
+                "status": "ready",
+                "result": {"ok": True, "step": "skipped_ready"},
+            }
+        },
+    )
+    assert status == "missing_sssom"
+
+
+def test_resolve_status_keeps_failure_state_without_sssom(tmp_path: Path) -> None:
+    store = InMemoryCrosswalkStore()
+    crosswalk = CrosswalkRecord(
+        id="rdamsc_c1",
+        name="One",
+        source_standard_id="s1",
+        target_standard_id="t1",
+        msc_id="msc:c1",
+    )
+
+    status = resolve_crosswalk_status(
+        store,
+        crosswalk,
+        tmp_path,
+        {
+            "rdamsc_c1": {
+                "status": "failed_parse",
+                "result": {"ok": False, "reason": "no_rules_extracted"},
+            }
+        },
+    )
+    assert status == "failed_parse"

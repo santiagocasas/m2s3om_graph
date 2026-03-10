@@ -81,15 +81,22 @@ def resolve_crosswalk_status(
     bundle = store.get_crosswalk_bundle(crosswalk.id)
     kg_rules = len(bundle.rules) if bundle is not None else 0
 
-    if sssom_rules and kg_rules > 0:
-        return "ready"
-    if sssom_rules and kg_rules == 0:
+    if sssom_rules:
+        if kg_rules > 0:
+            return "ready"
         return "kg_out_of_sync"
 
     last = status_map.get(crosswalk.id, {})
     last_status = last.get("status")
-    if isinstance(last_status, str) and last_status in STATUS_LABELS:
-        return last_status
+    if isinstance(last_status, str):
+        if last_status in {
+            "failed_unreachable",
+            "failed_unsupported",
+            "failed_parse",
+        }:
+            return last_status
+        if last_status == "missing_sssom":
+            return "missing_sssom"
     return "missing_sssom"
 
 
