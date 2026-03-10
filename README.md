@@ -51,6 +51,8 @@ Bootstrap logs are written to:
 
 - `.local/bootstrap_rdamsc.log`
 
+For benchmark/statistics workflows outside the app, see `BENCHMARKING.md`.
+
 In the app, use the **Pipeline** tab to re-run the full process (or a single mapping) and watch step-by-step logs.
 
 Manual mode:

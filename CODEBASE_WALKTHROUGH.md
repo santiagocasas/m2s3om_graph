@@ -751,6 +751,8 @@ Download button for converted payload
 
 Benchmarking still exists in the codebase and CLI helpers, but the Streamlit benchmark tab has been removed to keep the demo app focused on the three workflows that are presentation-critical: explore, pipeline, and convert.
 
+For the current CLI-oriented workflow, see `BENCHMARKING.md`.
+
 ---
 
 ## 10. Orchestration & Config
