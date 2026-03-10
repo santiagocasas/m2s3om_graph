@@ -10,6 +10,15 @@ NS_OAI = {
 NS_DATACITE = {"resource": "http://datacite.org/schema/kernel-4"}
 
 
+def _find_datacite_resource(root: ET.Element) -> ET.Element:
+    if root.tag == "{http://datacite.org/schema/kernel-4}resource":
+        return root
+    nested = root.find(".//resource:resource", NS_DATACITE)
+    if nested is not None:
+        return nested
+    return root
+
+
 def parse_oai_dc_xml_to_ir(xml_text: str) -> IRRecord:
     root = ET.fromstring(xml_text)
     ir: IRRecord = {}
@@ -51,7 +60,7 @@ def parse_oai_dc_xml_to_ir(xml_text: str) -> IRRecord:
 
 
 def parse_datacite_xml_to_ir(xml_text: str) -> IRRecord:
-    root = ET.fromstring(xml_text)
+    root = _find_datacite_resource(ET.fromstring(xml_text))
     ir: IRRecord = {}
 
     identifier = root.find(".//resource:identifier", NS_DATACITE)

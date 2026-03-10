@@ -137,7 +137,7 @@ Use it only when you intentionally want to regenerate outputs with current pipel
 - `src/kaigraph/oai`: OAI-PMH client and metadata format discovery
 - `src/kaigraph/db`: schema and repository layer
 - `src/kaigraph/candidates`: AI-assisted candidate mapping suggestions (non-baseline)
-- `app/app.py`: Streamlit app with 5 tabs (Crosswalks, Pipeline, System, Benchmark, Convert)
+- `app/app.py`: Streamlit app with 3 working tabs (Crosswalks, Pipeline, Convert)
 
 ## Current status
 
@@ -150,3 +150,4 @@ This repository currently provides:
 - conversion driven by SSSOM rows in the conversion tab
 - OAI-PMH integration for one-record conversion workflows
 - AI-assisted candidate suggestions using Blablador-compatible endpoints (fallback heuristic)
+- benchmark/report generation kept in the CLI and exported pipeline artifacts rather than the Streamlit UI
