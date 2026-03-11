@@ -59,10 +59,11 @@ Launches a web UI with 4 tabs and a sidebar:
 **Session Management**: `app/state.py`
 - `get_store()`: Lazy-loads CrosswalkStore into Streamlit session
 - `sssom_dir()`: Ensures SSSOM export directory exists
+- `ensure_seeded()`: seeds the app from committed SSSOM exports first and skips remote RDAMSC catalog sync unless `KAIGRAPH_AUTO_SYNC_ON_START=1`
 
 **Sidebar**: `app/views/system.py`
 - Displays runtime config (DB URL, Blablador API key status)
-- Model selector for LLM (Blablador) with caching
+- Model selector for LLM (Blablador) is lazy-loaded so startup does not block on remote model discovery
 
 ---
 
