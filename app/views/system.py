@@ -61,20 +61,37 @@ def _render_model_selector(use_sidebar: bool) -> None:
     rows = _env_rows()
     target = st.sidebar if use_sidebar else st
     key_prefix = "sidebar" if use_sidebar else "main"
+    loaded_key = f"{key_prefix}_models_loaded"
 
     target.markdown("### Blablador Model")
-    target.caption("Select model for mapping extraction runs")
+    target.caption("Load the remote model list only when you need to run extraction.")
 
-    if target.button("Refresh model list", key=f"{key_prefix}_refresh_models"):
+    if target.button("Load/refresh model list", key=f"{key_prefix}_refresh_models"):
         _fetch_blablador_models_cached.clear()
+        st.session_state[loaded_key] = True
+
+    default_model = st.session_state.get(
+        "selected_blablador_model",
+        rows["KAIGRAPH_LLM_MODEL"],
+    )
+
+    if not st.session_state.get(loaded_key, False):
+        selected = target.text_input(
+            "Active model",
+            value=str(default_model),
+            key=f"{key_prefix}_blablador_model_manual",
+        )
+        st.session_state["selected_blablador_model"] = selected
+        os.environ["KAIGRAPH_LLM_MODEL"] = selected
+        target.caption(
+            "Remote model discovery is skipped during startup for faster app load."
+        )
+        target.write(f"Using model: `{selected}`")
+        return
 
     models, error = _fetch_blablador_models_cached(
         rows["BLABLADOR_BASE_URL"],
         os.getenv("BLABLADOR_API_KEY", ""),
-    )
-    default_model = st.session_state.get(
-        "selected_blablador_model",
-        rows["KAIGRAPH_LLM_MODEL"],
     )
 
     selected = default_model
@@ -107,6 +124,8 @@ def render_sidebar() -> None:
     rows = _env_rows()
     st.sidebar.markdown("### System")
     st.sidebar.caption("Runtime diagnostics")
+    if not st.session_state.get("store_synced_catalog", False):
+        st.sidebar.caption("Startup mode: local SSSOM snapshot (no catalog sync)")
     st.sidebar.write(f"DB URL: `{rows['KAIGRAPH_DB_URL']}`")
     st.sidebar.write(
         f"Namespace/DB: `{rows['KAIGRAPH_DB_NS']}/{rows['KAIGRAPH_DB_NAME']}`"

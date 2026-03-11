@@ -27,6 +27,8 @@ Fastest way (starts SurrealDB + Streamlit in fast mode, no heavy bootstrap):
 ./scripts/run_app_local.sh
 ```
 
+The Streamlit app now starts in an offline-first mode: it seeds ready crosswalks from committed SSSOM exports and skips RDAMSC catalog sync on startup unless you explicitly enable it.
+
 The launcher waits for SurrealDB sign-in readiness. If readiness fails, startup aborts with a clear message.
 
 Optional wait tuning:
@@ -38,6 +40,7 @@ KAIGRAPH_DB_WAIT_ATTEMPTS=60 KAIGRAPH_DB_WAIT_DELAY=1 ./scripts/run_app_local.sh
 To run a quick catalog metadata sync on startup:
 
 ```bash
+KAIGRAPH_AUTO_SYNC_ON_START=1 \
 KAIGRAPH_SYNC_RDAMSC_CATALOG=1 ./scripts/run_app_local.sh
 ```
 
