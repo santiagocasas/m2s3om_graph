@@ -28,12 +28,15 @@ from kaigraph.transform import (
     ir_to_datacite_xml,
     ir_to_dublin_core_xml,
     parse_datacite_xml_to_ir,
+    parse_marcxml_to_ir,
     parse_oai_dc_xml_to_ir,
 )
 
 FORMAT_OPTIONS = {
     "oai_dc_xml": "OAI Dublin Core XML",
     "datacite_xml": "DataCite XML",
+    "marcxml": "MARCXML",
+    "mods_xml": "MODS XML",
 }
 
 
@@ -50,6 +53,8 @@ def _parse_payload(
 ):
     if payload_format == "oai_dc_xml":
         return parse_oai_dc_xml_to_ir(payload)
+    if payload_format == "marcxml":
+        return parse_marcxml_to_ir(payload)
     if source_profile == "oai_openaire":
         return parse_openaire_xml_to_ir(payload)
     if payload_format == "datacite_xml":
@@ -255,7 +260,7 @@ def _repository_source_panel(store) -> tuple[str, str | None, str, str | None]:
     choices = _resolved_choices(discovered)
     if not choices:
         st.info(
-            "Discover metadata formats first. Supported source families are Dublin Core and DataCite/OpenAIRE."
+            "Discover metadata formats first. Supported source families are Dublin Core, DataCite/OpenAIRE, and MARCXML."
         )
         return "", None, endpoint, None
 
@@ -327,7 +332,7 @@ def _manual_source_panel() -> tuple[str, str | None, str | None]:
         "Source payload",
         value="",
         height=260,
-        placeholder="Paste an OAI Dublin Core or DataCite/OpenAIRE XML record here.",
+        placeholder="Paste an OAI Dublin Core, DataCite/OpenAIRE, or MARCXML record here.",
     )
     source_profile = None
     if source_format == "datacite_xml":
@@ -370,7 +375,7 @@ def render() -> None:
         "Choose a Helmholtz repository, inspect the metadata formats it exposes, fetch one record, and convert it using the authoritative SSSOM route."
     )
     st.info(
-        "This demo currently supports Dublin Core and DataCite-family payloads. OpenAIRE is handled as DataCite-compatible."
+        "This demo currently supports Dublin Core, DataCite-family payloads, and MARCXML. OpenAIRE is handled as DataCite-compatible."
     )
 
     store = get_store()

@@ -15,6 +15,8 @@ from .reverse import derive_reverse_rules
 FORMAT_STANDARD_HINTS: dict[str, tuple[str, ...]] = {
     "oai_dc_xml": ("dublin core", "dcmi", "dcterms"),
     "datacite_xml": ("datacite",),
+    "marcxml": ("marc", "machine-readable", "marcxml"),
+    "mods_xml": ("mods", "metadata object description schema"),
 }
 
 

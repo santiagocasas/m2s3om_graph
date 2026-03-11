@@ -8,6 +8,7 @@ NS_OAI = {
     "dcterms": "http://purl.org/dc/terms/",
 }
 NS_DATACITE = {"resource": "http://datacite.org/schema/kernel-4"}
+NS_MARC = {"marc": "http://www.loc.gov/MARC21/slim"}
 
 
 def _find_datacite_resource(root: ET.Element) -> ET.Element:
@@ -128,4 +129,65 @@ def parse_datacite_xml_to_ir(xml_text: str) -> IRRecord:
         )
         add_ir_value(ir, "publicationYear", IRValue(text=year_text))
         add_ir_value(ir, "5", IRValue(text=year_text))
+    return ir
+
+
+def parse_marcxml_to_ir(xml_text: str) -> IRRecord:
+    root = ET.fromstring(xml_text)
+    ir: IRRecord = {}
+
+    for field in root.findall(".//marc:datafield", NS_MARC):
+        tag = field.attrib.get("tag", "").strip()
+        if not tag:
+            continue
+
+        subfields: dict[str, list[str]] = {}
+        for subfield in field.findall("marc:subfield", NS_MARC):
+            code = subfield.attrib.get("code", "").strip()
+            text = (subfield.text or "").strip()
+            if not code or not text:
+                continue
+            subfields.setdefault(code, []).append(text)
+            add_ir_value(
+                ir,
+                f"MARC {tag}${code}",
+                IRValue(
+                    text=text,
+                    source_path=f"MARC {tag}${code}",
+                    source_format="marcxml",
+                ),
+            )
+
+        if subfields:
+            joined = " ".join(
+                text for code in sorted(subfields) for text in subfields[code]
+            ).strip()
+            if joined:
+                add_ir_value(
+                    ir,
+                    f"MARC {tag}",
+                    IRValue(
+                        text=joined,
+                        source_path=f"MARC {tag}",
+                        source_format="marcxml",
+                    ),
+                )
+
+        subfield_codes = sorted(subfields)
+        if len(subfield_codes) > 1:
+            combined_key = f"MARC {tag}$" + "$".join(subfield_codes)
+            combined_text = " ".join(
+                text for code in subfield_codes for text in subfields[code]
+            ).strip()
+            if combined_text:
+                add_ir_value(
+                    ir,
+                    combined_key,
+                    IRValue(
+                        text=combined_text,
+                        source_path=combined_key,
+                        source_format="marcxml",
+                    ),
+                )
+
     return ir

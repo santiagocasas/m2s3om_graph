@@ -18,6 +18,20 @@ def bridge_metadata_format(
     schema = metadata_format.schema.strip().lower()
     namespace = metadata_format.metadata_namespace.strip().lower()
 
+    if prefix == "marcxml" or "marc21/slim" in schema or "marc21/slim" in namespace:
+        return ResolvedFormat(
+            metadata_prefix=metadata_format.metadata_prefix,
+            internal_format="marcxml",
+            source_profile="marcxml",
+        )
+
+    if prefix == "mods" or "loc.gov/mods" in schema or "loc.gov/mods" in namespace:
+        return ResolvedFormat(
+            metadata_prefix=metadata_format.metadata_prefix,
+            internal_format="mods_xml",
+            source_profile="mods",
+        )
+
     if prefix in {"oai_dc", "oai_bibl", "uketd_dc", "qdc"}:
         return ResolvedFormat(
             metadata_prefix=metadata_format.metadata_prefix,
