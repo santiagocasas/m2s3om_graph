@@ -54,7 +54,7 @@ Launches a web UI with 4 tabs and a sidebar:
 |-----|----------|---------|
 | **Crosswalks** | `app/views/crosswalks.py` | Browse & inspect RDAMSC mappings, generate SSSOM, export rules |
 | **Pipeline** | `app/views/pipeline.py` | Run batch ingestion with live logs |
-| **Convert** | `app/views/transform.py` | Single-record demo with OAI-PMH fetch or manual paste |
+| **Convert** | `app/views/transform.py` | Institution-aware OAI-PMH demo with format discovery, route matching, and manual paste fallback |
 
 **Session Management**: `app/state.py`
 - `get_store()`: Lazy-loads CrosswalkStore into Streamlit session
@@ -714,28 +714,30 @@ Parse TSV header (YAML) + data rows:
 
 **File**: `app/views/transform.py`
 
-**Workflow - OAI-PMH Fetch Mode**:
+**Workflow - Repository Browser Mode**:
 ```
-1. Enter OAI-PMH base URL (default: eLib)
-2. Enter record identifier (default: eLib example)
-3. [Optional] Click "Discover metadata formats" (calls OAI ListMetadataFormats)
-4. Select source metadataPrefix (dropdown)
-5. Click "Fetch source record"
-6. Pick the target format
-7. Convert through the authoritative SSSOM route
+1. Select a Helmholtz institution from `resources/OAIHarvester.config.yaml`
+2. Inspect the auto-filled OAI-PMH endpoint
+3. Click "Discover metadata formats" (calls OAI `ListMetadataFormats`)
+4. Review how the app bridges discovered prefixes into supported internal formats (`oai_dc_xml`, `datacite_xml`)
+5. Load sample identifiers from `ListIdentifiers` or curated fallbacks in `resources/OAIHarvester.samples.yaml`
+6. Enter or select a record identifier
+7. Fetch the source record and convert through the authoritative SSSOM route
 ```
 
 **Workflow - Manual Paste Mode**:
 ```
 1. Select source format (OAI DC XML / DataCite XML)
 2. Paste source metadata
-3. Select target format (OAI DC XML / DataCite XML)
-4. Click "Convert record"
+3. If needed, mark DataCite payloads as OpenAIRE-compatible
+4. Select a target format that has a real SSSOM route
+5. Click "Convert record"
 ```
 
 **Output**:
 ```
 Route summary (direct / reverse / transitive SSSOM steps)
+Discovered metadata format table with catalog matches and available target formats
 Metrics: Applied rules, Unmapped fields, Semantic loss rules
 Converted payload (XML, pretty-printed)
 Download button for converted payload
@@ -744,6 +746,7 @@ Download button for converted payload
 
 **Key Functions**:
 - `_parse_payload(payload, format)` → parse any source format → IR
+- `bridge_metadata_format()` → maps discovered OAI prefixes such as `oai_openaire` into supported internal formats
 - `resolve_conversion_route(store, source_format, target_format, sssom_dir)` → SSSOM-backed route
 - `apply_mapping_rules(source_ir, rules)` → (target_ir, report)
 - `_serialize_target(target_ir, format)` → IR → target format

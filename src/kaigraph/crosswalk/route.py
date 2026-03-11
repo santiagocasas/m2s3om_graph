@@ -2,7 +2,12 @@ from collections import deque
 from dataclasses import dataclass
 from pathlib import Path
 
-from kaigraph.db import CrosswalkBundle, CrosswalkStore, MappingRuleRecord
+from kaigraph.db import (
+    CrosswalkBundle,
+    CrosswalkStore,
+    MappingRuleRecord,
+    StandardRecord,
+)
 from kaigraph.sssom import load_sssom_rules
 
 from .reverse import derive_reverse_rules
@@ -39,6 +44,15 @@ def _candidate_standard_ids(store: CrosswalkStore, payload_format: str) -> list[
         if any(_text_matches(part, hints) for part in haystacks):
             matches.append(standard.id)
     return matches
+
+
+def matched_standards_for_format(
+    store: CrosswalkStore, payload_format: str
+) -> list[StandardRecord]:
+    matched_ids = set(_candidate_standard_ids(store, payload_format))
+    return [
+        standard for standard in store.list_standards() if standard.id in matched_ids
+    ]
 
 
 def _authoritative_rules(
@@ -126,3 +140,17 @@ def resolve_conversion_route(
             queue.append((next_id, [*steps, step]))
 
     return []
+
+
+def available_target_formats(
+    store: CrosswalkStore,
+    source_format: str,
+    sssom_dir: Path,
+) -> list[str]:
+    targets: list[str] = []
+    for candidate in FORMAT_STANDARD_HINTS:
+        if candidate == source_format:
+            continue
+        if resolve_conversion_route(store, source_format, candidate, sssom_dir):
+            targets.append(candidate)
+    return targets

@@ -1,0 +1,36 @@
+AWI:
+  oai_dc:
+    - oai:epic.awi.de:2
+CISPA:
+  oai_dc:
+    - oai:publications.cispa.saarland:1
+DLR:
+  oai_dc:
+    - oai:elib.dlr.de:19460
+    - oai:elib.dlr.de:1
+  oai_openaire:
+    - oai:elib.dlr.de:19460
+GEOMAR:
+  oai_dc:
+    - oai:oceanrep.geomar.de:1
+HZB:
+  oai_dc:
+    - oai:helmholtz.HZB:-6132
+HZDR:
+  oai_dc:
+    - HZDR:PUBLDB:1271-2
+HZI:
+  oai_dc:
+    - oai:repository.helmholtz-hzi.de:10033/8408
+HMGU:
+  oai_dc:
+    - oai:push-zb.helmholtz-munich.de:73222
+GFZ:
+  oai_dc:
+    - oai:gfzpublic.gfz.de:item_5025205
+KIT:
+  oai_dc:
+    - oai:EVASTAR-Karlsruhe.de:1000191284
+MDC:
+  oai_dc:
+    - oai:edoc.mdc-berlin.de:1

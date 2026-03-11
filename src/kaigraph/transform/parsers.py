@@ -81,6 +81,21 @@ def parse_datacite_xml_to_ir(xml_text: str) -> IRRecord:
         )
         add_ir_value(ir, "Identifier", IRValue(text=identifier_text))
 
+    for title in root.findall(".//resource:title", NS_DATACITE):
+        title_text = (title.text or "").strip()
+        if title_text:
+            add_ir_value(
+                ir,
+                "datacite:title",
+                IRValue(
+                    text=title_text,
+                    source_path="datacite:title",
+                    source_format="datacite",
+                ),
+            )
+            add_ir_value(ir, "Title", IRValue(text=title_text))
+            add_ir_value(ir, "title", IRValue(text=title_text))
+
     for creator in root.findall(".//resource:creator", NS_DATACITE):
         name = creator.find("resource:creatorName", NS_DATACITE)
         name_text = (name.text or "").strip() if name is not None else ""
