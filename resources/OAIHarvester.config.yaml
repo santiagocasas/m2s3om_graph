@@ -1,0 +1,38 @@
+AWI:
+  oai_endpoint: https://epic.awi.de/cgi/oai2
+CISPA:
+  oai_endpoint: https://publications.cispa.saarland/cgi/oai2
+DESY:
+  oai_endpoint: https://bib-pubdb1.desy.de/oai2d
+DKFZ:
+  oai_endpoint: https://inrepo02.dkfz.de/oai2d
+DLR:
+  oai_endpoint: https://elib.dlr.de/cgi/oai2
+DZNE:
+  oai_endpoint: https://pub.dzne.de/oai2d
+FZJ:
+  oai_endpoint: https://juser.fz-juelich.de/oai2d
+GEOMAR:
+  oai_endpoint: https://oceanrep.geomar.de/cgi/oai2
+GSI:
+  oai_endpoint: https://repository.gsi.de/oai2d
+HZB:
+  oai_endpoint: https://www.helmholtz-berlin.de/pubbin/oai
+HZDR:
+  oai_endpoint: https://www.hzdr.de/publications/OAI-PMH
+#NOT WORKING
+#HEREON:
+#  name: Helmholtz-Zentrum Hereon
+#  oai_endpoint: https://www.hereon.de/central_units/library/open_access/technical/index.php.de
+HZI:
+  oai_endpoint: https://repository.helmholtz-hzi.de/oai/request
+UFZ:
+  oai_endpoint : https://www.ufz.de/index.php?de=16406
+HMGU:
+  oai_endpoint: https://push-zb.helmholtz-munich.de/oai2/
+GFZ:
+  oai_endpoint: https://gfzpublic.gfz-potsdam.de/oai/provider
+KIT:
+  oai_endpoint : https://dbkit.bibliothek.kit.edu/oai/eva/
+MDC:
+  oai_endpoint : https://edoc.mdc-berlin.de/cgi/oai2

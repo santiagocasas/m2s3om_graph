@@ -22,6 +22,14 @@ class OAIClient:
             params["identifier"] = identifier
         return self._request(params)
 
+    def list_identifiers(self, metadata_prefix: str = "oai_dc") -> str:
+        return self._request(
+            {
+                "verb": "ListIdentifiers",
+                "metadataPrefix": metadata_prefix,
+            }
+        )
+
     def get_record(self, identifier: str, metadata_prefix: str = "oai_dc") -> str:
         return self._request(
             {

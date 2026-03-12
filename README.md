@@ -153,6 +153,9 @@ This repository currently provides:
 - markdown artifact/chunk ingestion into KG with provenance
 - deterministic conversion engine with ambiguity/loss flags
 - conversion driven by SSSOM rows in the conversion tab
+- institution-aware OAI-PMH conversion flow driven by `resources/OAIHarvester.config.yaml`
+- automatic format bridging from discovered OAI metadata prefixes to supported internal formats
+- `oai_openaire` treated as DataCite-compatible in the demo conversion workflow
 - OAI-PMH integration for one-record conversion workflows
 - AI-assisted candidate suggestions using Blablador-compatible endpoints (fallback heuristic)
 - benchmark/report generation kept in the CLI and exported pipeline artifacts rather than the Streamlit UI
