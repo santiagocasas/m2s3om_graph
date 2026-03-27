@@ -1,9 +1,17 @@
+from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 
-import app as app_entry
+_APP_SPEC = spec_from_file_location(
+    "kaigraph_app_entry",
+    Path(__file__).resolve().parents[1] / "app" / "app.py",
+)
+assert _APP_SPEC is not None and _APP_SPEC.loader is not None
+app_entry = module_from_spec(_APP_SPEC)
+_APP_SPEC.loader.exec_module(app_entry)
+
 from views import system
 
 
