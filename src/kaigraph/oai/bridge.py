@@ -11,6 +11,54 @@ class ResolvedFormat:
     note: str = ""
 
 
+def _resolve_from_prefix(raw_prefix: str, prefix: str) -> ResolvedFormat | None:
+    if prefix in {"oai_dc", "oai_bibl", "uketd_dc", "qdc"}:
+        return ResolvedFormat(
+            metadata_prefix=raw_prefix,
+            internal_format="oai_dc_xml",
+            source_profile=prefix,
+        )
+
+    if prefix in {"datacite", "oai_datacite"}:
+        return ResolvedFormat(
+            metadata_prefix=raw_prefix,
+            internal_format="datacite_xml",
+            source_profile=prefix,
+        )
+
+    if prefix == "oai_openaire":
+        return ResolvedFormat(
+            metadata_prefix=raw_prefix,
+            internal_format="datacite_xml",
+            source_profile="oai_openaire",
+            note="OpenAIRE is treated as DataCite-compatible in the demo app.",
+        )
+
+    if prefix == "marcxml":
+        return ResolvedFormat(
+            metadata_prefix=raw_prefix,
+            internal_format="marcxml",
+            source_profile="marcxml",
+        )
+
+    if prefix == "mods":
+        return ResolvedFormat(
+            metadata_prefix=raw_prefix,
+            internal_format="mods_xml",
+            source_profile="mods",
+        )
+
+    return None
+
+
+def _contains_in_schema_or_namespace(
+    schema: str,
+    namespace: str,
+    needle: str,
+) -> bool:
+    return needle in schema or needle in namespace
+
+
 def bridge_metadata_format(
     metadata_format: MetadataFormatInfo,
 ) -> ResolvedFormat | None:
@@ -18,35 +66,25 @@ def bridge_metadata_format(
     schema = metadata_format.schema.strip().lower()
     namespace = metadata_format.metadata_namespace.strip().lower()
 
-    if prefix == "marcxml" or "marc21/slim" in schema or "marc21/slim" in namespace:
+    if _contains_in_schema_or_namespace(schema, namespace, "marc21/slim"):
         return ResolvedFormat(
             metadata_prefix=metadata_format.metadata_prefix,
             internal_format="marcxml",
             source_profile="marcxml",
         )
 
-    if prefix == "mods" or "loc.gov/mods" in schema or "loc.gov/mods" in namespace:
+    if _contains_in_schema_or_namespace(schema, namespace, "loc.gov/mods"):
         return ResolvedFormat(
             metadata_prefix=metadata_format.metadata_prefix,
             internal_format="mods_xml",
             source_profile="mods",
         )
 
-    if prefix in {"oai_dc", "oai_bibl", "uketd_dc", "qdc"}:
-        return ResolvedFormat(
-            metadata_prefix=metadata_format.metadata_prefix,
-            internal_format="oai_dc_xml",
-            source_profile=prefix,
-        )
+    resolved = _resolve_from_prefix(metadata_format.metadata_prefix, prefix)
+    if resolved is not None:
+        return resolved
 
-    if prefix in {"datacite", "oai_datacite"}:
-        return ResolvedFormat(
-            metadata_prefix=metadata_format.metadata_prefix,
-            internal_format="datacite_xml",
-            source_profile=prefix,
-        )
-
-    if prefix == "oai_openaire" or "openaire" in namespace:
+    if "openaire" in namespace:
         return ResolvedFormat(
             metadata_prefix=metadata_format.metadata_prefix,
             internal_format="datacite_xml",
@@ -54,7 +92,7 @@ def bridge_metadata_format(
             note="OpenAIRE is treated as DataCite-compatible in the demo app.",
         )
 
-    if "datacite" in schema or "datacite" in namespace:
+    if _contains_in_schema_or_namespace(schema, namespace, "datacite"):
         return ResolvedFormat(
             metadata_prefix=metadata_format.metadata_prefix,
             internal_format="datacite_xml",

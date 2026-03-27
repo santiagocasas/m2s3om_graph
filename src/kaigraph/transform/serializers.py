@@ -1,17 +1,26 @@
 import xml.etree.ElementTree as ET
 
 from .ir import IRRecord
+from .xml_namespaces import (
+    DATACITE_NS,
+    DATACITE_SCHEMA_LOCATION,
+    DC_ELEMENTS_NS,
+    DCTERMS_NS,
+    OAI_DC_NS,
+    OAI_DC_SCHEMA_LOCATION,
+    XSI_NS,
+)
 
 
 def ir_to_dublin_core_xml(ir: IRRecord) -> str:
     root = ET.Element(
         "oai_dc:dc",
         {
-            "xmlns:oai_dc": "http://www.openarchives.org/OAI/2.0/oai_dc/",
-            "xmlns:dc": "http://purl.org/dc/elements/1.1/",
-            "xmlns:dcterms": "http://purl.org/dc/terms/",
-            "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-            "xsi:schemaLocation": "http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd",
+            "xmlns:oai_dc": OAI_DC_NS,
+            "xmlns:dc": DC_ELEMENTS_NS,
+            "xmlns:dcterms": DCTERMS_NS,
+            "xmlns:xsi": XSI_NS,
+            "xsi:schemaLocation": OAI_DC_SCHEMA_LOCATION,
         },
     )
 
@@ -37,9 +46,9 @@ def ir_to_datacite_xml(ir: IRRecord) -> str:
     root = ET.Element(
         "resource",
         {
-            "xmlns": "http://datacite.org/schema/kernel-4",
-            "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-            "xsi:schemaLocation": "http://datacite.org/schema/kernel-4 http://schema.datacite.org/meta/kernel-4.4/metadata.xsd",
+            "xmlns": DATACITE_NS,
+            "xmlns:xsi": XSI_NS,
+            "xsi:schemaLocation": DATACITE_SCHEMA_LOCATION,
         },
     )
 

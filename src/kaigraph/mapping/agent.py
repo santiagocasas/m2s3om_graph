@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
-from kaigraph.db import CrosswalkRepository
-from kaigraph.models import Citation, Crosswalk, Element, MappingRecord
+from kaigraph.db.repository import CrosswalkRepository
+from kaigraph.models.crosswalk import Citation, Crosswalk, MappingRecord
+from kaigraph.models.standards import Element
 from kaigraph.retrieval.hybrid import (
     confidence_from_similarity,
     cosine_like,

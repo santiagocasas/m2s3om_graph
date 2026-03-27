@@ -2,7 +2,8 @@ from collections import defaultdict
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
-from kaigraph.models import Chunk, Crosswalk, Element, MappingRecord, Standard
+from kaigraph.models.crosswalk import Crosswalk, MappingRecord
+from kaigraph.models.standards import Chunk, Element, Standard
 
 
 class CrosswalkRepository:

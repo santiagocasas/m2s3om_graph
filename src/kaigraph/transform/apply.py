@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import Callable
 
 from kaigraph.db import MappingRuleRecord, MappingType
 
@@ -40,6 +41,137 @@ def _values_for_source_paths(ir: IRRecord, source_paths: list[str]) -> list[IRVa
     return values
 
 
+def _output_keys_for_rule(rule: MappingRuleRecord) -> list[str]:
+    output_keys = rule.target_paths[:]
+    if not output_keys and rule.target_element_id:
+        output_keys = [rule.target_element_id.split(":", 1)[-1]]
+    return output_keys
+
+
+def _apply_copy_rule(
+    source_ir: IRRecord,
+    target_ir: IRRecord,
+    rule: MappingRuleRecord,
+    output_keys: list[str],
+) -> bool:
+    source_values = _values_for_source_paths(source_ir, rule.source_paths)
+    if not source_values:
+        return False
+    for output_key in output_keys:
+        for value in source_values:
+            add_ir_value(target_ir, output_key, value)
+    return True
+
+
+def _apply_concat_rule(
+    source_ir: IRRecord,
+    target_ir: IRRecord,
+    rule: MappingRuleRecord,
+    output_keys: list[str],
+) -> bool:
+    sep = str(rule.transform.get("separator", "; "))
+    fields = rule.transform.get("sources", rule.source_paths)
+    if not isinstance(fields, list):
+        fields = rule.source_paths
+    parts: list[str] = []
+    for source_field in fields:
+        if not isinstance(source_field, str):
+            continue
+        text = get_first_text(source_ir, source_field)
+        if text:
+            parts.append(text)
+    if not parts or not output_keys:
+        return False
+    for output_key in output_keys:
+        add_ir_value(target_ir, output_key, IRValue(text=sep.join(parts)))
+    return True
+
+
+def _apply_value_map_rule(
+    source_ir: IRRecord,
+    target_ir: IRRecord,
+    rule: MappingRuleRecord,
+    _output_keys: list[str],
+) -> bool:
+    mapping = rule.transform.get("mapping", {})
+    field = str(rule.transform.get("field", ""))
+    default = rule.transform.get("default")
+    raw_value = get_first_text(source_ir, field) or get_first_text(
+        source_ir,
+        f"datacite:{field}",
+    )
+    if not isinstance(mapping, dict):
+        mapping = {}
+    target_term = None
+    if raw_value is not None:
+        for key, value in mapping.items():
+            if str(key).lower() == raw_value.lower():
+                target_term = str(value)
+                break
+    if target_term is None and default is not None:
+        target_term = str(default)
+
+    source_values = _values_for_source_paths(source_ir, rule.source_paths)
+    if not target_term or not source_values:
+        return False
+    for value in source_values:
+        add_ir_value(target_ir, target_term, value)
+    return True
+
+
+def _apply_split_rule(
+    source_ir: IRRecord,
+    target_ir: IRRecord,
+    rule: MappingRuleRecord,
+    output_keys: list[str],
+) -> bool:
+    source_values = _values_for_source_paths(source_ir, rule.source_paths)
+    if not source_values or not output_keys:
+        return False
+    chunks = [x.strip() for x in source_values[0].text.split(";") if x.strip()]
+    for idx, chunk in enumerate(chunks):
+        key = output_keys[min(idx, len(output_keys) - 1)]
+        add_ir_value(target_ir, key, IRValue(text=chunk))
+    return True
+
+
+def _apply_fallback_rule(
+    source_ir: IRRecord,
+    target_ir: IRRecord,
+    rule: MappingRuleRecord,
+    output_keys: list[str],
+) -> bool:
+    source_values = _values_for_source_paths(source_ir, rule.source_paths)
+    if not source_values or not output_keys:
+        return False
+    for key in output_keys:
+        for value in source_values:
+            add_ir_value(target_ir, key, value)
+    return True
+
+
+RuleHandler = Callable[[IRRecord, IRRecord, MappingRuleRecord, list[str]], bool]
+
+
+RULE_HANDLERS: dict[str, RuleHandler] = {
+    "copy": _apply_copy_rule,
+    "concat": _apply_concat_rule,
+    "value_map": _apply_value_map_rule,
+    "split": _apply_split_rule,
+}
+
+
+def _apply_rule_operation(
+    source_ir: IRRecord,
+    target_ir: IRRecord,
+    rule: MappingRuleRecord,
+    output_keys: list[str],
+) -> bool:
+    op = str(rule.transform.get("op", "copy"))
+    handler = RULE_HANDLERS.get(op, _apply_fallback_rule)
+    return handler(source_ir, target_ir, rule, output_keys)
+
+
 def apply_mapping_rules(
     source_ir: IRRecord,
     rules: list[MappingRuleRecord],
@@ -53,94 +185,16 @@ def apply_mapping_rules(
         if rule.ambiguity:
             report.ambiguous_rules.append(rule.id)
 
-        op = str(rule.transform.get("op", "copy"))
-        output_keys = rule.target_paths[:]
-        if not output_keys and rule.target_element_id:
-            output_keys = [rule.target_element_id.split(":", 1)[-1]]
+        output_keys = _output_keys_for_rule(rule)
 
         if rule.mapping_type == MappingType.MISSING:
             report.applied_rule_ids.append(rule.id)
             continue
 
-        if op == "copy":
-            source_values = _values_for_source_paths(source_ir, rule.source_paths)
-            if not source_values:
-                report.unmapped_fields.extend(rule.source_paths)
-                continue
-            for output_key in output_keys:
-                for value in source_values:
-                    add_ir_value(target_ir, output_key, value)
+        if _apply_rule_operation(source_ir, target_ir, rule, output_keys):
             report.applied_rule_ids.append(rule.id)
             continue
-
-        if op == "concat":
-            sep = str(rule.transform.get("separator", "; "))
-            fields = rule.transform.get("sources", rule.source_paths)
-            if not isinstance(fields, list):
-                fields = rule.source_paths
-            parts: list[str] = []
-            for field in fields:
-                if not isinstance(field, str):
-                    continue
-                text = get_first_text(source_ir, field)
-                if text:
-                    parts.append(text)
-            if parts and output_keys:
-                for output_key in output_keys:
-                    add_ir_value(target_ir, output_key, IRValue(text=sep.join(parts)))
-                report.applied_rule_ids.append(rule.id)
-            else:
-                report.unmapped_fields.extend(rule.source_paths)
-            continue
-
-        if op == "value_map":
-            mapping = rule.transform.get("mapping", {})
-            field = str(rule.transform.get("field", ""))
-            default = rule.transform.get("default")
-            raw_value = get_first_text(source_ir, field) or get_first_text(
-                source_ir,
-                f"datacite:{field}",
-            )
-            if not isinstance(mapping, dict):
-                mapping = {}
-            target_term = None
-            if raw_value is not None:
-                for key, value in mapping.items():
-                    if str(key).lower() == raw_value.lower():
-                        target_term = str(value)
-                        break
-            if target_term is None and default is not None:
-                target_term = str(default)
-
-            source_values = _values_for_source_paths(source_ir, rule.source_paths)
-            if target_term and source_values:
-                for value in source_values:
-                    add_ir_value(target_ir, target_term, value)
-                report.applied_rule_ids.append(rule.id)
-            else:
-                report.unmapped_fields.extend(rule.source_paths)
-            continue
-
-        if op == "split":
-            source_values = _values_for_source_paths(source_ir, rule.source_paths)
-            if not source_values or not output_keys:
-                report.unmapped_fields.extend(rule.source_paths)
-                continue
-            chunks = [x.strip() for x in source_values[0].text.split(";") if x.strip()]
-            for idx, chunk in enumerate(chunks):
-                key = output_keys[min(idx, len(output_keys) - 1)]
-                add_ir_value(target_ir, key, IRValue(text=chunk))
-            report.applied_rule_ids.append(rule.id)
-            continue
-
-        source_values = _values_for_source_paths(source_ir, rule.source_paths)
-        if source_values and output_keys:
-            for key in output_keys:
-                for value in source_values:
-                    add_ir_value(target_ir, key, value)
-            report.applied_rule_ids.append(rule.id)
-        else:
-            report.unmapped_fields.extend(rule.source_paths)
+        report.unmapped_fields.extend(rule.source_paths)
 
     report.unmapped_fields = sorted(set(report.unmapped_fields))
     return target_ir, report

@@ -65,7 +65,9 @@ class CrosswalkStore:
 
 
 def stable_id(prefix: str, *parts: str) -> str:
-    digest = hashlib.md5("|".join(parts).encode("utf-8")).hexdigest()[:16]
+    digest = hashlib.md5(
+        "|".join(parts).encode("utf-8"), usedforsecurity=False
+    ).hexdigest()[:16]
     return f"{prefix}:{digest}"
 
 
@@ -93,7 +95,30 @@ class InMemoryCrosswalkStore(CrosswalkStore):
     )
 
     def apply_schema(self) -> None:
-        return
+        rebuilt_by_standard: dict[str, list[str]] = defaultdict(list)
+        for element in self.elements.values():
+            rebuilt_by_standard[element.standard_id].append(element.id)
+        self.by_standard = rebuilt_by_standard
+
+        rebuilt_rules_by_crosswalk: dict[str, list[str]] = defaultdict(list)
+        for rule in self.rules.values():
+            rebuilt_rules_by_crosswalk[rule.crosswalk_id].append(rule.id)
+        self.rules_by_crosswalk = rebuilt_rules_by_crosswalk
+
+        rebuilt_evidence_by_rule: dict[str, list[str]] = defaultdict(list)
+        for evidence in self.evidences.values():
+            rebuilt_evidence_by_rule[evidence.mapping_rule_id].append(evidence.id)
+        self.evidence_by_rule = rebuilt_evidence_by_rule
+
+        rebuilt_docs_by_crosswalk: dict[str, list[str]] = defaultdict(list)
+        for document in self.artifact_documents.values():
+            rebuilt_docs_by_crosswalk[document.crosswalk_id].append(document.id)
+        self.docs_by_crosswalk = rebuilt_docs_by_crosswalk
+
+        rebuilt_chunks_by_crosswalk: dict[str, list[str]] = defaultdict(list)
+        for chunk in self.artifact_chunks.values():
+            rebuilt_chunks_by_crosswalk[chunk.crosswalk_id].append(chunk.id)
+        self.chunks_by_crosswalk = rebuilt_chunks_by_crosswalk
 
     def upsert_standard(self, standard: StandardRecord) -> StandardRecord:
         self.standards[standard.id] = standard
@@ -160,8 +185,10 @@ class InMemoryCrosswalkStore(CrosswalkStore):
         crosswalk = self.crosswalks.get(crosswalk_id)
         if crosswalk is None:
             return None
-        source = self.standards[crosswalk.source_standard_id]
-        target = self.standards[crosswalk.target_standard_id]
+        source = self.standards.get(crosswalk.source_standard_id)
+        target = self.standards.get(crosswalk.target_standard_id)
+        if source is None or target is None:
+            return None
         rules: list[MappingRuleRecord] = []
         for rule_id in self.rules_by_crosswalk.get(crosswalk_id, []):
             rule = self.rules[rule_id]
@@ -432,9 +459,20 @@ def build_default_store() -> CrosswalkStore:
     if use_surreal in {"1", "true", "yes", "on"}:
         return SurrealCrosswalkStore(
             url=os.getenv("KAIGRAPH_DB_URL", "ws://localhost:8000/rpc"),
-            username=os.getenv("KAIGRAPH_DB_USER", "root"),
-            password=os.getenv("KAIGRAPH_DB_PASSWORD", "root"),
+            username=_required_non_root_secret("KAIGRAPH_DB_USER"),
+            password=_required_non_root_secret("KAIGRAPH_DB_PASSWORD"),
             namespace=os.getenv("KAIGRAPH_DB_NS", "kaigraph"),
             database=os.getenv("KAIGRAPH_DB_NAME", "crosswalk"),
         )
     return InMemoryCrosswalkStore()
+
+
+def _required_non_root_secret(name: str) -> str:
+    value = os.getenv(name, "").strip()
+    if not value:
+        raise RuntimeError(f"{name} must be set when KAIGRAPH_USE_SURREAL is enabled")
+    if value.lower() == "root":
+        raise RuntimeError(
+            f"{name} cannot use insecure default 'root' when KAIGRAPH_USE_SURREAL is enabled"
+        )
+    return value

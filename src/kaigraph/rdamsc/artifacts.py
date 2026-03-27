@@ -1,6 +1,7 @@
+import os
 import re
 import shutil
-import subprocess
+import subprocess  # nosec B404 - controlled soffice invocation for .doc conversion
 import tempfile
 from dataclasses import dataclass
 from html.parser import HTMLParser
@@ -11,6 +12,11 @@ from urllib.parse import urlparse
 import requests
 from markitdown import MarkItDown
 from pypdf import PdfReader
+
+from kaigraph.rdamsc.constants import (
+    GITHUB_RAW_CONTENT_URL_TEMPLATE,
+    GITHUB_WEB_HOST,
+)
 
 DEFAULT_HEADERS = {
     "User-Agent": (
@@ -41,7 +47,14 @@ class ArtifactText:
     text: str
 
 
-_MARKITDOWN = MarkItDown(enable_plugins=False)
+_MARKITDOWN: MarkItDown | None = None
+
+
+def _markitdown() -> MarkItDown:
+    global _MARKITDOWN
+    if _MARKITDOWN is None:
+        _MARKITDOWN = MarkItDown(enable_plugins=False)
+    return _MARKITDOWN
 
 
 class ArtifactFetchError(RuntimeError):
@@ -116,7 +129,7 @@ def _extract_html_text(content: str) -> str:
 def _markitdown_convert(content: bytes, *, url: str) -> str:
     ext = artifact_extension(url)
     file_extension = None if ext == "(none)" else ext
-    result = _MARKITDOWN.convert_stream(
+    result = _markitdown().convert_stream(
         BytesIO(content),
         file_extension=file_extension,
         url=url,
@@ -132,6 +145,28 @@ def _soffice_binary() -> str | None:
     return shutil.which("soffice") or shutil.which("libreoffice")
 
 
+def _atomic_write_bytes(path: Path, content: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_name: str | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="wb",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            delete=False,
+        ) as tmp_file:
+            tmp_file.write(content)
+            tmp_file.flush()
+            os.fsync(tmp_file.fileno())
+            tmp_name = tmp_file.name
+        Path(tmp_name).replace(path)
+    finally:
+        if tmp_name is not None:
+            tmp_path = Path(tmp_name)
+            if tmp_path.exists():
+                tmp_path.unlink()
+
+
 def _convert_legacy_doc_via_soffice(content: bytes, *, url: str) -> str:
     binary = _soffice_binary()
     if not binary:
@@ -144,7 +179,7 @@ def _convert_legacy_doc_via_soffice(content: bytes, *, url: str) -> str:
         source_path = tmp_path / "input.doc"
         out_dir = tmp_path / "out"
         out_dir.mkdir(parents=True, exist_ok=True)
-        source_path.write_bytes(content)
+        _atomic_write_bytes(source_path, content)
 
         cmd = [
             binary,
@@ -155,7 +190,7 @@ def _convert_legacy_doc_via_soffice(content: bytes, *, url: str) -> str:
             str(out_dir),
             str(source_path),
         ]
-        completed = subprocess.run(
+        completed = subprocess.run(  # nosec B603 - fixed command and trusted temp paths
             cmd,
             capture_output=True,
             text=True,
@@ -191,7 +226,7 @@ def artifact_extension(url: str) -> str:
 
 def _github_raw_fallback(url: str) -> str | None:
     parsed = urlparse(url)
-    if parsed.netloc != "github.com":
+    if parsed.netloc != GITHUB_WEB_HOST:
         return None
     parts = parsed.path.strip("/").split("/")
     if len(parts) < 5:
@@ -201,7 +236,12 @@ def _github_raw_fallback(url: str) -> str | None:
         return None
     branch = parts[3]
     tail = "/".join(parts[4:])
-    return f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{tail}"
+    return GITHUB_RAW_CONTENT_URL_TEMPLATE.format(
+        owner=owner,
+        repo=repo,
+        branch=branch,
+        tail=tail,
+    )
 
 
 def _candidate_urls(url: str) -> list[str]:
@@ -216,61 +256,79 @@ def _candidate_urls(url: str) -> list[str]:
     return out
 
 
+def _fetch_candidate_response(
+    candidate: str,
+    timeout: int,
+    errors: list[str],
+) -> requests.Response | None:
+    try:
+        response = requests.get(candidate, timeout=timeout, headers=DEFAULT_HEADERS)
+        response.raise_for_status()
+    except requests.HTTPError as exc:
+        code = exc.response.status_code if exc.response is not None else None
+        errors.append(f"{candidate} -> HTTP {code}")
+        return None
+    except requests.RequestException as exc:
+        errors.append(f"{candidate} -> {exc}")
+        return None
+    return response
+
+
+def _is_text_like_content_type(content_type: str) -> bool:
+    return any(
+        item in content_type
+        for item in (
+            "text/plain",
+            "application/xml",
+            "text/xml",
+            "application/xslt+xml",
+        )
+    )
+
+
+def _convert_response_to_text(
+    response: requests.Response,
+    candidate: str,
+    content_type: str,
+) -> str:
+    try:
+        return _markitdown_convert(response.content, url=candidate)
+    except Exception as exc:
+        is_pdf = "application/pdf" in content_type or _is_pdf_url(candidate)
+        is_html = "text/html" in content_type or _is_html_url(candidate)
+        is_doc = artifact_extension(candidate) == ".doc"
+        if is_pdf:
+            return _extract_pdf_text(response.content)
+        if is_html:
+            return _extract_html_text(response.text)
+        if is_doc:
+            try:
+                return _convert_legacy_doc_via_soffice(response.content, url=candidate)
+            except Exception as doc_exc:
+                raise ArtifactFetchError(
+                    f"{candidate} -> Legacy .doc conversion failed: {doc_exc}",
+                    reason="conversion_error",
+                ) from doc_exc
+        if _is_text_like_content_type(content_type):
+            return _normalize_text(response.text)
+        raise ArtifactFetchError(
+            f"{candidate} -> MarkItDown conversion failed: {exc}. "
+            "If this is legacy .doc, install LibreOffice or convert to .docx/.rtf first.",
+            reason="conversion_error",
+        )
+
+
 def fetch_artifact_text(
     url: str, timeout: int = 30, max_chars: int = 200_000
 ) -> ArtifactText:
     errors: list[str] = []
     for candidate in _candidate_urls(url):
-        try:
-            response = requests.get(candidate, timeout=timeout, headers=DEFAULT_HEADERS)
-            response.raise_for_status()
-        except requests.HTTPError as exc:
-            code = exc.response.status_code if exc.response is not None else None
-            errors.append(f"{candidate} -> HTTP {code}")
-            continue
-        except requests.RequestException as exc:
-            errors.append(f"{candidate} -> {exc}")
+        response = _fetch_candidate_response(candidate, timeout, errors)
+        if response is None:
             continue
 
         content_type = (response.headers.get("content-type") or "").lower()
-        try:
-            text = _markitdown_convert(response.content, url=candidate)
-        except Exception as exc:
-            is_pdf = "application/pdf" in content_type or _is_pdf_url(candidate)
-            is_html = "text/html" in content_type or _is_html_url(candidate)
-            is_doc = artifact_extension(candidate) == ".doc"
-            is_text_like = any(
-                x in content_type
-                for x in (
-                    "text/plain",
-                    "application/xml",
-                    "text/xml",
-                    "application/xslt+xml",
-                )
-            )
-
-            if is_pdf:
-                text = _extract_pdf_text(response.content)
-            elif is_html:
-                text = _extract_html_text(response.text)
-            elif is_doc:
-                try:
-                    text = _convert_legacy_doc_via_soffice(
-                        response.content, url=candidate
-                    )
-                except Exception as doc_exc:
-                    raise ArtifactFetchError(
-                        f"{candidate} -> Legacy .doc conversion failed: {doc_exc}",
-                        reason="conversion_error",
-                    ) from doc_exc
-            elif is_text_like:
-                text = _normalize_text(response.text)
-            else:
-                raise ArtifactFetchError(
-                    f"{candidate} -> MarkItDown conversion failed: {exc}. "
-                    "If this is legacy .doc, install LibreOffice or convert to .docx/.rtf first.",
-                    reason="conversion_error",
-                )
+        text = _convert_response_to_text(response, candidate, content_type)
 
         if len(text) > max_chars:
             text = text[:max_chars]

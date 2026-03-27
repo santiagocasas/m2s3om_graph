@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import re
 
-from kaigraph.transform import IRRecord
+from kaigraph.transform.ir import IRRecord
 
 
 def _normalize(text: str) -> str:

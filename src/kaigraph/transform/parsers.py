@@ -1,18 +1,29 @@
-import xml.etree.ElementTree as ET
+from typing import Any
+
+from defusedxml import ElementTree as ET
 
 from .ir import IRRecord, IRValue, add_ir_value
+from .xml_namespaces import (
+    DATACITE_NS,
+    DC_ELEMENTS_NS,
+    DCTERMS_NS,
+    OAI_DC_NS,
+    OAI_PMH_NS,
+)
 
 NS_OAI = {
-    "oai_dc": "http://www.openarchives.org/OAI/2.0/oai_dc/",
-    "dc": "http://purl.org/dc/elements/1.1/",
-    "dcterms": "http://purl.org/dc/terms/",
+    "oai_dc": OAI_DC_NS,
+    "dc": DC_ELEMENTS_NS,
+    "dcterms": DCTERMS_NS,
 }
-NS_DATACITE = {"resource": "http://datacite.org/schema/kernel-4"}
+NS_DATACITE = {"resource": DATACITE_NS}
 NS_MARC = {"marc": "http://www.loc.gov/MARC21/slim"}
+DATACITE_RESOURCE_TAG = f"{{{DATACITE_NS}}}resource"
+OAI_IDENTIFIER_PATH = f".//{{{OAI_PMH_NS}}}identifier"
 
 
-def _find_datacite_resource(root: ET.Element) -> ET.Element:
-    if root.tag == "{http://datacite.org/schema/kernel-4}resource":
+def _find_datacite_resource(root: Any) -> Any:
+    if root.tag == DATACITE_RESOURCE_TAG:
         return root
     nested = root.find(".//resource:resource", NS_DATACITE)
     if nested is not None:
@@ -23,7 +34,7 @@ def _find_datacite_resource(root: ET.Element) -> ET.Element:
 def parse_oai_dc_xml_to_ir(xml_text: str) -> IRRecord:
     root = ET.fromstring(xml_text)
     ir: IRRecord = {}
-    source_id_node = root.find(".//{http://www.openarchives.org/OAI/2.0/}identifier")
+    source_id_node = root.find(OAI_IDENTIFIER_PATH)
     source_id = (
         (source_id_node.text or "").strip() if source_id_node is not None else None
     )

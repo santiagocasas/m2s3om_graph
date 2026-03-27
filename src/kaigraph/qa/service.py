@@ -1,4 +1,4 @@
-from kaigraph.db import CrosswalkRepository
+from kaigraph.db.repository import CrosswalkRepository
 
 
 def answer_question(repo: CrosswalkRepository, question: str) -> str:

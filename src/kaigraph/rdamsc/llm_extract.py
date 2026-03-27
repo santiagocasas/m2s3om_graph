@@ -1,5 +1,4 @@
 import json
-import os
 import re
 import time
 
@@ -7,38 +6,12 @@ import requests
 
 from kaigraph.db import MappingType
 
-
-def configured_llm_model() -> str:
-    return os.getenv("KAIGRAPH_LLM_MODEL", "alias-fast")
-
-
-def blablador_enabled() -> bool:
-    return bool(os.getenv("BLABLADOR_API_KEY"))
-
-
-def _int_env(name: str, default: int, *, minimum: int, maximum: int) -> int:
-    raw = os.getenv(name, "").strip()
-    if not raw:
-        return default
-    try:
-        value = int(raw)
-    except ValueError:
-        return default
-    return max(minimum, min(maximum, value))
-
-
-def configured_llm_timeout_s() -> int:
-    return _int_env("KAIGRAPH_LLM_TIMEOUT_S", 60, minimum=5, maximum=300)
-
-
-def configured_llm_retries() -> int:
-    return _int_env("KAIGRAPH_LLM_RETRIES", 2, minimum=0, maximum=6)
-
-
-def configured_llm_max_input_chars() -> int:
-    return _int_env(
-        "KAIGRAPH_LLM_MAX_INPUT_CHARS", 120_000, minimum=2_000, maximum=300_000
-    )
+from .contracts import LLMDiagnostics, llm_diagnostics_template
+from .llm_runtime import (
+    llm_chat_completions_url_from_base,
+    llm_enabled,
+    load_llm_runtime_config,
+)
 
 
 def _clean_json_blob(text: str) -> str:
@@ -86,6 +59,29 @@ def _heuristic_extract(text: str, max_rules: int) -> list[dict[str, object]]:
     return out
 
 
+def _normalize_json_candidate(item: object) -> dict[str, object] | None:
+    if not isinstance(item, dict):
+        return None
+    source = str(item.get("source_path", "")).strip()
+    target = str(item.get("target_path", "")).strip()
+    if not source:
+        return None
+    mapping_type = _validate_mapping_type(str(item.get("mapping_type", "direct")))
+    try:
+        confidence = float(item.get("confidence", 0.6))
+    except (TypeError, ValueError):
+        confidence = 0.6
+    confidence = max(0.0, min(1.0, confidence))
+    return {
+        "source_path": source,
+        "target_path": target,
+        "mapping_type": mapping_type.value,
+        "confidence": confidence,
+        "notes": str(item.get("notes", "")).strip() or None,
+        "evidence": str(item.get("evidence", "")).strip() or None,
+    }
+
+
 def _request_with_retries(
     url: str,
     *,
@@ -114,44 +110,115 @@ def _request_with_retries(
     raise RuntimeError(message)
 
 
+def _extract_json_mode(
+    *,
+    base_url: str,
+    api_key: str,
+    payload: dict[str, object],
+    timeout_s: int,
+    retries: int,
+    max_rules: int,
+) -> tuple[list[dict[str, object]], int, int]:
+    endpoint = llm_chat_completions_url_from_base(base_url)
+    response, attempts = _request_with_retries(
+        endpoint,
+        headers={"Authorization": f"Bearer {api_key}"},
+        payload=payload,
+        timeout_s=timeout_s,
+        retries=retries,
+    )
+
+    raw = response.json()["choices"][0]["message"]["content"]
+    try:
+        parsed = json.loads(_clean_json_blob(raw))
+    except json.JSONDecodeError:
+        return [], attempts, 0
+    if not isinstance(parsed, list):
+        return [], attempts, 0
+
+    out: list[dict[str, object]] = []
+    for item in parsed:
+        candidate = _normalize_json_candidate(item)
+        if candidate is None:
+            continue
+        out.append(candidate)
+        if len(out) >= max_rules:
+            break
+
+    return out, attempts, len(parsed)
+
+
+def _extract_relaxed_mode(
+    *,
+    base_url: str,
+    api_key: str,
+    payload: dict[str, object],
+    timeout_s: int,
+    retries: int,
+    max_rules: int,
+) -> tuple[list[dict[str, object]], int, int]:
+    endpoint = llm_chat_completions_url_from_base(base_url)
+    response, attempts = _request_with_retries(
+        endpoint,
+        headers={"Authorization": f"Bearer {api_key}"},
+        payload=payload,
+        timeout_s=timeout_s,
+        retries=retries,
+    )
+
+    raw = str(response.json()["choices"][0]["message"]["content"])
+    raw_lines = [line for line in raw.splitlines() if line.strip()]
+    out: list[dict[str, object]] = []
+    for line in raw_lines:
+        parts = [x.strip() for x in line.split("\t")]
+        if len(parts) < 2:
+            continue
+        source = parts[0]
+        target = parts[1]
+        if not source or not target:
+            continue
+        evidence = parts[2] if len(parts) > 2 else "LLM relaxed extraction"
+        out.append(
+            {
+                "source_path": source,
+                "target_path": target,
+                "mapping_type": "direct",
+                "confidence": 0.45,
+                "notes": "Relaxed LLM extraction",
+                "evidence": evidence,
+            }
+        )
+        if len(out) >= max_rules:
+            break
+
+    return out, attempts, len(raw_lines)
+
+
 def extract_mapping_candidates_with_meta(
     text: str,
     source_standard: str,
     target_standard: str,
     *,
     max_rules: int = 160,
-) -> tuple[list[dict[str, object]], dict[str, object]]:
-    diagnostics: dict[str, object] = {
-        "backend": "heuristic",
-        "prompt_chars": 0,
-        "llm_error": None,
-        "candidates_before_validation": 0,
-        "candidates_after_validation": 0,
-        "timeout_s": configured_llm_timeout_s(),
-        "retries": configured_llm_retries(),
-        "max_input_chars": configured_llm_max_input_chars(),
-        "attempts_json": 0,
-        "attempts_relaxed": 0,
-    }
+) -> tuple[list[dict[str, object]], LLMDiagnostics]:
+    config = load_llm_runtime_config()
+    diagnostics = llm_diagnostics_template(
+        timeout_s=config.timeout_s,
+        retries=config.retries,
+        max_input_chars=config.max_input_chars,
+    )
 
-    api_key = os.getenv("BLABLADOR_API_KEY")
-    if not api_key:
+    if not llm_enabled(config):
         diagnostics["backend"] = "heuristic"
         diagnostics["llm_error"] = "missing_api_key"
         heuristic = _heuristic_extract(text, max_rules)
         diagnostics["candidates_after_validation"] = len(heuristic)
         return heuristic, diagnostics
 
-    base_url = os.getenv(
-        "BLABLADOR_BASE_URL",
-        "https://api.helmholtz-blablador.fz-juelich.de/v1",
-    ).rstrip("/")
-
-    max_input_chars = int(diagnostics["max_input_chars"])
-    excerpt = text[:max_input_chars]
+    excerpt = text[: config.max_input_chars]
     diagnostics["prompt_chars"] = len(excerpt)
-    timeout_s = int(diagnostics["timeout_s"])
-    retries = int(diagnostics["retries"])
+    timeout_s = config.timeout_s
+    retries = config.retries
 
     prompt_payload = {
         "source_standard": source_standard,
@@ -172,7 +239,7 @@ def extract_mapping_candidates_with_meta(
     }
 
     payload = {
-        "model": configured_llm_model(),
+        "model": config.model,
         "temperature": 0,
         "messages": [
             {
@@ -192,45 +259,16 @@ def extract_mapping_candidates_with_meta(
 
     out: list[dict[str, object]] = []
     try:
-        response, attempts = _request_with_retries(
-            f"{base_url}/chat/completions",
-            headers={"Authorization": f"Bearer {api_key}"},
+        out, attempts, before_validation = _extract_json_mode(
+            base_url=config.base_url,
+            api_key=config.api_key,
             payload=payload,
             timeout_s=timeout_s,
             retries=retries,
+            max_rules=max_rules,
         )
         diagnostics["attempts_json"] = attempts
-        raw = response.json()["choices"][0]["message"]["content"]
-        parsed = json.loads(_clean_json_blob(raw))
-        if isinstance(parsed, list):
-            diagnostics["candidates_before_validation"] = len(parsed)
-            for item in parsed:
-                if not isinstance(item, dict):
-                    continue
-                source = str(item.get("source_path", "")).strip()
-                target = str(item.get("target_path", "")).strip()
-                if not source:
-                    continue
-                mapping_type = _validate_mapping_type(
-                    str(item.get("mapping_type", "direct"))
-                )
-                try:
-                    confidence = float(item.get("confidence", 0.6))
-                except (TypeError, ValueError):
-                    confidence = 0.6
-                confidence = max(0.0, min(1.0, confidence))
-                out.append(
-                    {
-                        "source_path": source,
-                        "target_path": target,
-                        "mapping_type": mapping_type.value,
-                        "confidence": confidence,
-                        "notes": str(item.get("notes", "")).strip() or None,
-                        "evidence": str(item.get("evidence", "")).strip() or None,
-                    }
-                )
-                if len(out) >= max_rules:
-                    break
+        diagnostics["candidates_before_validation"] = before_validation
     except Exception as exc:
         diagnostics["llm_error"] = str(exc)
 
@@ -240,7 +278,7 @@ def extract_mapping_candidates_with_meta(
         return out, diagnostics
 
     relaxed_payload = {
-        "model": configured_llm_model(),
+        "model": config.model,
         "temperature": 0,
         "messages": [
             {
@@ -261,38 +299,16 @@ def extract_mapping_candidates_with_meta(
         ],
     }
     try:
-        response, attempts = _request_with_retries(
-            f"{base_url}/chat/completions",
-            headers={"Authorization": f"Bearer {api_key}"},
+        out, attempts, before_validation = _extract_relaxed_mode(
+            base_url=config.base_url,
+            api_key=config.api_key,
             payload=relaxed_payload,
             timeout_s=timeout_s,
             retries=retries,
+            max_rules=max_rules,
         )
         diagnostics["attempts_relaxed"] = attempts
-        raw = str(response.json()["choices"][0]["message"]["content"])
-        raw_lines = [line for line in raw.splitlines() if line.strip()]
-        diagnostics["candidates_before_validation"] = len(raw_lines)
-        for line in raw_lines:
-            parts = [x.strip() for x in line.split("\t")]
-            if len(parts) < 2:
-                continue
-            source = parts[0]
-            target = parts[1]
-            if not source or not target:
-                continue
-            evidence = parts[2] if len(parts) > 2 else "LLM relaxed extraction"
-            out.append(
-                {
-                    "source_path": source,
-                    "target_path": target,
-                    "mapping_type": "direct",
-                    "confidence": 0.45,
-                    "notes": "Relaxed LLM extraction",
-                    "evidence": evidence,
-                }
-            )
-            if len(out) >= max_rules:
-                break
+        diagnostics["candidates_before_validation"] = before_validation
     except Exception as exc:
         diagnostics["llm_error"] = str(exc)
 

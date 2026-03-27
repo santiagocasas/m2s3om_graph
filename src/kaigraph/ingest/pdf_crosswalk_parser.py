@@ -82,6 +82,57 @@ def _parse_id_row(line: str, page_number: int) -> ParsedMappingRow | None:
     )
 
 
+def _is_ignored_line(line: str) -> bool:
+    return line in {
+        "ID DataCite-Property Dublin Core",
+        "DataCite to Dublin Core Mapping 4.4",
+    }
+
+
+def _append_note(current: ParsedMappingRow, line: str) -> None:
+    if current.notes is None:
+        current.notes = line
+        return
+    current.notes = f"{current.notes} {line}"
+
+
+def _apply_continuation_line(current: ParsedMappingRow, line: str) -> None:
+    if "dcterms:" in line:
+        term_match = TERM_RE.search(line)
+        if term_match is None:
+            return
+        term = term_match.group(1)
+        key = _normalize_spaces(line[: term_match.start()]).strip()
+        if key:
+            current.cases.append(ParsedCase(key=key, value=term))
+            current.mapping_type = MappingType.CONDITIONAL
+        return
+
+    if "concatenate" in line.lower():
+        current.mapping_type = MappingType.AGGREGATION
+        _append_note(current, line)
+        return
+
+    _append_note(current, line)
+
+
+def _finalize_row(row: ParsedMappingRow, doc_uri: str | None) -> None:
+    if row.cases and row.mapping_type != MappingType.CONDITIONAL:
+        row.mapping_type = MappingType.CONDITIONAL
+    if (
+        row.mapping_type == MappingType.DIRECT
+        and row.datacite_property.lower() == "relateditem"
+    ):
+        row.mapping_type = MappingType.AGGREGATION
+        row.notes = (
+            row.notes or ""
+        ) + " Concatenate related item details into citation."
+    if row.mapping_type == MappingType.PASSTHROUGH and row.dublin_core:
+        row.mapping_type = MappingType.DIRECT
+    if doc_uri:
+        row.snippet = f"[{doc_uri}] {row.snippet}"
+
+
 def parse_mapping_page_texts(
     page_texts: list[str],
     doc_uri: str | None = None,
@@ -92,12 +143,7 @@ def parse_mapping_page_texts(
     for page_number, raw_text in enumerate(page_texts, start=1):
         for raw_line in raw_text.splitlines():
             line = _normalize_spaces(raw_line)
-            if not line:
-                continue
-            if line in {
-                "ID DataCite-Property Dublin Core",
-                "DataCite to Dublin Core Mapping 4.4",
-            }:
+            if not line or _is_ignored_line(line):
                 continue
 
             parsed = _parse_id_row(line, page_number)
@@ -109,44 +155,10 @@ def parse_mapping_page_texts(
             if current is None:
                 continue
 
-            if "dcterms:" in line:
-                term_match = TERM_RE.search(line)
-                if term_match is None:
-                    continue
-                term = term_match.group(1)
-                key = _normalize_spaces(line[: term_match.start()]).strip()
-                if key:
-                    current.cases.append(ParsedCase(key=key, value=term))
-                    current.mapping_type = MappingType.CONDITIONAL
-                continue
-
-            if "concatenate" in line.lower():
-                current.mapping_type = MappingType.AGGREGATION
-                current.notes = (
-                    line if current.notes is None else f"{current.notes} {line}"
-                )
-                continue
-
-            if current.notes is None:
-                current.notes = line
-            else:
-                current.notes = f"{current.notes} {line}"
+            _apply_continuation_line(current, line)
 
     for row in rows:
-        if row.cases and row.mapping_type != MappingType.CONDITIONAL:
-            row.mapping_type = MappingType.CONDITIONAL
-        if (
-            row.mapping_type == MappingType.DIRECT
-            and row.datacite_property.lower() == "relateditem"
-        ):
-            row.mapping_type = MappingType.AGGREGATION
-            row.notes = (
-                row.notes or ""
-            ) + " Concatenate related item details into citation."
-        if row.mapping_type == MappingType.PASSTHROUGH and row.dublin_core:
-            row.mapping_type = MappingType.DIRECT
-        if doc_uri:
-            row.snippet = f"[{doc_uri}] {row.snippet}"
+        _finalize_row(row, doc_uri)
 
     return rows
 

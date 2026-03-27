@@ -1,13 +1,13 @@
 from dataclasses import dataclass, field
 
 from kaigraph.db import CrosswalkBundle
-from kaigraph.interop import (
+from kaigraph.interop.elib import (
     elib_export_urls,
     fetch_export,
     parse_dc_export_text_to_ir,
     parse_openaire_xml_to_ir,
 )
-from kaigraph.transform import apply_mapping_rules
+from kaigraph.transform.apply import apply_mapping_rules
 
 from .metrics import ComparisonMetrics, FieldDiff, compare_ir_detailed
 
