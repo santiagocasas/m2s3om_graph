@@ -1,5 +1,5 @@
 from kaigraph.db import MappingType
-from kaigraph.ingest.deterministic import extract_deterministic_candidates
+from kaigraph.ingest.deterministic.engine import extract_deterministic_candidates
 
 
 def test_extract_deterministic_candidates_assignment_and_dedupe() -> None:

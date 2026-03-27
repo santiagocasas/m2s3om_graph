@@ -1,18 +1,16 @@
 from pathlib import Path
 
-from kaigraph.crosswalk import resolve_conversion_route
+from kaigraph.crosswalk.route import resolve_conversion_route
 from kaigraph.db import InMemoryCrosswalkStore
-from kaigraph.ingest import ingest_datacite_to_dc_pdf
-from kaigraph.rdamsc import ensure_sssom_for_bundle
+from kaigraph.ingest.crosswalk_ingestion import ingest_datacite_to_dc_pdf
+from kaigraph.rdamsc.ingest import ensure_sssom_for_bundle
 
 
-def test_resolve_conversion_route_for_datacite_and_dc() -> None:
+def test_resolve_conversion_route_for_datacite_and_dc(
+    datacite_mapping_pdf_path: Path,
+) -> None:
     store = InMemoryCrosswalkStore()
-    pdf_path = Path("/home/casas/AI/Metadata-Mappings/DataCite_DublinCore_Mapping.pdf")
-    if not pdf_path.exists():
-        return
-
-    crosswalk_id = ingest_datacite_to_dc_pdf(store, pdf_path)
+    crosswalk_id = ingest_datacite_to_dc_pdf(store, datacite_mapping_pdf_path)
     bundle = store.get_crosswalk_bundle(crosswalk_id)
     assert bundle is not None
 

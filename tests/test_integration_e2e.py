@@ -1,21 +1,15 @@
 from pathlib import Path
 
 from kaigraph.db import InMemoryCrosswalkStore
-from kaigraph.ingest import ingest_datacite_to_dc_pdf
-from kaigraph.transform import (
-    apply_mapping_rules,
-    ir_to_dublin_core_xml,
-    parse_oai_dc_xml_to_ir,
-)
+from kaigraph.ingest.crosswalk_ingestion import ingest_datacite_to_dc_pdf
+from kaigraph.transform.apply import apply_mapping_rules
+from kaigraph.transform.parsers import parse_oai_dc_xml_to_ir
+from kaigraph.transform.serializers import ir_to_dublin_core_xml
 
 
-def test_end_to_end_ingest_and_transform() -> None:
+def test_end_to_end_ingest_and_transform(datacite_mapping_pdf_path: Path) -> None:
     store = InMemoryCrosswalkStore()
-    pdf_path = Path("/home/casas/AI/Metadata-Mappings/DataCite_DublinCore_Mapping.pdf")
-    if not pdf_path.exists():
-        return
-
-    crosswalk_id = ingest_datacite_to_dc_pdf(store, pdf_path)
+    crosswalk_id = ingest_datacite_to_dc_pdf(store, datacite_mapping_pdf_path)
     bundle = store.get_crosswalk_bundle(crosswalk_id)
     assert bundle is not None
     assert len(bundle.rules) > 20

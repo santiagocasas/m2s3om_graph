@@ -30,11 +30,8 @@ Other relation types dcterms:relation
     )
 
 
-def test_real_pdf_is_parsable_if_available() -> None:
-    pdf_path = Path("/home/casas/AI/Metadata-Mappings/DataCite_DublinCore_Mapping.pdf")
-    if not pdf_path.exists():
-        return
-    from kaigraph.ingest import parse_mapping_pdf
+def test_real_pdf_is_parsable_if_available(datacite_mapping_pdf_path: Path) -> None:
+    from kaigraph.ingest.pdf_crosswalk_parser import parse_mapping_pdf
 
-    rows = parse_mapping_pdf(pdf_path)
+    rows = parse_mapping_pdf(datacite_mapping_pdf_path)
     assert len(rows) > 20
