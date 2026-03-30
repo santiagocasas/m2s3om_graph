@@ -1,5 +1,6 @@
 from kaigraph.db import MappingRuleRecord, MappingType
-from kaigraph.transform import IRValue, add_ir_value, apply_mapping_rules
+from kaigraph.transform.apply import apply_mapping_rules
+from kaigraph.transform.ir import IRValue, add_ir_value
 
 
 def test_apply_direct_missing_and_conditional_rules() -> None:

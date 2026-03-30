@@ -136,6 +136,7 @@ Use it only when you intentionally want to regenerate outputs with current pipel
 ## Package layout
 
 - `src/kaigraph/rdamsc`: RDAMSC API sync + artifact ingestion
+- `src/kaigraph/rdamsc/pipeline_stats_*`: pipeline stats/freeze tooling internals (CLI entrypoint: `scripts/rdamsc_pipeline_stats.py`)
 - `src/kaigraph/sssom.py`: authoritative SSSOM read/write
 - `src/kaigraph/ingest`: mapping artifact parsers (including PDF)
 - `src/kaigraph/transform`: IR parsers, deterministic rule application, serializers

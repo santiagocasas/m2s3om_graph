@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-import xml.etree.ElementTree as ET
+
+from defusedxml import ElementTree as ET
 
 NS = {"oai": "http://www.openarchives.org/OAI/2.0/"}
 

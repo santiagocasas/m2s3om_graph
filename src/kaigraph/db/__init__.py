@@ -19,7 +19,6 @@ from .models import (
     MappingType,
     StandardRecord,
 )
-from .repository import CrosswalkRepository, InMemoryCrosswalkRepository
 from .schema import surreal_schema
 from .surreal_schema import crosswalk_surreal_schema
 
@@ -28,14 +27,12 @@ __all__ = [
     "CrosswalkRecord",
     "ArtifactDocumentRecord",
     "ArtifactChunkRecord",
-    "CrosswalkRepository",
     "CrosswalkStore",
     "BenchmarkRunRecord",
     "ComparisonResultRecord",
     "ElementRecord",
     "EvidenceRecord",
     "IRStoredRecord",
-    "InMemoryCrosswalkRepository",
     "InMemoryCrosswalkStore",
     "MappingRuleRecord",
     "MappingType",

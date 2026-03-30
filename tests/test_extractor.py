@@ -1,4 +1,4 @@
-from kaigraph.ingestion.extractor import extract_elements_from_text
+from kaigraph.ingest.extractor import extract_elements_from_text
 
 
 def test_extract_elements_from_text() -> None:

@@ -3,22 +3,21 @@ import json
 from pathlib import Path
 from typing import Callable
 
-from kaigraph.benchmark import benchmark_summary_to_json, run_fixture_benchmark
+from kaigraph.benchmark.report import benchmark_summary_to_json
+from kaigraph.benchmark.runner import run_fixture_benchmark
 from kaigraph.db import build_default_store
-from kaigraph.ingest import ingest_datacite_to_dc_pdf
-from kaigraph.rdamsc import (
+from kaigraph.ingest.crosswalk_ingestion import ingest_datacite_to_dc_pdf
+from kaigraph.rdamsc.ingest import (
     dump_result_json,
     ensure_sssom_for_bundle,
     ingest_rdamsc_crosswalk_docs,
-    run_bootstrap_pipeline,
     sync_rdamsc_catalog,
 )
-from kaigraph.transform import (
-    IRValue,
-    add_ir_value,
-    apply_mapping_rules,
-    ir_to_dublin_core_xml,
-)
+from kaigraph.rdamsc.contracts import BootstrapPipelineResult, IngestResult
+from kaigraph.rdamsc.pipeline import run_bootstrap_pipeline
+from kaigraph.transform.apply import apply_mapping_rules
+from kaigraph.transform.ir import IRValue, add_ir_value
+from kaigraph.transform.serializers import ir_to_dublin_core_xml
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -91,136 +90,160 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def run_cli(argv: list[str]) -> int:
-    parser = build_parser()
-    args = parser.parse_args(argv)
-    store = build_default_store()
+def _default_mapping_pdf() -> Path:
+    return Path("/home/casas/AI/Metadata-Mappings/DataCite_DublinCore_Mapping.pdf")
 
-    if args.command == "ingest-pdf":
-        pdf_path = Path(args.pdf)
-        if not pdf_path.exists():
-            print(f"error: pdf not found: {pdf_path}")
-            return 2
-        crosswalk_id = ingest_datacite_to_dc_pdf(store, pdf_path)
-        bundle = store.get_crosswalk_bundle(crosswalk_id)
-        count = len(bundle.rules) if bundle else 0
-        if bundle is not None:
-            _ = ensure_sssom_for_bundle(bundle, Path("exports/sssom"))
-        print(json.dumps({"crosswalk_id": crosswalk_id, "rules": count}))
-        return 0
 
-    if args.command == "sync-rdamsc":
-        count = sync_rdamsc_catalog(store)
-        result: dict[str, object] = {"synced": count}
-        if args.with_ingest:
-            out_dir = Path(args.sssom_dir)
-            outputs: list[dict[str, object]] = []
-            for crosswalk in store.list_crosswalks():
-                outputs.append(
-                    ingest_rdamsc_crosswalk_docs(store, crosswalk.id, out_dir)
-                )
-            result["ingest_results"] = outputs
-        print(dump_result_json(result))
-        return 0
+def _load_demo_bundle(store):
+    pdf_path = _default_mapping_pdf()
+    if not pdf_path.exists():
+        print("error: expected mapping PDF missing")
+        return None
+    crosswalk_id = ingest_datacite_to_dc_pdf(store, pdf_path)
+    bundle = store.get_crosswalk_bundle(crosswalk_id)
+    if bundle is None:
+        print("error: crosswalk bundle missing")
+        return None
+    _ = ensure_sssom_for_bundle(bundle, Path("exports/sssom"))
+    return bundle
 
-    if args.command == "ingest-rdamsc":
-        out_dir = Path(args.sssom_dir)
-        if not store.list_crosswalks():
+
+def _logger_from_verbose(verbose: bool) -> Callable[[str], None] | None:
+    if not verbose:
+        return None
+
+    def _logger(message: str) -> None:
+        print(message, flush=True)
+
+    return _logger
+
+
+def _targets_for_ingest(store, args: argparse.Namespace) -> list[str] | None:
+    crosswalks = store.list_crosswalks()
+    if not crosswalks:
+        _ = sync_rdamsc_catalog(store)
+        crosswalks = store.list_crosswalks()
+
+    if args.all:
+        return [x.id for x in crosswalks]
+    if args.crosswalk_id:
+        if not any(x.id == args.crosswalk_id for x in crosswalks):
             _ = sync_rdamsc_catalog(store)
-        targets: list[str] = []
-        if args.all:
-            targets = [x.id for x in store.list_crosswalks()]
-        elif args.crosswalk_id:
-            if not any(x.id == args.crosswalk_id for x in store.list_crosswalks()):
-                _ = sync_rdamsc_catalog(store)
-            targets = [args.crosswalk_id]
-        else:
-            print("error: provide --crosswalk-id or --all")
-            return 2
+        return [args.crosswalk_id]
 
-        outputs = [ingest_rdamsc_crosswalk_docs(store, cid, out_dir) for cid in targets]
-        print(dump_result_json({"results": outputs}))
-        return 0
+    print("error: provide --crosswalk-id or --all")
+    return None
 
-    if args.command == "bootstrap-rdamsc":
+
+def _cmd_ingest_pdf(store, args: argparse.Namespace) -> int:
+    pdf_path = Path(args.pdf)
+    if not pdf_path.exists():
+        print(f"error: pdf not found: {pdf_path}")
+        return 2
+    crosswalk_id = ingest_datacite_to_dc_pdf(store, pdf_path)
+    bundle = store.get_crosswalk_bundle(crosswalk_id)
+    count = len(bundle.rules) if bundle else 0
+    if bundle is not None:
+        _ = ensure_sssom_for_bundle(bundle, Path("exports/sssom"))
+    print(json.dumps({"crosswalk_id": crosswalk_id, "rules": count}))
+    return 0
+
+
+def _cmd_sync_rdamsc(store, args: argparse.Namespace) -> int:
+    count = sync_rdamsc_catalog(store)
+    result: dict[str, object] = {"synced": count}
+    if args.with_ingest:
         out_dir = Path(args.sssom_dir)
-        logger_fn: Callable[[str], None] | None = None
-        if args.verbose:
+        outputs: list[IngestResult] = []
+        for crosswalk in store.list_crosswalks():
+            outputs.append(ingest_rdamsc_crosswalk_docs(store, crosswalk.id, out_dir))
+        result["ingest_results"] = outputs
+    print(dump_result_json(result))
+    return 0
 
-            def _logger(message: str) -> None:
-                print(message, flush=True)
 
-            logger_fn = _logger
+def _cmd_ingest_rdamsc(store, args: argparse.Namespace) -> int:
+    targets = _targets_for_ingest(store, args)
+    if targets is None:
+        return 2
 
-        result = run_bootstrap_pipeline(
-            store,
-            out_dir,
-            force=bool(args.force),
-            only_crosswalk_id=(args.crosswalk_id or None),
-            logger=logger_fn,
+    out_dir = Path(args.sssom_dir)
+    outputs: list[IngestResult] = [
+        ingest_rdamsc_crosswalk_docs(store, cid, out_dir) for cid in targets
+    ]
+    print(dump_result_json({"results": outputs}))
+    return 0
+
+
+def _cmd_bootstrap_rdamsc(store, args: argparse.Namespace) -> int:
+    result: BootstrapPipelineResult = run_bootstrap_pipeline(
+        store,
+        Path(args.sssom_dir),
+        force=bool(args.force),
+        only_crosswalk_id=(args.crosswalk_id or None),
+        logger=_logger_from_verbose(bool(args.verbose)),
+    )
+    print(dump_result_json(result))
+    return 0
+
+
+def _cmd_demo_convert(store, _args: argparse.Namespace) -> int:
+    bundle = _load_demo_bundle(store)
+    if bundle is None:
+        return 2
+
+    source_ir: dict[str, list[IRValue]] = {}
+    add_ir_value(source_ir, "publicationYear", IRValue(text="2024"))
+    add_ir_value(source_ir, "Identifier", IRValue(text="10.1000/demo"))
+    target_ir, report = apply_mapping_rules(source_ir, bundle.rules)
+    xml = ir_to_dublin_core_xml(target_ir)
+    print(
+        json.dumps(
+            {
+                "applied_rules": len(report.applied_rule_ids),
+                "unmapped": len(report.unmapped_fields),
+                "xml_preview": xml[:180],
+            }
         )
-        print(dump_result_json(result))
-        return 0
+    )
+    return 0
 
-    if args.command == "demo-convert":
-        pdf_path = Path(
-            "/home/casas/AI/Metadata-Mappings/DataCite_DublinCore_Mapping.pdf"
-        )
-        if not pdf_path.exists():
-            print("error: expected mapping PDF missing")
-            return 2
-        crosswalk_id = ingest_datacite_to_dc_pdf(store, pdf_path)
-        bundle = store.get_crosswalk_bundle(crosswalk_id)
-        if bundle is None:
-            print("error: crosswalk bundle missing")
-            return 2
-        _ = ensure_sssom_for_bundle(bundle, Path("exports/sssom"))
 
-        source_ir: dict[str, list[IRValue]] = {}
-        add_ir_value(source_ir, "publicationYear", IRValue(text="2024"))
-        add_ir_value(source_ir, "Identifier", IRValue(text="10.1000/demo"))
-        target_ir, report = apply_mapping_rules(source_ir, bundle.rules)
-        xml = ir_to_dublin_core_xml(target_ir)
-        print(
-            json.dumps(
-                {
-                    "applied_rules": len(report.applied_rule_ids),
-                    "unmapped": len(report.unmapped_fields),
-                    "xml_preview": xml[:180],
-                }
-            )
-        )
-        return 0
+def _cmd_benchmark_fixture(store, _args: argparse.Namespace) -> int:
+    bundle = _load_demo_bundle(store)
+    if bundle is None:
+        return 2
 
-    if args.command == "benchmark-fixture":
-        pdf_path = Path(
-            "/home/casas/AI/Metadata-Mappings/DataCite_DublinCore_Mapping.pdf"
-        )
-        if not pdf_path.exists():
-            print("error: expected mapping PDF missing")
-            return 2
-        crosswalk_id = ingest_datacite_to_dc_pdf(store, pdf_path)
-        bundle = store.get_crosswalk_bundle(crosswalk_id)
-        if bundle is None:
-            print("error: crosswalk bundle missing")
-            return 2
-        _ = ensure_sssom_for_bundle(bundle, Path("exports/sssom"))
+    source_xml = (
+        "<oaire:resource xmlns:oaire='http://namespace.openaire.eu/schema/oaire/' "
+        "xmlns:datacite='http://datacite.org/schema/kernel-4'>"
+        "<datacite:titles><datacite:title>Demo title</datacite:title></datacite:titles>"
+        "<datacite:creators><datacite:creator><datacite:creatorName>Doe, Jane</datacite:creatorName></datacite:creator></datacite:creators>"
+        "<datacite:identifier>10.000/demo</datacite:identifier>"
+        "</oaire:resource>"
+    )
+    expected_dc = "title: Demo title\ncreator: Doe, Jane\nidentifier: 10.000/demo\n"
+    summary = run_fixture_benchmark(bundle, source_xml, expected_dc, n_cases=1)
+    print(benchmark_summary_to_json(summary))
+    return 0
 
-        source_xml = (
-            "<oaire:resource xmlns:oaire='http://namespace.openaire.eu/schema/oaire/' "
-            "xmlns:datacite='http://datacite.org/schema/kernel-4'>"
-            "<datacite:titles><datacite:title>Demo title</datacite:title></datacite:titles>"
-            "<datacite:creators><datacite:creator><datacite:creatorName>Doe, Jane</datacite:creatorName></datacite:creator></datacite:creators>"
-            "<datacite:identifier>10.000/demo</datacite:identifier>"
-            "</oaire:resource>"
-        )
-        expected_dc = "title: Demo title\ncreator: Doe, Jane\nidentifier: 10.000/demo\n"
-        summary = run_fixture_benchmark(bundle, source_xml, expected_dc, n_cases=1)
-        print(benchmark_summary_to_json(summary))
-        return 0
 
-    print("error: unsupported command")
-    return 2
+def run_cli(argv: list[str]) -> int:
+    args = build_parser().parse_args(argv)
+    store = build_default_store()
+    handlers: dict[str, Callable[[object, argparse.Namespace], int]] = {
+        "ingest-pdf": _cmd_ingest_pdf,
+        "sync-rdamsc": _cmd_sync_rdamsc,
+        "ingest-rdamsc": _cmd_ingest_rdamsc,
+        "bootstrap-rdamsc": _cmd_bootstrap_rdamsc,
+        "demo-convert": _cmd_demo_convert,
+        "benchmark-fixture": _cmd_benchmark_fixture,
+    }
+    handler = handlers.get(args.command)
+    if handler is None:
+        print("error: unsupported command")
+        return 2
+    return handler(store, args)
 
 
 def main() -> None:

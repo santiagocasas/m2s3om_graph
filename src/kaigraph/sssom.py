@@ -7,6 +7,7 @@ from typing import cast
 
 import yaml
 
+from kaigraph.atomic_files import atomic_write_text
 from kaigraph.db import (
     CrosswalkBundle,
     MappingRuleRecord,
@@ -15,6 +16,15 @@ from kaigraph.db import (
 )
 
 _NON_WORD_RE = re.compile(r"[^a-z0-9]+")
+
+SKOS_NS_URL = "http://www.w3.org/2004/02/skos/core#"
+SEMAPV_NS_URL = "https://w3id.org/semapv/vocab/"
+CC_BY_40_LICENSE_URL = "https://creativecommons.org/licenses/by/4.0/"
+KAIGRAPH_LOCAL_BASE_URL = "https://kaigraph.local"
+
+
+def _kaigraph_standard_iri(standard_id: str) -> str:
+    return f"{KAIGRAPH_LOCAL_BASE_URL.rstrip('/')}/{standard_id}/"
 
 
 def _slug(value: str) -> str:
@@ -40,8 +50,6 @@ def _predicate_for_rule(rule: MappingRuleRecord) -> str:
 def _justification_for_rule(rule: MappingRuleRecord) -> str:
     if rule.ambiguity:
         return "semapv:CompositeMatching"
-    if rule.mapping_type == MappingType.MISSING:
-        return "semapv:ManualMappingCuration"
     return "semapv:ManualMappingCuration"
 
 
@@ -54,12 +62,12 @@ def bundle_to_sssom_tsv(bundle: CrosswalkBundle) -> str:
             f" ({bundle.source_standard.name} -> {bundle.target_standard.name})"
         ),
         "curie_map": {
-            "src": f"https://kaigraph.local/{bundle.source_standard.id}/",
-            "dst": f"https://kaigraph.local/{bundle.target_standard.id}/",
-            "skos": "http://www.w3.org/2004/02/skos/core#",
-            "semapv": "https://w3id.org/semapv/vocab/",
+            "src": _kaigraph_standard_iri(bundle.source_standard.id),
+            "dst": _kaigraph_standard_iri(bundle.target_standard.id),
+            "skos": SKOS_NS_URL,
+            "semapv": SEMAPV_NS_URL,
         },
-        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "license": CC_BY_40_LICENSE_URL,
     }
     if bundle.crosswalk.doc_uri:
         metadata["mapping_set_source"] = bundle.crosswalk.doc_uri
@@ -121,8 +129,97 @@ def bundle_to_sssom_tsv(bundle: CrosswalkBundle) -> str:
 
 def write_bundle_sssom(bundle: CrosswalkBundle, output_path: Path) -> Path:
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(bundle_to_sssom_tsv(bundle), encoding="utf-8")
+    atomic_write_text(output_path, bundle_to_sssom_tsv(bundle))
     return output_path
+
+
+def _payload_from_comment(comment: str) -> dict[str, object]:
+    if not comment:
+        return {}
+    try:
+        loaded = json.loads(comment)
+    except json.JSONDecodeError:
+        return {}
+    return loaded if isinstance(loaded, dict) else {}
+
+
+def _mapping_type_from_payload(payload: dict[str, object]) -> MappingType:
+    raw_mapping_type = str(payload.get("mapping_type", "direct"))
+    try:
+        return MappingType(raw_mapping_type)
+    except ValueError:
+        return MappingType.DIRECT
+
+
+def _paths_from_payload_or_label(
+    payload: dict[str, object],
+    row: dict[str, str],
+    payload_key: str,
+    label_key: str,
+) -> list[object]:
+    if payload_key in payload:
+        value = payload.get(payload_key)
+        return value if isinstance(value, list) else []
+    label = row.get(label_key, "") or ""
+    return [x for x in label.split("|") if x]
+
+
+def _transform_from_payload(payload: dict[str, object]) -> dict[str, object]:
+    transform_obj = payload.get("transform")
+    if not isinstance(transform_obj, dict):
+        transform_obj = {"op": cast(object, "copy")}
+    return {str(k): v for k, v in transform_obj.items()}
+
+
+def _rule_id_from_row(
+    row: dict[str, str],
+    crosswalk_id: str,
+    source_paths: list[object],
+    target_paths: list[object],
+) -> str:
+    raw_id = row.get("record_id") or ""
+    trimmed = raw_id.strip()
+    if trimmed:
+        return trimmed
+    return stable_id(
+        "mapping_rule",
+        crosswalk_id,
+        "|".join(str(x) for x in source_paths),
+        "|".join(str(x) for x in target_paths),
+    )
+
+
+def _confidence_from_row(row: dict[str, str]) -> float:
+    try:
+        confidence = float(row.get("confidence", "0.8") or 0.8)
+    except ValueError:
+        confidence = 0.8
+    return max(0.0, min(1.0, confidence))
+
+
+def _semantic_loss_from_payload(
+    payload: dict[str, object],
+    mapping_type: MappingType,
+) -> bool:
+    if "semantic_loss" not in payload:
+        return mapping_type == MappingType.MISSING
+    return bool(payload.get("semantic_loss"))
+
+
+def _ambiguity_from_payload(
+    payload: dict[str, object],
+    mapping_type: MappingType,
+) -> bool:
+    if "ambiguity" not in payload:
+        return mapping_type in {MappingType.CONDITIONAL, MappingType.AGGREGATION}
+    return bool(payload.get("ambiguity"))
+
+
+def _notes_from_payload(payload: dict[str, object]) -> str | None:
+    notes = payload.get("notes")
+    if notes is None:
+        return None
+    return str(notes)
 
 
 def sssom_tsv_to_rules(content: str, crosswalk_id: str) -> list[MappingRuleRecord]:
@@ -135,64 +232,26 @@ def sssom_tsv_to_rules(content: str, crosswalk_id: str) -> list[MappingRuleRecor
 
     for row in reader:
         comment = row.get("comment", "") or ""
-        payload: dict[str, object] = {}
-        if comment:
-            try:
-                loaded = json.loads(comment)
-                if isinstance(loaded, dict):
-                    payload = loaded
-            except json.JSONDecodeError:
-                payload = {}
-
-        raw_mapping_type = str(payload.get("mapping_type", "direct"))
-        try:
-            mapping_type = MappingType(raw_mapping_type)
-        except ValueError:
-            mapping_type = MappingType.DIRECT
-
-        source_paths = payload.get("source_paths")
-        if not isinstance(source_paths, list):
-            source_label = row.get("subject_label", "") or ""
-            source_paths = [x for x in source_label.split("|") if x]
-
-        target_paths = payload.get("target_paths")
-        if not isinstance(target_paths, list):
-            object_label = row.get("object_label", "") or ""
-            target_paths = [x for x in object_label.split("|") if x]
-
-        transform_obj = payload.get("transform")
-        transform: dict[str, object]
-        if isinstance(transform_obj, dict):
-            transform = {str(k): v for k, v in transform_obj.items()}
-        else:
-            transform = {"op": cast(object, "copy")}
-
-        raw_id = row.get("record_id") or ""
-        rule_id = raw_id.strip() or stable_id(
-            "mapping_rule",
-            crosswalk_id,
-            "|".join(str(x) for x in source_paths),
-            "|".join(str(x) for x in target_paths),
+        payload = _payload_from_comment(comment)
+        mapping_type = _mapping_type_from_payload(payload)
+        source_paths = _paths_from_payload_or_label(
+            payload,
+            row,
+            "source_paths",
+            "subject_label",
         )
-
-        try:
-            confidence = float(row.get("confidence", "0.8") or 0.8)
-        except ValueError:
-            confidence = 0.8
-        confidence = max(0.0, min(1.0, confidence))
-
-        semantic_loss = bool(
-            payload.get("semantic_loss", mapping_type == MappingType.MISSING)
+        target_paths = _paths_from_payload_or_label(
+            payload,
+            row,
+            "target_paths",
+            "object_label",
         )
-        ambiguity = bool(
-            payload.get(
-                "ambiguity",
-                mapping_type in {MappingType.CONDITIONAL, MappingType.AGGREGATION},
-            )
-        )
-        notes = payload.get("notes")
-        if notes is not None:
-            notes = str(notes)
+        transform = _transform_from_payload(payload)
+        rule_id = _rule_id_from_row(row, crosswalk_id, source_paths, target_paths)
+        confidence = _confidence_from_row(row)
+        semantic_loss = _semantic_loss_from_payload(payload, mapping_type)
+        ambiguity = _ambiguity_from_payload(payload, mapping_type)
+        notes = _notes_from_payload(payload)
 
         out.append(
             MappingRuleRecord(

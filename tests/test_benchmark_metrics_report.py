@@ -1,7 +1,10 @@
-from kaigraph.benchmark import benchmark_summary_to_csv, benchmark_summary_to_json
+from kaigraph.benchmark.report import (
+    benchmark_summary_to_csv,
+    benchmark_summary_to_json,
+)
 from kaigraph.benchmark.metrics import compare_ir_detailed
 from kaigraph.benchmark.runner import BenchmarkCase, BenchmarkSummary
-from kaigraph.transform import IRValue
+from kaigraph.transform.ir import IRValue
 
 
 def test_compare_ir_detailed_metrics() -> None:

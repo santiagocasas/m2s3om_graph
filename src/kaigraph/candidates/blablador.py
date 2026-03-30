@@ -1,8 +1,14 @@
 import json
-import os
 from dataclasses import dataclass
 
 import requests
+
+from kaigraph.errors import ErrorPayload, make_error_payload
+from kaigraph.rdamsc.llm_runtime import (
+    llm_chat_completions_url,
+    llm_enabled,
+    load_llm_runtime_config,
+)
 
 
 @dataclass
@@ -10,6 +16,15 @@ class CandidateSuggestion:
     target_path: str
     confidence: float
     rationale: str
+
+
+_last_suggestion_error: ErrorPayload | None = None
+
+
+def last_suggestion_error() -> ErrorPayload | None:
+    if _last_suggestion_error is None:
+        return None
+    return dict(_last_suggestion_error)
 
 
 def _tokenize(text: str) -> set[str]:
@@ -53,16 +68,15 @@ def suggest_candidate_mappings(
     target_paths: list[str],
     max_candidates: int = 3,
 ) -> list[CandidateSuggestion]:
-    api_key = os.getenv("BLABLADOR_API_KEY")
-    base_url = os.getenv(
-        "BLABLADOR_BASE_URL",
-        "https://api.helmholtz-blablador.fz-juelich.de/v1",
-    ).rstrip("/")
-    if not api_key:
+    global _last_suggestion_error
+    _last_suggestion_error = None
+
+    config = load_llm_runtime_config()
+    if not llm_enabled(config):
         return _heuristic_suggestions(source_text, target_paths, max_candidates)
 
     payload = {
-        "model": os.getenv("KAIGRAPH_LLM_MODEL", "alias-fast"),
+        "model": config.model,
         "temperature": 0,
         "messages": [
             {
@@ -86,10 +100,10 @@ def suggest_candidate_mappings(
     }
     try:
         response = requests.post(
-            f"{base_url}/chat/completions",
-            headers={"Authorization": f"Bearer {api_key}"},
+            llm_chat_completions_url(config),
+            headers={"Authorization": f"Bearer {config.api_key}"},
             json=payload,
-            timeout=20,
+            timeout=config.timeout_s,
         )
         response.raise_for_status()
         raw = response.json()["choices"][0]["message"]["content"]
@@ -114,6 +128,20 @@ def suggest_candidate_mappings(
                 )
         if suggestions:
             return suggestions
-    except Exception:
-        pass
+    except requests.RequestException as exc:
+        status_code = (
+            exc.response.status_code if getattr(exc, "response", None) else None
+        )
+        _last_suggestion_error = make_error_payload(
+            source="candidate_suggestions",
+            operation="suggest_candidate_mappings.request",
+            error=exc,
+            status_code=status_code,
+        )
+    except (json.JSONDecodeError, KeyError, IndexError, TypeError, ValueError) as exc:
+        _last_suggestion_error = make_error_payload(
+            source="candidate_suggestions",
+            operation="suggest_candidate_mappings.parse_response",
+            error=exc,
+        )
     return _heuristic_suggestions(source_text, target_paths, max_candidates)

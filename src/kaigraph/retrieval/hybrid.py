@@ -2,8 +2,8 @@ import math
 import re
 from dataclasses import dataclass
 
-from kaigraph.db import CrosswalkRepository
-from kaigraph.models import Chunk, Element
+from kaigraph.db.repository import CrosswalkRepository
+from kaigraph.models.standards import Chunk, Element
 
 WORD_RE = re.compile(r"[A-Za-z0-9_]+")
 

@@ -1,36 +1,35 @@
 import json
-from xml.dom import minidom
 
 import streamlit as st
+from defusedxml.minidom import parseString as safe_parse_xml
 
-from state import DEFAULT_OAI_BASE_URL, DEFAULT_OAI_IDENTIFIER, get_store, sssom_dir
-from kaigraph.crosswalk import (
+from state import DEFAULT_OAI_BASE_URL, DEFAULT_OAI_IDENTIFIER, ensure_store, sssom_dir
+from kaigraph.crosswalk.route import (
     ConversionStep,
     available_target_formats,
     matched_standards_for_format,
     resolve_conversion_route,
 )
-from kaigraph.interop import parse_openaire_xml_to_ir
-from kaigraph.oai import (
-    InstitutionEndpoint,
+from kaigraph.interop.elib import parse_openaire_xml_to_ir
+from kaigraph.oai.bridge import ResolvedFormat, bridge_metadata_format
+from kaigraph.oai.client import OAIClient
+from kaigraph.oai.parser import (
     MetadataFormatInfo,
-    OAIClient,
-    ResolvedFormat,
-    bridge_metadata_format,
-    load_demo_identifiers,
-    load_institution_endpoints,
     parse_identifiers,
     parse_metadata_formats,
 )
-from kaigraph.transform import (
-    TransformationReport,
-    apply_mapping_rules,
-    ir_to_datacite_xml,
-    ir_to_dublin_core_xml,
+from kaigraph.oai.registry import (
+    InstitutionEndpoint,
+    load_demo_identifiers,
+    load_institution_endpoints,
+)
+from kaigraph.transform.apply import TransformationReport, apply_mapping_rules
+from kaigraph.transform.parsers import (
     parse_datacite_xml_to_ir,
     parse_marcxml_to_ir,
     parse_oai_dc_xml_to_ir,
 )
+from kaigraph.transform.serializers import ir_to_datacite_xml, ir_to_dublin_core_xml
 
 FORMAT_OPTIONS = {
     "oai_dc_xml": "OAI Dublin Core XML",
@@ -42,7 +41,7 @@ FORMAT_OPTIONS = {
 
 def _pretty_xml(xml_text: str) -> str:
     try:
-        parsed = minidom.parseString(xml_text)
+        parsed = safe_parse_xml(xml_text)
         return parsed.toprettyxml(indent="  ")
     except Exception:
         return xml_text
@@ -209,6 +208,112 @@ def _load_sample_identifiers(
     return [], error
 
 
+def _discover_and_render_formats(store, endpoint: str) -> list[MetadataFormatInfo]:
+    if st.button(
+        "Discover metadata formats", key="transform_discover_formats", type="primary"
+    ):
+        try:
+            st.session_state["transform_discovered_formats"] = _discover_formats(
+                endpoint
+            )
+            st.session_state["transform_discovery_endpoint"] = endpoint
+            st.success(
+                f"Found {len(st.session_state['transform_discovered_formats'])} metadata formats."
+            )
+        except Exception as exc:
+            st.error(f"Format discovery failed: {exc}")
+
+    discovered = st.session_state.get("transform_discovered_formats", [])
+    if endpoint != st.session_state.get("transform_discovery_endpoint"):
+        return []
+
+    if discovered:
+        st.dataframe(
+            _resolved_formats_table(store, discovered),
+            use_container_width=True,
+            hide_index=True,
+        )
+    return discovered
+
+
+def _select_resolved_source(
+    discovered: list[MetadataFormatInfo],
+) -> tuple[str, ResolvedFormat] | None:
+    choices = _resolved_choices(discovered)
+    if not choices:
+        st.info(
+            "Discover metadata formats first. Supported source families are Dublin Core, DataCite/OpenAIRE, and MARCXML."
+        )
+        return None
+
+    selected_prefix = st.selectbox(
+        "Source metadataPrefix",
+        list(choices.keys()),
+        format_func=lambda prefix: f"{prefix} -> {FORMAT_OPTIONS[choices[prefix].internal_format]}",
+    )
+    return selected_prefix, choices[selected_prefix]
+
+
+def _load_identifiers_if_requested(
+    institution_name: str,
+    endpoint: str,
+    selected_prefix: str,
+) -> None:
+    if not st.button("Load sample record IDs", key="transform_load_identifiers"):
+        return
+    identifiers, warning = _load_sample_identifiers(
+        institution_name, endpoint, selected_prefix
+    )
+    st.session_state["transform_identifier_choices"] = identifiers
+    if identifiers:
+        st.session_state["transform_record_identifier"] = identifiers[0]
+    if warning:
+        st.warning(warning)
+    elif identifiers:
+        st.success(f"Loaded {len(identifiers)} sample identifiers.")
+
+
+def _pick_identifier_input() -> str:
+    identifier_choices = st.session_state.get("transform_identifier_choices", [])
+    picked = ""
+    if identifier_choices:
+        picked = st.selectbox(
+            "Suggested record identifiers",
+            identifier_choices,
+            key="transform_identifier_select",
+        )
+
+    default_identifier = st.session_state.get(
+        "transform_record_identifier", picked or DEFAULT_OAI_IDENTIFIER
+    )
+    return st.text_input(
+        "Record identifier / URI",
+        value=str(default_identifier),
+        key="transform_record_identifier",
+    )
+
+
+def _fetch_source_payload_if_requested(
+    endpoint: str,
+    identifier: str,
+    selected_prefix: str,
+    resolved: ResolvedFormat,
+) -> None:
+    if not st.button("Fetch source record", key="transform_fetch_payload"):
+        return
+    try:
+        client = OAIClient(endpoint)
+        payload = client.get_record(str(identifier), selected_prefix)
+    except Exception as exc:
+        st.error(f"Failed to fetch source payload: {exc}")
+        return
+
+    st.session_state["transform_source_payload"] = payload
+    st.session_state["transform_source_format"] = resolved.internal_format
+    st.session_state["transform_source_profile"] = resolved.source_profile
+    st.session_state["transform_source_label"] = selected_prefix
+
+
 def _repository_source_panel(store) -> tuple[str, str | None, str, str | None]:
     institutions = _institution_options()
     names = [item.name for item in institutions]
@@ -232,87 +337,15 @@ def _repository_source_panel(store) -> tuple[str, str | None, str, str | None]:
         "`oai_openaire` is treated as DataCite-compatible in this demo. After discovery, the app shows which OAI formats it can actually map to the RDAMSC/SSSOM catalog."
     )
 
-    if st.button(
-        "Discover metadata formats", key="transform_discover_formats", type="primary"
-    ):
-        try:
-            st.session_state["transform_discovered_formats"] = _discover_formats(
-                endpoint
-            )
-            st.session_state["transform_discovery_endpoint"] = endpoint
-            st.success(
-                f"Found {len(st.session_state['transform_discovered_formats'])} metadata formats."
-            )
-        except Exception as exc:
-            st.error(f"Format discovery failed: {exc}")
-
-    discovered = st.session_state.get("transform_discovered_formats", [])
-    if endpoint != st.session_state.get("transform_discovery_endpoint"):
-        discovered = []
-
-    if discovered:
-        st.dataframe(
-            _resolved_formats_table(store, discovered),
-            use_container_width=True,
-            hide_index=True,
-        )
-
-    choices = _resolved_choices(discovered)
-    if not choices:
-        st.info(
-            "Discover metadata formats first. Supported source families are Dublin Core, DataCite/OpenAIRE, and MARCXML."
-        )
+    discovered = _discover_and_render_formats(store, endpoint)
+    selected_source = _select_resolved_source(discovered)
+    if selected_source is None:
         return "", None, endpoint, None
 
-    selected_prefix = st.selectbox(
-        "Source metadataPrefix",
-        list(choices.keys()),
-        format_func=lambda prefix: f"{prefix} -> {FORMAT_OPTIONS[choices[prefix].internal_format]}",
-    )
-    resolved = choices[selected_prefix]
-
-    if st.button("Load sample record IDs", key="transform_load_identifiers"):
-        identifiers, warning = _load_sample_identifiers(
-            institution_name, endpoint, selected_prefix
-        )
-        st.session_state["transform_identifier_choices"] = identifiers
-        if identifiers:
-            st.session_state["transform_record_identifier"] = identifiers[0]
-        if warning:
-            st.warning(warning)
-        elif identifiers:
-            st.success(f"Loaded {len(identifiers)} sample identifiers.")
-
-    identifier_choices = st.session_state.get("transform_identifier_choices", [])
-    if identifier_choices:
-        picked = st.selectbox(
-            "Suggested record identifiers",
-            identifier_choices,
-            key="transform_identifier_select",
-        )
-    else:
-        picked = ""
-
-    default_identifier = st.session_state.get(
-        "transform_record_identifier", picked or DEFAULT_OAI_IDENTIFIER
-    )
-    identifier = st.text_input(
-        "Record identifier / URI",
-        value=str(default_identifier),
-        key="transform_record_identifier",
-    )
-
-    if st.button("Fetch source record", key="transform_fetch_payload"):
-        try:
-            client = OAIClient(endpoint)
-            payload = client.get_record(str(identifier), selected_prefix)
-        except Exception as exc:
-            st.error(f"Failed to fetch source payload: {exc}")
-        else:
-            st.session_state["transform_source_payload"] = payload
-            st.session_state["transform_source_format"] = resolved.internal_format
-            st.session_state["transform_source_profile"] = resolved.source_profile
-            st.session_state["transform_source_label"] = selected_prefix
+    selected_prefix, resolved = selected_source
+    _load_identifiers_if_requested(institution_name, endpoint, selected_prefix)
+    identifier = _pick_identifier_input()
+    _fetch_source_payload_if_requested(endpoint, identifier, selected_prefix, resolved)
 
     return (
         st.session_state.get("transform_source_payload", ""),
@@ -378,7 +411,7 @@ def render() -> None:
         "This demo currently supports Dublin Core, DataCite-family payloads, and MARCXML. OpenAIRE is handled as DataCite-compatible."
     )
 
-    store = get_store()
+    store = ensure_store()
     source_mode = st.radio(
         "Source workflow",
         ["Repository browser", "Paste manually"],

@@ -11,11 +11,14 @@ from kaigraph.db import (
     StandardRecord,
     build_default_store,
 )
-from kaigraph.rdamsc import (
-    backfill_kg_from_sssom,
-    load_pipeline_status,
+from kaigraph.errors import make_error_payload
+from kaigraph.rdamsc.ingest import (
     sssom_output_path,
     sync_rdamsc_catalog,
+)
+from kaigraph.rdamsc.pipeline import (
+    backfill_kg_from_sssom,
+    load_pipeline_status,
 )
 from kaigraph.sssom import load_sssom_rules
 
@@ -34,9 +37,16 @@ def _auto_sync_enabled() -> bool:
 
 
 def get_store() -> CrosswalkStore:
+    store = st.session_state.get("crosswalk_store")
+    if isinstance(store, CrosswalkStore):
+        return store
+    raise RuntimeError("Crosswalk store is not initialized. Call ensure_store() first.")
+
+
+def ensure_store() -> CrosswalkStore:
     if "crosswalk_store" not in st.session_state:
         st.session_state["crosswalk_store"] = build_default_store()
-    return st.session_state["crosswalk_store"]
+    return get_store()
 
 
 def _parse_sssom_metadata(path: Path) -> dict[str, object]:
@@ -141,7 +151,7 @@ def ensure_seeded() -> None:
         return
 
     out_dir = sssom_dir()
-    store = get_store()
+    store = ensure_store()
     seeded_rules = _seed_store_from_sssom_exports(store, out_dir)
     synced_catalog = False
 
@@ -149,7 +159,17 @@ def ensure_seeded() -> None:
         try:
             _ = sync_rdamsc_catalog(store)
             synced_catalog = True
-        except Exception:
+            st.session_state["store_sync_error"] = None
+        except Exception as exc:
+            diagnostics = getattr(exc, "diagnostics", None)
+            if isinstance(diagnostics, dict):
+                st.session_state["store_sync_error"] = diagnostics
+            else:
+                st.session_state["store_sync_error"] = make_error_payload(
+                    source="app_state",
+                    operation="ensure_seeded.sync_rdamsc_catalog",
+                    error=exc,
+                )
             st.session_state["store_seeded"] = True
             st.session_state["store_seeded_rules"] = seeded_rules
             st.session_state["store_synced_catalog"] = False

@@ -1,22 +1,31 @@
 import csv
 import io
 import json
+from pathlib import Path
 
 import streamlit as st
 
-from state import get_store, sssom_dir
-from kaigraph.candidates import suggest_candidate_mappings
-from kaigraph.db import CrosswalkRecord, MappingType
-from kaigraph.rdamsc import backfill_kg_from_sssom
-from kaigraph.rdamsc import (
-    ingest_rdamsc_crosswalk_docs,
+from state import ensure_store, sssom_dir
+from kaigraph.candidates.blablador import (
+    last_suggestion_error,
+    suggest_candidate_mappings,
+)
+from kaigraph.db import (
+    CrosswalkBundle,
+    CrosswalkRecord,
+    CrosswalkStore,
+    MappingRuleRecord,
+    MappingType,
+)
+from kaigraph.rdamsc.ingest import (
     sssom_output_path,
     sync_rdamsc_catalog,
 )
+from kaigraph.rdamsc.contracts import PipelineResult, PipelineStatusMap, result_is_ok
 from kaigraph.rdamsc.pipeline import (
     load_pipeline_status,
     resolve_crosswalk_status,
-    save_pipeline_status,
+    run_bootstrap_pipeline,
     status_label,
 )
 from kaigraph.sssom import load_sssom_rules
@@ -30,8 +39,7 @@ def _stats(rules_count: int, missing: int, conditional: int, aggregation: int) -
     c4.metric("Aggregation", aggregation)
 
 
-def _rdamsc_crosswalks() -> list[CrosswalkRecord]:
-    store = get_store()
+def _rdamsc_crosswalks(store: CrosswalkStore) -> list[CrosswalkRecord]:
     return [
         x
         for x in store.list_crosswalks()
@@ -40,39 +48,15 @@ def _rdamsc_crosswalks() -> list[CrosswalkRecord]:
 
 
 def _status_code(
+    store: CrosswalkStore,
+    out_dir: Path,
     crosswalk: CrosswalkRecord,
-    status_map: dict[str, dict[str, object]],
+    status_map: PipelineStatusMap,
 ) -> str:
-    return resolve_crosswalk_status(get_store(), crosswalk, sssom_dir(), status_map)
+    return resolve_crosswalk_status(store, crosswalk, out_dir, status_map)
 
 
-def _remember_result(
-    crosswalk: CrosswalkRecord,
-    result: dict[str, object],
-    status_map: dict[str, dict[str, object]],
-) -> None:
-    if bool(result.get("ok")):
-        status = "ready"
-    else:
-        reason = str(result.get("reason", "unknown"))
-        if reason == "artifacts_unreachable":
-            status = "failed_unreachable"
-        elif reason == "artifacts_unsupported":
-            status = "failed_unsupported"
-        else:
-            status = "failed_parse"
-    status_map[crosswalk.id] = {
-        "crosswalk_id": crosswalk.id,
-        "msc_id": crosswalk.msc_id,
-        "name": crosswalk.name,
-        "status": status,
-        "label": status_label(status),
-        "result": result,
-    }
-    _ = save_pipeline_status(status_map)
-
-
-def _display_artifact_checks(result: dict[str, object]) -> None:
+def _display_artifact_checks(result: PipelineResult) -> None:
     checks = result.get("artifact_checks")
     if not isinstance(checks, list) or not checks:
         return
@@ -113,35 +97,43 @@ def _display_artifact_checks(result: dict[str, object]) -> None:
 
 
 def _ingest_selected(
+    store: CrosswalkStore,
+    out_dir: Path,
     crosswalk: CrosswalkRecord,
-    status_map: dict[str, dict[str, object]],
     *,
     force: bool = False,
-) -> dict[str, object]:
-    code = _status_code(crosswalk, status_map)
-    if code == "ready" and not force:
-        return {"ok": True, "reason": "already_ready"}
-    if code == "kg_out_of_sync" and not force:
-        loaded = backfill_kg_from_sssom(get_store(), crosswalk, sssom_dir())
-        result = {"ok": True, "reason": "kg_backfill", "backfilled_rules": loaded}
-        _remember_result(crosswalk, result, status_map)
-        return result
-
-    result = ingest_rdamsc_crosswalk_docs(
-        get_store(),
-        crosswalk.id,
-        sssom_dir(),
+) -> PipelineResult:
+    pipeline_result = run_bootstrap_pipeline(
+        store,
+        out_dir,
+        force=force,
+        only_crosswalk_id=crosswalk.id,
     )
-    _remember_result(crosswalk, result, status_map)
-    return result
+    processed = pipeline_result.get("processed", [])
+    if not processed:
+        return {
+            "ok": False,
+            "reason": "not_processed",
+            "crosswalk_id": crosswalk.id,
+        }
+    first = processed[0]
+    result = first.get("result")
+    if isinstance(result, dict):
+        return result
+    return {
+        "ok": False,
+        "reason": "invalid_pipeline_result",
+        "crosswalk_id": crosswalk.id,
+    }
 
 
 def _ingest_all(
-    status_map: dict[str, dict[str, object]],
+    store: CrosswalkStore,
+    out_dir: Path,
     *,
     force: bool = False,
 ) -> None:
-    crosswalks = _rdamsc_crosswalks()
+    crosswalks = _rdamsc_crosswalks(store)
     if not crosswalks:
         st.warning("No RDAMSC mappings available.")
         return
@@ -149,14 +141,15 @@ def _ingest_all(
     ok = 0
     skipped = 0
     failed = 0
-    for crosswalk in crosswalks:
-        code = _status_code(crosswalk, status_map)
-        if code == "ready" and not force:
-            skipped += 1
+    pipeline_result = run_bootstrap_pipeline(store, out_dir, force=force)
+    processed = pipeline_result.get("processed", [])
+    for item in processed:
+        result = item.get("result")
+        if not isinstance(result, dict):
+            failed += 1
             continue
-        result = _ingest_selected(crosswalk, status_map, force=force)
-        if bool(result.get("ok")):
-            if result.get("reason") == "already_ready":
+        if result_is_ok(result):
+            if result.get("step") == "skipped_ready":
                 skipped += 1
             else:
                 ok += 1
@@ -165,7 +158,7 @@ def _ingest_all(
     st.success(f"Completed. Success: {ok}, skipped ready: {skipped}, failed: {failed}.")
 
 
-def render() -> None:
+def _render_intro() -> None:
     st.header("Crosswalk Browser")
     st.caption("Browse RDAMSC mappings, inspect rules, and export SSSOM/JSON/CSV.")
     st.markdown(
@@ -178,8 +171,13 @@ def render() -> None:
         "3) Inspect rules and evidence, 4) Export TSV/JSON/CSV."
     )
 
-    status_map = load_pipeline_status()
-    crosswalks = _rdamsc_crosswalks()
+
+def _status_counts(
+    store: CrosswalkStore,
+    out_dir: Path,
+    crosswalks: list[CrosswalkRecord],
+    status_map: PipelineStatusMap,
+) -> dict[str, int]:
     counts: dict[str, int] = {
         "ready": 0,
         "kg_out_of_sync": 0,
@@ -189,12 +187,21 @@ def render() -> None:
         "failed_parse": 0,
     }
     for crosswalk in crosswalks:
-        code = _status_code(crosswalk, status_map)
+        code = _status_code(store, out_dir, crosswalk, status_map)
         if code not in counts:
             counts["failed_parse"] += 1
-        else:
-            counts[code] += 1
+            continue
+        counts[code] += 1
+    return counts
 
+
+def _render_catalog_overview(
+    store: CrosswalkStore,
+    out_dir: Path,
+    crosswalks: list[CrosswalkRecord],
+    status_map: PipelineStatusMap,
+) -> None:
+    counts = _status_counts(store, out_dir, crosswalks, status_map)
     st.caption(
         " | ".join(
             [
@@ -209,6 +216,12 @@ def render() -> None:
         )
     )
 
+
+def _render_maintenance_actions(
+    store: CrosswalkStore,
+    out_dir: Path,
+) -> list[CrosswalkRecord]:
+    crosswalks = _rdamsc_crosswalks(store)
     with st.expander("Maintenance (optional)", expanded=False):
         st.caption(
             "Artifacts are converted to markdown via MarkItDown first. "
@@ -216,9 +229,9 @@ def render() -> None:
         )
         if st.button("Refresh RDAMSC catalog", key="crosswalk_sync_optional"):
             try:
-                count = sync_rdamsc_catalog(get_store())
+                count = sync_rdamsc_catalog(store)
                 st.success(f"Catalog refreshed. Synced {count} mappings.")
-                crosswalks = _rdamsc_crosswalks()
+                crosswalks = _rdamsc_crosswalks(store)
             except Exception as exc:
                 st.error(f"Catalog sync failed: {exc}")
 
@@ -226,86 +239,24 @@ def render() -> None:
         if c1.button(
             "Generate missing SSSOM for all", key="crosswalk_ingest_missing_all"
         ):
-            _ingest_all(status_map, force=False)
-            status_map = load_pipeline_status()
+            _ingest_all(store, out_dir, force=False)
         if c2.button(
             "Force re-ingest all supported docs", key="crosswalk_ingest_force_all"
         ):
-            _ingest_all(status_map, force=True)
-            status_map = load_pipeline_status()
+            _ingest_all(store, out_dir, force=True)
 
-    if not crosswalks:
-        st.warning(
-            "No RDAMSC mappings in store. Use the optional refresh button above."
-        )
-        return
+    return crosswalks
 
-    show_non_ready_only = st.checkbox(
-        "Show only mappings not ready",
-        value=False,
-        key="crosswalk_show_missing_only",
-    )
-    if show_non_ready_only:
-        crosswalks = [
-            x for x in crosswalks if _status_code(x, status_map) not in {"ready"}
-        ]
-        if not crosswalks:
-            st.info("All RDAMSC mappings are ready.")
-            return
 
-    selected = st.selectbox(
-        "Crosswalk",
-        crosswalks,
-        format_func=lambda x: f"{x.name} ({x.msc_id}) [{status_label(_status_code(x, status_map))}]",
-        key="crosswalk_browser_select",
-    )
-
-    if st.button(
-        "Generate SSSOM for selected",
-        key="crosswalk_generate_selected",
-        type="primary",
-    ):
-        try:
-            result = _ingest_selected(selected, status_map, force=False)
-            if result.get("reason") == "already_ready":
-                st.info("Mapping already ready; no re-ingestion needed.")
-            elif result.get("reason") == "kg_backfill":
-                st.success(
-                    f"Loaded {result.get('backfilled_rules', 0)} rules from SSSOM into KG."
-                )
-            elif bool(result.get("ok")):
-                st.success(
-                    f"Generated {result.get('inserted_rules', 0)} new rules "
-                    f"(total {result.get('total_rules', 0)}) and wrote {result.get('sssom_path')}"
-                )
-            else:
-                st.warning(f"Ingestion failed: {result.get('reason')}")
-                _display_artifact_checks(result)
-            status_map = load_pipeline_status()
-        except Exception as exc:
-            st.error(f"Generation failed: {exc}")
-
-    with st.expander("Selected mapping advanced actions", expanded=False):
-        if st.button("Force re-ingest selected", key="crosswalk_force_selected"):
-            try:
-                result = _ingest_selected(selected, status_map, force=True)
-                if bool(result.get("ok")):
-                    st.success(
-                        f"Re-ingested mapping; total rules now {result.get('total_rules', 0)}"
-                    )
-                else:
-                    st.warning(f"Re-ingestion failed: {result.get('reason')}")
-                    _display_artifact_checks(result)
-                status_map = load_pipeline_status()
-            except Exception as exc:
-                st.error(f"Re-ingestion failed: {exc}")
-
-    bundle = get_store().get_crosswalk_bundle(selected.id)
+def _resolve_bundle_rules(
+    store: CrosswalkStore,
+    out_dir: Path,
+    selected: CrosswalkRecord,
+) -> tuple[CrosswalkBundle, Path, list[MappingRuleRecord]]:
+    bundle = store.get_crosswalk_bundle(selected.id)
     if bundle is None:
-        st.error("Crosswalk bundle not found")
-        return
-
-    sssom_path = sssom_output_path(sssom_dir(), selected.id)
+        raise RuntimeError("Crosswalk bundle not found")
+    sssom_path = sssom_output_path(out_dir, selected.id)
     sssom_rules = (
         load_sssom_rules(sssom_path, selected.id) if sssom_path.exists() else []
     )
@@ -314,7 +265,18 @@ def render() -> None:
         st.info(
             "KG has no rules for this mapping yet. Showing authoritative SSSOM rules."
         )
+    return bundle, sssom_path, rules
 
+
+def _render_selected_summary(
+    store: CrosswalkStore,
+    out_dir: Path,
+    selected: CrosswalkRecord,
+    status_map: PipelineStatusMap,
+    bundle: CrosswalkBundle,
+    sssom_path: Path,
+    rules: list[MappingRuleRecord],
+) -> None:
     missing_rules = sum(1 for r in rules if r.mapping_type == MappingType.MISSING)
     conditional = sum(1 for r in rules if r.mapping_type == MappingType.CONDITIONAL)
     aggregation = sum(1 for r in rules if r.mapping_type == MappingType.AGGREGATION)
@@ -327,7 +289,9 @@ def render() -> None:
     st.write(f"MSC ID: `{bundle.crosswalk.msc_id or 'n/a'}`")
     st.write(f"DOI: `{bundle.crosswalk.doi or 'n/a'}`")
     st.write(f"Primary document URI: `{bundle.crosswalk.doc_uri or 'n/a'}`")
-    st.write(f"Pipeline status: `{status_label(_status_code(selected, status_map))}`")
+    st.write(
+        f"Pipeline status: `{status_label(_status_code(store, out_dir, selected, status_map))}`"
+    )
     if sssom_path.exists():
         st.write(f"SSSOM file: `{sssom_path}`")
     else:
@@ -337,16 +301,12 @@ def render() -> None:
 
     last = status_map.get(selected.id, {})
     last_result = last.get("result")
-    if isinstance(last_result, dict) and not bool(last_result.get("ok", True)):
+    if isinstance(last_result, dict) and not result_is_ok(last_result):
         st.warning(f"Last ingestion failure reason: {last_result.get('reason')}")
         _display_artifact_checks(last_result)
 
-    st.subheader("Rules")
-    if not rules:
-        st.info(
-            "No rules extracted yet for this mapping. "
-            "The source documentation may require parser improvements or assisted curation."
-        )
+
+def _rule_filter_inputs() -> tuple[str, str, int]:
     filter_type = st.selectbox(
         "Mapping type",
         ["all"] + [x.value for x in MappingType],
@@ -362,7 +322,25 @@ def render() -> None:
         .strip()
         .lower()
     )
+    max_rows = int(
+        st.number_input(
+            "Max rules to show",
+            min_value=10,
+            max_value=500,
+            value=120,
+            step=10,
+        )
+    )
+    return filter_type, query, max_rows
 
+
+def _filter_rules(
+    rules: list[MappingRuleRecord],
+    *,
+    filter_type: str,
+    query: str,
+    max_rows: int,
+) -> list[MappingRuleRecord]:
     filtered = rules
     if filter_type != "all":
         filtered = [x for x in filtered if x.mapping_type.value == filter_type]
@@ -373,60 +351,82 @@ def render() -> None:
             if query in " ".join(x.source_paths).lower()
             or query in " ".join(x.target_paths).lower()
         ]
+    return filtered[:max_rows]
 
-    max_rows = st.number_input(
-        "Max rules to show",
-        min_value=10,
-        max_value=500,
-        value=120,
-        step=10,
+
+def _render_candidate_suggestions(
+    rule: MappingRuleRecord,
+    rules: list[MappingRuleRecord],
+) -> None:
+    all_target_paths = sorted(
+        {
+            path
+            for other_rule in rules
+            for path in other_rule.target_paths
+            if path.startswith("dcterms:")
+        }
     )
-    filtered = filtered[: int(max_rows)]
+    source_text = " ".join(rule.source_paths)
+    suggestions = suggest_candidate_mappings(source_text, all_target_paths)
+    suggestion_error = last_suggestion_error()
+    if isinstance(suggestion_error, dict):
+        operation = str(suggestion_error.get("operation", "suggest_candidate_mappings"))
+        message = str(suggestion_error.get("message", "unknown error"))
+        st.caption(f"LLM fallback used: {operation} failed ({message}).")
+    st.caption(
+        "Candidate suggestions are non-authoritative and never overwrite baseline rules."
+    )
+    for item in suggestions:
+        st.write(
+            f"- {item.target_path} (confidence {item.confidence:.2f}) - {item.rationale}"
+        )
+
+
+def _render_rule_card(rule: MappingRuleRecord, rules: list[MappingRuleRecord]) -> None:
+    source_row = rule.source_paths[0] if rule.source_paths else "n/a"
+    source_label = rule.source_paths[1] if len(rule.source_paths) > 1 else source_row
+    title = (
+        f"{source_row} ({source_label}) -> "
+        f"{', '.join(rule.target_paths) if rule.target_paths else 'n/a'} "
+        f"[{rule.mapping_type.value}]"
+    )
+    with st.expander(title):
+        st.write(f"Source field: {source_label}")
+        st.write(f"Confidence: {rule.confidence:.2f}")
+        st.write(f"Ambiguity: {rule.ambiguity} | Semantic loss: {rule.semantic_loss}")
+        st.code(json.dumps(rule.transform, indent=2), language="json")
+        if rule.notes:
+            st.caption(rule.notes)
+        for evidence in rule.evidence:
+            st.markdown(
+                f"- Source **{evidence.source}**, row **{evidence.row_id}**: {evidence.snippet}"
+            )
+
+        if st.button("Suggest AI candidate mappings", key=f"suggest_{rule.id}"):
+            _render_candidate_suggestions(rule, rules)
+
+
+def _render_rules_section(rules: list[MappingRuleRecord]) -> None:
+    st.subheader("Rules")
+    if not rules:
+        st.info(
+            "No rules extracted yet for this mapping. "
+            "The source documentation may require parser improvements or assisted curation."
+        )
+    filter_type, query, max_rows = _rule_filter_inputs()
+    filtered = _filter_rules(
+        rules,
+        filter_type=filter_type,
+        query=query,
+        max_rows=max_rows,
+    )
 
     st.write(f"Showing {len(filtered)} of {len(rules)} rules")
     for rule in filtered:
-        source_row = rule.source_paths[0] if rule.source_paths else "n/a"
-        source_label = (
-            rule.source_paths[1] if len(rule.source_paths) > 1 else source_row
-        )
-        title = (
-            f"{source_row} ({source_label}) -> "
-            f"{', '.join(rule.target_paths) if rule.target_paths else 'n/a'} "
-            f"[{rule.mapping_type.value}]"
-        )
-        with st.expander(title):
-            st.write(f"Source field: {source_label}")
-            st.write(f"Confidence: {rule.confidence:.2f}")
-            st.write(
-                f"Ambiguity: {rule.ambiguity} | Semantic loss: {rule.semantic_loss}"
-            )
-            st.code(json.dumps(rule.transform, indent=2), language="json")
-            if rule.notes:
-                st.caption(rule.notes)
-            for evidence in rule.evidence:
-                st.markdown(
-                    f"- Source **{evidence.source}**, row **{evidence.row_id}**: {evidence.snippet}"
-                )
+        _render_rule_card(rule, rules)
 
-            if st.button("Suggest AI candidate mappings", key=f"suggest_{rule.id}"):
-                all_target_paths = sorted(
-                    {
-                        path
-                        for other_rule in rules
-                        for path in other_rule.target_paths
-                        if path.startswith("dcterms:")
-                    }
-                )
-                source_text = " ".join(rule.source_paths)
-                suggestions = suggest_candidate_mappings(source_text, all_target_paths)
-                st.caption(
-                    "Candidate suggestions are non-authoritative and never overwrite baseline rules."
-                )
-                for item in suggestions:
-                    st.write(
-                        f"- {item.target_path} (confidence {item.confidence:.2f}) - {item.rationale}"
-                    )
 
+def _render_exports(rules: list[MappingRuleRecord], sssom_path: Path) -> None:
     st.subheader("Export")
     st.caption(
         "SSSOM TSV is authoritative for conversion. JSON and CSV are convenience exports."
@@ -472,3 +472,144 @@ def render() -> None:
         csv_buffer.getvalue(),
         file_name="mapping_rules.csv",
     )
+
+
+def _report_selected_ingest_result(result: PipelineResult, *, force: bool) -> None:
+    if result_is_ok(result):
+        step = str(result.get("step", ""))
+        if step == "kg_backfill":
+            st.success(
+                f"Loaded {result.get('backfilled_rules', 0)} rules from SSSOM into KG."
+            )
+            return
+        if step == "skipped_ready" and not force:
+            st.info("Mapping already ready; no re-ingestion needed.")
+            return
+        if force:
+            st.success(
+                f"Re-ingested mapping; total rules now {result.get('total_rules', 0)}"
+            )
+            return
+        st.success(
+            f"Generated {result.get('inserted_rules', 0)} new rules "
+            f"(total {result.get('total_rules', 0)}) and wrote {result.get('sssom_path')}"
+        )
+        return
+
+    failure_label = "Re-ingestion failed" if force else "Ingestion failed"
+    st.warning(f"{failure_label}: {result.get('reason')}")
+    _display_artifact_checks(result)
+
+
+def _run_selected_ingest(
+    store: CrosswalkStore,
+    out_dir: Path,
+    selected: CrosswalkRecord,
+    status_map: PipelineStatusMap,
+    *,
+    force: bool,
+) -> PipelineStatusMap:
+    try:
+        result = _ingest_selected(store, out_dir, selected, force=force)
+    except Exception as exc:
+        error_label = "Re-ingestion failed" if force else "Generation failed"
+        st.error(f"{error_label}: {exc}")
+        return status_map
+
+    _report_selected_ingest_result(result, force=force)
+    return load_pipeline_status()
+
+
+def _filter_crosswalks_for_display(
+    store: CrosswalkStore,
+    out_dir: Path,
+    crosswalks: list[CrosswalkRecord],
+    status_map: PipelineStatusMap,
+) -> list[CrosswalkRecord]:
+    show_non_ready_only = st.checkbox(
+        "Show only mappings not ready",
+        value=False,
+        key="crosswalk_show_missing_only",
+    )
+    if not show_non_ready_only:
+        return crosswalks
+
+    filtered = [
+        x for x in crosswalks if _status_code(store, out_dir, x, status_map) != "ready"
+    ]
+    if not filtered:
+        st.info("All RDAMSC mappings are ready.")
+    return filtered
+
+
+def render() -> None:
+    _render_intro()
+
+    store = ensure_store()
+    out_dir = sssom_dir()
+    status_map = load_pipeline_status()
+    crosswalks = _rdamsc_crosswalks(store)
+    _render_catalog_overview(store, out_dir, crosswalks, status_map)
+    crosswalks = _render_maintenance_actions(store, out_dir)
+    status_map = load_pipeline_status()
+
+    if not crosswalks:
+        st.warning(
+            "No RDAMSC mappings in store. Use the optional refresh button above."
+        )
+        return
+
+    crosswalks = _filter_crosswalks_for_display(store, out_dir, crosswalks, status_map)
+    if not crosswalks:
+        return
+
+    selected = st.selectbox(
+        "Crosswalk",
+        crosswalks,
+        format_func=lambda x: (
+            f"{x.name} ({x.msc_id}) "
+            f"[{status_label(_status_code(store, out_dir, x, status_map))}]"
+        ),
+        key="crosswalk_browser_select",
+    )
+
+    if st.button(
+        "Generate SSSOM for selected",
+        key="crosswalk_generate_selected",
+        type="primary",
+    ):
+        status_map = _run_selected_ingest(
+            store,
+            out_dir,
+            selected,
+            status_map,
+            force=False,
+        )
+
+    with st.expander("Selected mapping advanced actions", expanded=False):
+        if st.button("Force re-ingest selected", key="crosswalk_force_selected"):
+            status_map = _run_selected_ingest(
+                store,
+                out_dir,
+                selected,
+                status_map,
+                force=True,
+            )
+
+    try:
+        bundle, sssom_path, rules = _resolve_bundle_rules(store, out_dir, selected)
+    except RuntimeError as exc:
+        st.error(str(exc))
+        return
+
+    _render_selected_summary(
+        store,
+        out_dir,
+        selected,
+        status_map,
+        bundle,
+        sssom_path,
+        rules,
+    )
+    _render_rules_section(rules)
+    _render_exports(rules, sssom_path)

@@ -16,7 +16,7 @@ from kaigraph.db import (
     StandardRecord,
     stable_id,
 )
-from kaigraph.ingest.deterministic import extract_deterministic_candidates
+from kaigraph.ingest.deterministic.engine import extract_deterministic_candidates
 from kaigraph.ingest.pdf_crosswalk_parser import parse_mapping_page_texts
 from kaigraph.sssom import write_bundle_sssom
 
@@ -27,8 +27,14 @@ from .artifacts import (
     artifact_extension,
     fetch_artifact_text,
 )
+from .contracts import (
+    ArtifactCheck,
+    IngestResult,
+    LLMDiagnostics,
+    llm_diagnostics_template,
+)
 from .llm_extract import extract_mapping_candidates_with_meta
-from .llm_extract import blablador_enabled, configured_llm_model
+from .llm_runtime import llm_backend_label, load_llm_runtime_config
 
 _DC_HEADING_RE = re.compile(r"^\s*([A-Za-z][A-Za-z\s]+?)\s+--\s+")
 _MARC_FIELD_RE = re.compile(r"\b(\d{3})\s*([0-9#])([0-9#])?\$([0-9a-z])")
@@ -389,7 +395,7 @@ def _ingest_with_llm(
     evidence_doc_uri: str,
     *,
     seen_pairs: set[tuple[str, str]] | None = None,
-) -> tuple[int, dict[str, object]]:
+) -> tuple[int, LLMDiagnostics]:
     extracted, diagnostics = _extract_llm_candidates(
         merged_markdown,
         source_standard.name,
@@ -412,9 +418,17 @@ def _extract_llm_candidates(
     merged_markdown: str,
     source_standard_name: str,
     target_standard_name: str,
-) -> tuple[list[dict[str, object]], dict[str, object]]:
+) -> tuple[list[dict[str, object]], LLMDiagnostics]:
     if not merged_markdown:
-        return [], {"backend": "none", "llm_error": "empty_input", "prompt_chars": 0}
+        config = load_llm_runtime_config()
+        diagnostics = llm_diagnostics_template(
+            timeout_s=config.timeout_s,
+            retries=config.retries,
+            max_input_chars=config.max_input_chars,
+        )
+        diagnostics["backend"] = "none"
+        diagnostics["llm_error"] = "empty_input"
+        return [], diagnostics
     return extract_mapping_candidates_with_meta(
         merged_markdown,
         source_standard_name,
@@ -613,33 +627,20 @@ def sssom_output_path(base_dir: Path, crosswalk_id: str) -> Path:
     return base_dir / f"{crosswalk_id}.sssom.tsv"
 
 
-def ingest_rdamsc_crosswalk_docs(
-    store: CrosswalkStore,
-    crosswalk_id: str,
-    output_dir: Path,
-    client: RDAMSCClient | None = None,
-    logger: Callable[[str], None] | None = None,
-) -> dict[str, object]:
-    def emit(message: str) -> None:
-        if logger is not None:
-            logger(message)
+def _artifact_failure_reason(artifact_checks: list[ArtifactCheck]) -> str:
+    had_fetch_errors = any(x.get("status") == "fetch_error" for x in artifact_checks)
+    if had_fetch_errors:
+        return "artifacts_unreachable"
+    return "artifacts_unsupported"
 
-    client = client or RDAMSCClient()
-    crosswalks = {x.id: x for x in store.list_crosswalks()}
-    crosswalk = crosswalks.get(crosswalk_id)
-    if crosswalk is None:
-        return {"ok": False, "reason": "crosswalk_not_found"}
-    if not crosswalk.msc_id:
-        return {"ok": False, "reason": "missing_msc_id"}
 
-    emit(f"[{crosswalk.msc_id}] Inspecting mapping metadata")
-    detail = client.get_mapping_detail(crosswalk.msc_id)
-    locations = detail.get("locations")
-    if not isinstance(locations, list):
-        return {"ok": False, "reason": "no_locations"}
-
+def _fetch_artifacts(
+    crosswalk: CrosswalkRecord,
+    locations: list[object],
+    emit: Callable[[str], None],
+) -> tuple[list[ArtifactText], list[ArtifactCheck], list[str]]:
     artifacts: list[ArtifactText] = []
-    artifact_checks: list[dict[str, object]] = []
+    artifact_checks: list[ArtifactCheck] = []
     skipped: list[str] = []
     for loc in locations:
         if not isinstance(loc, dict):
@@ -647,6 +648,7 @@ def ingest_rdamsc_crosswalk_docs(
         url = str(loc.get("url", "")).strip()
         if not url:
             continue
+
         check: dict[str, object] = {
             "url": url,
             "extension": artifact_extension(url),
@@ -678,51 +680,96 @@ def ingest_rdamsc_crosswalk_docs(
             skipped.append(url)
         artifact_checks.append(check)
 
-    if not artifacts:
-        had_fetch_errors = any(
-            x.get("status") == "fetch_error" for x in artifact_checks
-        )
-        had_conversion_errors = any(
-            x.get("status") == "conversion_error" for x in artifact_checks
-        )
-        reason = "artifacts_unsupported"
-        if had_fetch_errors and not had_conversion_errors:
-            reason = "artifacts_unreachable"
-        elif had_fetch_errors and had_conversion_errors:
-            reason = "artifacts_unreachable"
-        return {
-            "ok": False,
-            "reason": reason,
-            "crosswalk_id": crosswalk.id,
-            "skipped": skipped,
-            "artifact_checks": artifact_checks,
-        }
+    return artifacts, artifact_checks, skipped
 
-    standards = {x.id: x for x in store.list_standards()}
-    source_standard = standards.get(crosswalk.source_standard_id)
-    target_standard = standards.get(crosswalk.target_standard_id)
-    if source_standard is None or target_standard is None:
-        return {"ok": False, "reason": "missing_standards"}
 
-    docs_count, chunks_count = _persist_artifacts_in_kg(store, crosswalk, artifacts)
-    emit(
-        f"[{crosswalk.msc_id}] Ingested artifacts into KG as markdown "
-        f"(documents={docs_count}, chunks={chunks_count})"
+def _llm_backend_label() -> str:
+    return llm_backend_label(load_llm_runtime_config())
+
+
+def _run_generic_or_llm_extraction(
+    store: CrosswalkStore,
+    crosswalk: CrosswalkRecord,
+    source_standard: StandardRecord,
+    target_standard: StandardRecord,
+    merged_markdown: str,
+    evidence_doc_uri: str,
+    emit: Callable[[str], None],
+    *,
+    generic_log: str,
+    llm_log: str,
+) -> tuple[int, int, str, dict[str, object] | None, LLMDiagnostics | None]:
+    deterministic_candidates, deterministic_diagnostics = (
+        _deterministic_generic_candidates(merged_markdown)
     )
-    merged_markdown = _merged_markdown_from_kg(store, crosswalk.id)
-    if not merged_markdown:
-        merged_markdown = _merge_texts(artifacts)
-    evidence_doc_uri = artifacts[0].url if artifacts else (crosswalk.doc_uri or "")
+    if len(deterministic_candidates) >= DETERMINISTIC_GENERIC_MIN_RULES:
+        strategy = "deterministic_generic"
+        emit(generic_log.format(candidate_count=len(deterministic_candidates)))
+        seen_pairs: set[tuple[str, str]] = set()
+        inserted_rules = _ingest_candidate_records(
+            store,
+            crosswalk,
+            source_standard,
+            deterministic_candidates,
+            evidence_doc_uri=evidence_doc_uri,
+            evidence_source="DETERMINISTIC",
+            default_evidence="Deterministic extraction from mapping documentation",
+            seen_pairs=seen_pairs,
+        )
+        llm_augmented_rules, llm_diagnostics = _ingest_with_llm(
+            store,
+            crosswalk,
+            source_standard,
+            target_standard,
+            merged_markdown,
+            evidence_doc_uri,
+            seen_pairs=seen_pairs,
+        )
+        inserted_rules += llm_augmented_rules
+        if llm_augmented_rules > 0:
+            strategy = "deterministic_generic_augmented"
+            emit(
+                f"[{crosswalk.msc_id}] LLM augmentation added "
+                f"{llm_augmented_rules} additional rules"
+            )
+        return (
+            inserted_rules,
+            llm_augmented_rules,
+            strategy,
+            deterministic_diagnostics,
+            llm_diagnostics,
+        )
 
-    inserted_rules = 0
-    llm_augmented_rules = 0
-    llm_diagnostics: dict[str, object] | None = None
-    deterministic_diagnostics: dict[str, object] | None = None
+    emit(
+        llm_log.format(
+            backend=_llm_backend_label(),
+            candidate_count=len(deterministic_candidates),
+        )
+    )
+    inserted_rules, llm_diagnostics = _ingest_with_llm(
+        store,
+        crosswalk,
+        source_standard,
+        target_standard,
+        merged_markdown,
+        evidence_doc_uri,
+    )
+    return inserted_rules, 0, "llm", deterministic_diagnostics, llm_diagnostics
+
+
+def _extract_rules_for_artifacts(
+    store: CrosswalkStore,
+    crosswalk: CrosswalkRecord,
+    source_standard: StandardRecord,
+    target_standard: StandardRecord,
+    artifacts: list[ArtifactText],
+    merged_markdown: str,
+    evidence_doc_uri: str,
+    emit: Callable[[str], None],
+) -> tuple[int, int, str, dict[str, object] | None, LLMDiagnostics | None]:
     artifact_urls = [x.url.lower() for x in artifacts]
     first_url = artifact_urls[0]
-    strategy = "llm"
     if "datacite_dublincore_mapping" in first_url and first_url.endswith(".pdf"):
-        strategy = "deterministic_pdf"
         emit(f"[{crosswalk.msc_id}] Parsing deterministic PDF mapping")
         inserted_rules = _ingest_datacite_like_pdf(
             store,
@@ -730,8 +777,9 @@ def ingest_rdamsc_crosswalk_docs(
             source_standard,
             artifacts[0],
         )
-    elif any("loc.gov/marc/dccross" in url for url in artifact_urls):
-        strategy = "deterministic_html_loc"
+        return inserted_rules, 0, "deterministic_pdf", None, None
+
+    if any("loc.gov/marc/dccross" in url for url in artifact_urls):
         emit(f"[{crosswalk.msc_id}] Parsing deterministic LOC HTML crosswalk")
         inserted_rules = _ingest_loc_dccross_html(
             store,
@@ -739,120 +787,115 @@ def ingest_rdamsc_crosswalk_docs(
             source_standard,
             artifacts,
         )
-        if inserted_rules == 0:
-            deterministic_candidates, deterministic_diagnostics = (
-                _deterministic_generic_candidates(merged_markdown)
-            )
-            if len(deterministic_candidates) >= DETERMINISTIC_GENERIC_MIN_RULES:
-                strategy = "deterministic_generic"
-                emit(
-                    f"[{crosswalk.msc_id}] Deterministic generic extraction produced "
-                    f"{len(deterministic_candidates)} candidates"
-                )
-                seen_pairs: set[tuple[str, str]] = set()
-                inserted_rules = _ingest_candidate_records(
-                    store,
-                    crosswalk,
-                    source_standard,
-                    deterministic_candidates,
-                    evidence_doc_uri=evidence_doc_uri,
-                    evidence_source="DETERMINISTIC",
-                    default_evidence="Deterministic extraction from mapping documentation",
-                    seen_pairs=seen_pairs,
-                )
-                llm_augmented_rules, llm_diagnostics = _ingest_with_llm(
-                    store,
-                    crosswalk,
-                    source_standard,
-                    target_standard,
-                    merged_markdown,
-                    evidence_doc_uri,
-                    seen_pairs=seen_pairs,
-                )
-                inserted_rules += llm_augmented_rules
-                if llm_augmented_rules > 0:
-                    strategy = "deterministic_generic_augmented"
-                    emit(
-                        f"[{crosswalk.msc_id}] LLM augmentation added "
-                        f"{llm_augmented_rules} additional rules"
-                    )
-            else:
-                strategy = "llm"
-                backend = (
-                    f"Blablador model={configured_llm_model()}"
-                    if blablador_enabled()
-                    else "heuristic fallback (BLABLADOR_API_KEY not set)"
-                )
-                emit(
-                    f"[{crosswalk.msc_id}] Deterministic parsers found "
-                    f"{inserted_rules} rules and generic parser produced "
-                    f"{len(deterministic_candidates)} candidates; "
-                    f"falling back to LLM extraction ({backend})"
-                )
-                inserted_rules, llm_diagnostics = _ingest_with_llm(
-                    store,
-                    crosswalk,
-                    source_standard,
-                    target_standard,
-                    merged_markdown,
-                    evidence_doc_uri,
-                )
-    else:
-        deterministic_candidates, deterministic_diagnostics = (
-            _deterministic_generic_candidates(merged_markdown)
+        if inserted_rules > 0:
+            return inserted_rules, 0, "deterministic_html_loc", None, None
+        return _run_generic_or_llm_extraction(
+            store,
+            crosswalk,
+            source_standard,
+            target_standard,
+            merged_markdown,
+            evidence_doc_uri,
+            emit,
+            generic_log=(
+                f"[{crosswalk.msc_id}] Deterministic generic extraction produced "
+                "{candidate_count} candidates"
+            ),
+            llm_log=(
+                f"[{crosswalk.msc_id}] Deterministic parsers found {inserted_rules} "
+                "rules and generic parser produced {candidate_count} candidates; "
+                "falling back to LLM extraction ({backend})"
+            ),
         )
-        if len(deterministic_candidates) >= DETERMINISTIC_GENERIC_MIN_RULES:
-            strategy = "deterministic_generic"
-            emit(
-                f"[{crosswalk.msc_id}] Running deterministic generic extraction "
-                f"on merged artifact text ({len(deterministic_candidates)} candidates)"
-            )
-            seen_pairs: set[tuple[str, str]] = set()
-            inserted_rules = _ingest_candidate_records(
-                store,
-                crosswalk,
-                source_standard,
-                deterministic_candidates,
-                evidence_doc_uri=evidence_doc_uri,
-                evidence_source="DETERMINISTIC",
-                default_evidence="Deterministic extraction from mapping documentation",
-                seen_pairs=seen_pairs,
-            )
-            llm_augmented_rules, llm_diagnostics = _ingest_with_llm(
-                store,
-                crosswalk,
-                source_standard,
-                target_standard,
-                merged_markdown,
-                evidence_doc_uri,
-                seen_pairs=seen_pairs,
-            )
-            inserted_rules += llm_augmented_rules
-            if llm_augmented_rules > 0:
-                strategy = "deterministic_generic_augmented"
-                emit(
-                    f"[{crosswalk.msc_id}] LLM augmentation added "
-                    f"{llm_augmented_rules} additional rules"
-                )
-        else:
-            backend = (
-                f"Blablador model={configured_llm_model()}"
-                if blablador_enabled()
-                else "heuristic fallback (BLABLADOR_API_KEY not set)"
-            )
-            emit(
-                f"[{crosswalk.msc_id}] Running LLM extraction on merged artifact text "
-                f"({backend}; deterministic generic candidates={len(deterministic_candidates)})"
-            )
-            inserted_rules, llm_diagnostics = _ingest_with_llm(
-                store,
-                crosswalk,
-                source_standard,
-                target_standard,
-                merged_markdown,
-                evidence_doc_uri,
-            )
 
+    return _run_generic_or_llm_extraction(
+        store,
+        crosswalk,
+        source_standard,
+        target_standard,
+        merged_markdown,
+        evidence_doc_uri,
+        emit,
+        generic_log=(
+            f"[{crosswalk.msc_id}] Running deterministic generic extraction "
+            "on merged artifact text ({candidate_count} candidates)"
+        ),
+        llm_log=(
+            f"[{crosswalk.msc_id}] Running LLM extraction on merged artifact text "
+            "({backend}; deterministic generic candidates={candidate_count})"
+        ),
+    )
+
+
+def _ingest_result_payload(
+    crosswalk: CrosswalkRecord,
+    inserted_rules: int,
+    docs_count: int,
+    chunks_count: int,
+    artifacts: list[ArtifactText],
+    skipped: list[str],
+    artifact_checks: list[ArtifactCheck],
+    strategy: str,
+    llm_augmented_rules: int,
+    deterministic_diagnostics: dict[str, object] | None,
+    llm_diagnostics: LLMDiagnostics | None,
+) -> dict[str, object]:
+    return {
+        "crosswalk_id": crosswalk.id,
+        "inserted_rules": inserted_rules,
+        "artifact_documents": docs_count,
+        "artifact_chunks": chunks_count,
+        "artifacts": [x.url for x in artifacts],
+        "skipped": skipped,
+        "artifact_checks": artifact_checks,
+        "strategy": strategy,
+        "llm_augmented_rules": llm_augmented_rules,
+        "deterministic_diagnostics": deterministic_diagnostics,
+        "llm_diagnostics": llm_diagnostics,
+    }
+
+
+def _lookup_crosswalk_and_locations(
+    store: CrosswalkStore,
+    crosswalk_id: str,
+    client: RDAMSCClient,
+    emit: Callable[[str], None],
+) -> tuple[CrosswalkRecord, list[object]] | IngestResult:
+    crosswalks = {x.id: x for x in store.list_crosswalks()}
+    crosswalk = crosswalks.get(crosswalk_id)
+    if crosswalk is None:
+        return {"ok": False, "reason": "crosswalk_not_found"}
+    if not crosswalk.msc_id:
+        return {"ok": False, "reason": "missing_msc_id"}
+
+    emit(f"[{crosswalk.msc_id}] Inspecting mapping metadata")
+    detail = client.get_mapping_detail(crosswalk.msc_id)
+    locations = detail.get("locations")
+    if not isinstance(locations, list):
+        return {"ok": False, "reason": "no_locations"}
+
+    return crosswalk, locations
+
+
+def _lookup_crosswalk_standards(
+    store: CrosswalkStore,
+    crosswalk: CrosswalkRecord,
+) -> tuple[StandardRecord, StandardRecord] | IngestResult:
+    standards = {x.id: x for x in store.list_standards()}
+    source_standard = standards.get(crosswalk.source_standard_id)
+    target_standard = standards.get(crosswalk.target_standard_id)
+    if source_standard is None or target_standard is None:
+        return {"ok": False, "reason": "missing_standards"}
+    return source_standard, target_standard
+
+
+def _finalize_ingest_result(
+    store: CrosswalkStore,
+    crosswalk: CrosswalkRecord,
+    output_dir: Path,
+    result_payload: dict[str, object],
+    emit: Callable[[str], None],
+) -> IngestResult:
     bundle = store.get_crosswalk_bundle(crosswalk.id)
     if bundle is None:
         return {"ok": False, "reason": "bundle_missing_after_ingest"}
@@ -867,17 +910,7 @@ def ingest_rdamsc_crosswalk_docs(
         return {
             "ok": False,
             "reason": "no_rules_extracted",
-            "crosswalk_id": crosswalk.id,
-            "inserted_rules": inserted_rules,
-            "artifact_documents": docs_count,
-            "artifact_chunks": chunks_count,
-            "artifacts": [x.url for x in artifacts],
-            "skipped": skipped,
-            "artifact_checks": artifact_checks,
-            "strategy": strategy,
-            "llm_augmented_rules": llm_augmented_rules,
-            "deterministic_diagnostics": deterministic_diagnostics,
-            "llm_diagnostics": llm_diagnostics,
+            **result_payload,
         }
 
     emit(
@@ -885,23 +918,94 @@ def ingest_rdamsc_crosswalk_docs(
     )
     _ = write_bundle_sssom(bundle, out_path)
     emit(f"[{crosswalk.msc_id}] Wrote SSSOM: {out_path}")
-
     return {
         "ok": True,
-        "crosswalk_id": crosswalk.id,
-        "inserted_rules": inserted_rules,
+        **result_payload,
         "total_rules": len(bundle.rules),
-        "artifact_documents": docs_count,
-        "artifact_chunks": chunks_count,
-        "artifacts": [x.url for x in artifacts],
-        "skipped": skipped,
-        "artifact_checks": artifact_checks,
-        "strategy": strategy,
-        "llm_augmented_rules": llm_augmented_rules,
-        "deterministic_diagnostics": deterministic_diagnostics,
-        "llm_diagnostics": llm_diagnostics,
         "sssom_path": str(out_path),
     }
+
+
+def ingest_rdamsc_crosswalk_docs(
+    store: CrosswalkStore,
+    crosswalk_id: str,
+    output_dir: Path,
+    client: RDAMSCClient | None = None,
+    logger: Callable[[str], None] | None = None,
+) -> IngestResult:
+    def emit(message: str) -> None:
+        if logger is not None:
+            logger(message)
+
+    client = client or RDAMSCClient()
+    crosswalk_with_locations = _lookup_crosswalk_and_locations(
+        store,
+        crosswalk_id,
+        client,
+        emit,
+    )
+    if isinstance(crosswalk_with_locations, dict):
+        return crosswalk_with_locations
+    crosswalk, locations = crosswalk_with_locations
+
+    artifacts, artifact_checks, skipped = _fetch_artifacts(crosswalk, locations, emit)
+
+    if not artifacts:
+        return {
+            "ok": False,
+            "reason": _artifact_failure_reason(artifact_checks),
+            "crosswalk_id": crosswalk.id,
+            "skipped": skipped,
+            "artifact_checks": artifact_checks,
+        }
+
+    source_and_target = _lookup_crosswalk_standards(store, crosswalk)
+    if isinstance(source_and_target, dict):
+        return source_and_target
+    source_standard, target_standard = source_and_target
+
+    docs_count, chunks_count = _persist_artifacts_in_kg(store, crosswalk, artifacts)
+    emit(
+        f"[{crosswalk.msc_id}] Ingested artifacts into KG as markdown "
+        f"(documents={docs_count}, chunks={chunks_count})"
+    )
+    merged_markdown = _merged_markdown_from_kg(store, crosswalk.id)
+    if not merged_markdown:
+        merged_markdown = _merge_texts(artifacts)
+    evidence_doc_uri = artifacts[0].url if artifacts else (crosswalk.doc_uri or "")
+
+    (
+        inserted_rules,
+        llm_augmented_rules,
+        strategy,
+        deterministic_diagnostics,
+        llm_diagnostics,
+    ) = _extract_rules_for_artifacts(
+        store,
+        crosswalk,
+        source_standard,
+        target_standard,
+        artifacts,
+        merged_markdown,
+        evidence_doc_uri,
+        emit,
+    )
+
+    result_payload = _ingest_result_payload(
+        crosswalk,
+        inserted_rules,
+        docs_count,
+        chunks_count,
+        artifacts,
+        skipped,
+        artifact_checks,
+        strategy,
+        llm_augmented_rules,
+        deterministic_diagnostics,
+        llm_diagnostics,
+    )
+
+    return _finalize_ingest_result(store, crosswalk, output_dir, result_payload, emit)
 
 
 def ensure_sssom_for_bundle(bundle: CrosswalkBundle, output_dir: Path) -> Path:

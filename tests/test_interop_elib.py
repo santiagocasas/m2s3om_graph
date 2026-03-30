@@ -1,4 +1,4 @@
-from kaigraph.interop import (
+from kaigraph.interop.elib import (
     elib_export_urls,
     parse_dc_export_text_to_ir,
     parse_openaire_xml_to_ir,

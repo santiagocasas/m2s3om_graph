@@ -3,7 +3,7 @@ from kaigraph.mapping.exporters import (
     export_crosswalk_json,
     export_crosswalk_yaml,
 )
-from kaigraph.models import Crosswalk, MappingRecord
+from kaigraph.models.crosswalk import Crosswalk, MappingRecord
 
 
 def test_exporters() -> None:

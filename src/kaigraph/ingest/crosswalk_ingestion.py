@@ -18,6 +18,11 @@ DATACITE_STANDARD_ID = "datacite_4_4"
 DC_STANDARD_ID = "dublin_core_terms"
 CROSSWALK_ID = "datacite44_to_dcterms"
 
+DATACITE_SPEC_URL = "https://schema.datacite.org/meta/kernel-4.4/"
+DATACITE_DOCS_URL = "https://support.datacite.org/docs/datacite-metadata-schema-v44"
+DCTERMS_SPEC_URL = "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/"
+DCTERMS_BASE_IRI = "http://purl.org/dc/terms/"
+
 
 def _parent_row_id(row_id: str) -> str | None:
     if "." not in row_id:
@@ -43,6 +48,12 @@ def _mapping_confidence(mapping_type: MappingType) -> float:
     if mapping_type == MappingType.MISSING:
         return 0.95
     return 0.65
+
+
+def _dcterms_full_iri(path: str) -> str:
+    if ":" not in path:
+        return DCTERMS_BASE_IRI + path
+    return DCTERMS_BASE_IRI + path.split(":", 1)[1]
 
 
 def _build_transform(row: ParsedMappingRow) -> dict[str, object]:
@@ -91,8 +102,8 @@ def ingest_datacite_to_dc_pdf(
         namespace="datacite",
         version="4.4",
         urls={
-            "spec": "https://schema.datacite.org/meta/kernel-4.4/",
-            "docs": "https://support.datacite.org/docs/datacite-metadata-schema-v44",
+            "spec": DATACITE_SPEC_URL,
+            "docs": DATACITE_DOCS_URL,
         },
     )
     dcterms = StandardRecord(
@@ -101,7 +112,7 @@ def ingest_datacite_to_dc_pdf(
         namespace="dcterms",
         version="1.1",
         urls={
-            "spec": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/",
+            "spec": DCTERMS_SPEC_URL,
         },
     )
     store.upsert_standard(datacite)
@@ -150,10 +161,7 @@ def ingest_datacite_to_dc_pdf(
                         standard_id=dcterms.id,
                         path=row.dublin_core,
                         label=_dc_label(row.dublin_core),
-                        full_iri=(
-                            "http://purl.org/dc/terms/"
-                            f"{row.dublin_core.split(':', 1)[1]}"
-                        ),
+                        full_iri=_dcterms_full_iri(row.dublin_core),
                     )
                 )
 
@@ -169,10 +177,7 @@ def ingest_datacite_to_dc_pdf(
                             standard_id=dcterms.id,
                             path=case.value,
                             label=_dc_label(case.value),
-                            full_iri=(
-                                "http://purl.org/dc/terms/"
-                                f"{case.value.split(':', 1)[1]}"
-                            ),
+                            full_iri=_dcterms_full_iri(case.value),
                         )
                     )
 

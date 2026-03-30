@@ -4,7 +4,7 @@ import json
 
 import yaml
 
-from kaigraph.models import Crosswalk, MappingRecord
+from kaigraph.models.crosswalk import Crosswalk, MappingRecord
 
 
 def export_crosswalk_json(crosswalk: Crosswalk, mappings: list[MappingRecord]) -> str:

@@ -1,16 +1,13 @@
 from pathlib import Path
 
-from kaigraph.benchmark import run_fixture_benchmark
+from kaigraph.benchmark.runner import run_fixture_benchmark
 from kaigraph.db import InMemoryCrosswalkStore
-from kaigraph.ingest import ingest_datacite_to_dc_pdf
+from kaigraph.ingest.crosswalk_ingestion import ingest_datacite_to_dc_pdf
 
 
-def test_fixture_benchmark_runs() -> None:
+def test_fixture_benchmark_runs(datacite_mapping_pdf_path: Path) -> None:
     store = InMemoryCrosswalkStore()
-    pdf_path = Path("/home/casas/AI/Metadata-Mappings/DataCite_DublinCore_Mapping.pdf")
-    if not pdf_path.exists():
-        return
-    crosswalk_id = ingest_datacite_to_dc_pdf(store, pdf_path)
+    crosswalk_id = ingest_datacite_to_dc_pdf(store, datacite_mapping_pdf_path)
     bundle = store.get_crosswalk_bundle(crosswalk_id)
     assert bundle is not None
 

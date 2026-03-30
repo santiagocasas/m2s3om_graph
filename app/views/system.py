@@ -3,6 +3,11 @@ import os
 import requests
 import streamlit as st
 
+from kaigraph.rdamsc.llm_runtime import (
+    DEFAULT_BLABLADOR_BASE_URL,
+    DEFAULT_LLM_MODEL,
+)
+
 
 def _env_rows() -> dict[str, str]:
     has_key = bool(os.getenv("BLABLADOR_API_KEY"))
@@ -14,9 +19,9 @@ def _env_rows() -> dict[str, str]:
         "BLABLADOR_API_KEY": "loaded" if has_key else "missing",
         "BLABLADOR_BASE_URL": os.getenv(
             "BLABLADOR_BASE_URL",
-            "https://api.helmholtz-blablador.fz-juelich.de/v1",
+            DEFAULT_BLABLADOR_BASE_URL,
         ),
-        "KAIGRAPH_LLM_MODEL": os.getenv("KAIGRAPH_LLM_MODEL", "alias-fast"),
+        "KAIGRAPH_LLM_MODEL": os.getenv("KAIGRAPH_LLM_MODEL", DEFAULT_LLM_MODEL),
     }
 
 
@@ -126,6 +131,11 @@ def render_sidebar() -> None:
     st.sidebar.caption("Runtime diagnostics")
     if not st.session_state.get("store_synced_catalog", False):
         st.sidebar.caption("Startup mode: local SSSOM snapshot (no catalog sync)")
+    sync_error = st.session_state.get("store_sync_error")
+    if isinstance(sync_error, dict):
+        operation = str(sync_error.get("operation", "catalog sync"))
+        message = str(sync_error.get("message", "unknown error"))
+        st.sidebar.caption(f"Catalog sync fallback: {operation} ({message})")
     st.sidebar.write(f"DB URL: `{rows['KAIGRAPH_DB_URL']}`")
     st.sidebar.write(
         f"Namespace/DB: `{rows['KAIGRAPH_DB_NS']}/{rows['KAIGRAPH_DB_NAME']}`"

@@ -1,4 +1,4 @@
-from kaigraph.oai import load_demo_identifiers, load_institution_endpoints
+from kaigraph.oai.registry import load_demo_identifiers, load_institution_endpoints
 
 
 def test_load_institution_endpoints_includes_dlr() -> None:
