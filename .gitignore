@@ -2,3 +2,5 @@
 .desloppify/
 **/__pycache__/
 *.pyc
+.claude/
+.agents/
