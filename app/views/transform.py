@@ -314,10 +314,24 @@ def _fetch_source_payload_if_requested(
     st.session_state["transform_source_label"] = selected_prefix
 
 
+def _repo_browser_step_state() -> dict[str, bool]:
+    """Determine which steps have been reached based on session state."""
+    return {
+        "formats_discovered": bool(
+            st.session_state.get("transform_discovered_formats")
+        ),
+        "prefix_selected": bool(st.session_state.get("transform_discovered_formats")),
+        "record_fetched": bool(st.session_state.get("transform_source_payload")),
+    }
+
+
 def _repository_source_panel(store) -> tuple[str, str | None, str, str | None]:
     institutions = _institution_options()
     names = [item.name for item in institutions]
     default_index = names.index("DLR") if "DLR" in names else 0
+
+    # Step 1: Discover formats (always active)
+    st.markdown("**Step 1 — Select institution & endpoint**")
     institution_name = st.selectbox(
         "Institution", [*names, "Custom endpoint"], index=default_index
     )
@@ -338,13 +352,40 @@ def _repository_source_panel(store) -> tuple[str, str | None, str, str | None]:
     )
 
     discovered = _discover_and_render_formats(store, endpoint)
+    st.divider()
+
+    # Step 2: Select metadata prefix (reached after discovery)
+    step_state = _repo_browser_step_state()
+    if not step_state["formats_discovered"]:
+        st.markdown("**Step 2 — Select a metadata prefix**")
+        st.caption("⬜ Discover formats first (Step 1).")
+        st.divider()
+        return "", None, endpoint, None
+
+    st.markdown("**Step 2 — Select a metadata prefix**")
     selected_source = _select_resolved_source(discovered)
     if selected_source is None:
+        st.divider()
         return "", None, endpoint, None
 
     selected_prefix, resolved = selected_source
+    st.divider()
+
+    # Step 3: Load identifiers (reached after prefix selection)
+    step_state = _repo_browser_step_state()
+    if not step_state["prefix_selected"]:
+        st.markdown("**Step 3 — Load sample record IDs**")
+        st.caption("⬜ Select a metadata prefix first (Step 2).")
+        st.divider()
+        return "", None, endpoint, None
+
+    st.markdown("**Step 3 — Load sample record IDs**")
     _load_identifiers_if_requested(institution_name, endpoint, selected_prefix)
     identifier = _pick_identifier_input()
+    st.divider()
+
+    # Step 4: Fetch record (reached after identifier available)
+    st.markdown("**Step 4 — Fetch source record**")
     _fetch_source_payload_if_requested(endpoint, identifier, selected_prefix, resolved)
 
     return (

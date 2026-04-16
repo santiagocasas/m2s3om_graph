@@ -382,28 +382,45 @@ def _render_candidate_suggestions(
         )
 
 
-def _render_rule_card(rule: MappingRuleRecord, rules: list[MappingRuleRecord]) -> None:
-    source_row = rule.source_paths[0] if rule.source_paths else "n/a"
-    source_label = rule.source_paths[1] if len(rule.source_paths) > 1 else source_row
-    title = (
-        f"{source_row} ({source_label}) -> "
-        f"{', '.join(rule.target_paths) if rule.target_paths else 'n/a'} "
-        f"[{rule.mapping_type.value}]"
+def _render_rule_detail_panel(
+    rule: MappingRuleRecord, rules: list[MappingRuleRecord]
+) -> None:
+    """Render the detail panel for a selected rule."""
+    source_text = rule.source_paths[0] if rule.source_paths else "—"
+    target_text = ", ".join(rule.target_paths) if rule.target_paths else "—"
+    st.markdown(f"**{source_text} → {target_text}**")
+
+    left, right = st.columns(2)
+    with left:
+        st.markdown("**Source paths**")
+        for path in rule.source_paths:
+            st.caption(path)
+    with right:
+        st.markdown("**Target paths**")
+        for path in rule.target_paths:
+            st.caption(path)
+
+    st.write(
+        f"Type: {rule.mapping_type.value} | "
+        f"Confidence: {rule.confidence:.2f} | "
+        f"Ambiguity: {rule.ambiguity} | "
+        f"Semantic loss: {rule.semantic_loss}"
     )
-    with st.expander(title):
-        st.write(f"Source field: {source_label}")
-        st.write(f"Confidence: {rule.confidence:.2f}")
-        st.write(f"Ambiguity: {rule.ambiguity} | Semantic loss: {rule.semantic_loss}")
-        st.code(json.dumps(rule.transform, indent=2), language="json")
-        if rule.notes:
-            st.caption(rule.notes)
+
+    st.code(json.dumps(rule.transform, indent=2), language="json")
+
+    if rule.notes:
+        st.caption(rule.notes)
+
+    if rule.evidence:
+        st.markdown("**Evidence**")
         for evidence in rule.evidence:
             st.markdown(
                 f"- Source **{evidence.source}**, row **{evidence.row_id}**: {evidence.snippet}"
             )
 
-        if st.button("Suggest AI candidate mappings", key=f"suggest_{rule.id}"):
-            _render_candidate_suggestions(rule, rules)
+    if st.button("Suggest AI candidate mappings", key=f"suggest_{rule.id}"):
+        _render_candidate_suggestions(rule, rules)
 
 
 def _render_rules_section(rules: list[MappingRuleRecord]) -> None:
@@ -413,6 +430,8 @@ def _render_rules_section(rules: list[MappingRuleRecord]) -> None:
             "No rules extracted yet for this mapping. "
             "The source documentation may require parser improvements or assisted curation."
         )
+        return
+
     filter_type, query, max_rows = _rule_filter_inputs()
     filtered = _filter_rules(
         rules,
@@ -422,8 +441,43 @@ def _render_rules_section(rules: list[MappingRuleRecord]) -> None:
     )
 
     st.write(f"Showing {len(filtered)} of {len(rules)} rules")
+
+    # Build dataframe rows from filtered rules
+    rows = []
     for rule in filtered:
-        _render_rule_card(rule, rules)
+        source = rule.source_paths[0] if rule.source_paths else "—"
+        target = ", ".join(rule.target_paths) if rule.target_paths else "—"
+        rows.append(
+            {
+                "source": source,
+                "target": target,
+                "type": rule.mapping_type.value,
+                "loss": "⚠" if rule.semantic_loss else "",
+                "ambiguous": "?" if rule.ambiguity else "",
+            }
+        )
+
+    # Render dataframe with single-row selection
+    event = st.dataframe(
+        rows,
+        use_container_width=True,
+        hide_index=True,
+        on_select="rerun",
+        selection_mode="single-row",
+        key="crosswalk_rules_table",
+    )
+
+    # Extract selected row index and render detail panel
+    selected_rows = event.selection.rows
+    if not selected_rows:
+        st.caption("Select a rule above to see details.")
+        return
+
+    selected_index = selected_rows[0]
+    if selected_index < len(filtered):
+        selected_rule = filtered[selected_index]
+        st.divider()
+        _render_rule_detail_panel(selected_rule, rules)
 
 
 def _render_exports(rules: list[MappingRuleRecord], sssom_path: Path) -> None:
