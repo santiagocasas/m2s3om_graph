@@ -1,4 +1,4 @@
-from kaigraph.db.surreal_health import SurrealProbeResult, wait_for_surreal_ready
+from m2s3om_graph.db.surreal_health import SurrealProbeResult, wait_for_surreal_ready
 
 
 def test_wait_for_surreal_ready_retries_until_success() -> None:
@@ -19,7 +19,7 @@ def test_wait_for_surreal_ready_retries_until_success() -> None:
         url="ws://localhost:8000/rpc",
         username="root",
         password="root",
-        namespace="kaigraph",
+        namespace="m2s3om_graph",
         database="crosswalk",
         attempts=5,
         delay_seconds=0.25,
@@ -43,7 +43,7 @@ def test_wait_for_surreal_ready_reports_last_error_on_failure() -> None:
         url="ws://localhost:8000/rpc",
         username="root",
         password="root",
-        namespace="kaigraph",
+        namespace="m2s3om_graph",
         database="crosswalk",
         attempts=3,
         delay_seconds=0,

@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.state import _auto_sync_enabled, _seed_store_from_sssom_exports
-from kaigraph.db import (
+from m2s3om_graph.db import (
     CrosswalkBundle,
     CrosswalkRecord,
     InMemoryCrosswalkStore,
@@ -12,16 +12,16 @@ from kaigraph.db import (
     MappingType,
     StandardRecord,
 )
-from kaigraph.sssom import write_bundle_sssom
+from m2s3om_graph.sssom import write_bundle_sssom
 
 
 def test_auto_sync_disabled_by_default(monkeypatch) -> None:
-    monkeypatch.delenv("KAIGRAPH_AUTO_SYNC_ON_START", raising=False)
+    monkeypatch.delenv("M2S3OM_AUTO_SYNC_ON_START", raising=False)
     assert _auto_sync_enabled() is False
 
 
 def test_auto_sync_enabled_by_env(monkeypatch) -> None:
-    monkeypatch.setenv("KAIGRAPH_AUTO_SYNC_ON_START", "1")
+    monkeypatch.setenv("M2S3OM_AUTO_SYNC_ON_START", "1")
     assert _auto_sync_enabled() is True
 
 

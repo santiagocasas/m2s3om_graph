@@ -7,11 +7,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 
 from views import pipeline as pipeline_view
 from views import transform as transform_view
-from kaigraph.crosswalk.route import ConversionStep
-from kaigraph.db import CrosswalkRecord, InMemoryCrosswalkStore
-from kaigraph.oai.bridge import ResolvedFormat
-from kaigraph.oai.parser import IdentifierList, MetadataFormatInfo
-from kaigraph.transform.apply import TransformationReport
+from m2s3om_graph.crosswalk.route import ConversionStep
+from m2s3om_graph.db import CrosswalkRecord, InMemoryCrosswalkStore
+from m2s3om_graph.oai.bridge import ResolvedFormat
+from m2s3om_graph.oai.parser import IdentifierList, MetadataFormatInfo
+from m2s3om_graph.transform.apply import TransformationReport
 
 
 def test_pipeline_status_rows_extracts_reason_and_sorts(

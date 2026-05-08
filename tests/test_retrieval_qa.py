@@ -1,7 +1,7 @@
-from kaigraph.db.repository import InMemoryCrosswalkRepository
-from kaigraph.models.standards import Chunk, Element, Standard
-from kaigraph.qa.service import answer_question
-from kaigraph.retrieval.hybrid import confidence_from_similarity, retrieve_for_element
+from m2s3om_graph.db.repository import InMemoryCrosswalkRepository
+from m2s3om_graph.models.standards import Chunk, Element, Standard
+from m2s3om_graph.qa.service import answer_question
+from m2s3om_graph.retrieval.hybrid import confidence_from_similarity, retrieve_for_element
 
 
 def _seed_repo_for_retrieval() -> tuple[InMemoryCrosswalkRepository, Element]:

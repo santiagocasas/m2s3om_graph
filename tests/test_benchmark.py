@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from kaigraph.benchmark.runner import run_fixture_benchmark
-from kaigraph.db import InMemoryCrosswalkStore
-from kaigraph.ingest.crosswalk_ingestion import ingest_datacite_to_dc_pdf
+from m2s3om_graph.benchmark.runner import run_fixture_benchmark
+from m2s3om_graph.db import InMemoryCrosswalkStore
+from m2s3om_graph.ingest.crosswalk_ingestion import ingest_datacite_to_dc_pdf
 
 
 def test_fixture_benchmark_runs(datacite_mapping_pdf_path: Path) -> None:

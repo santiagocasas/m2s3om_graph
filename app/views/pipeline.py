@@ -3,13 +3,18 @@ from pathlib import Path
 import streamlit as st
 
 from state import ensure_store, sssom_dir
-from kaigraph.rdamsc.contracts import PipelineStatusMap
-from kaigraph.rdamsc.pipeline import (
+from m2s3om_graph.rdamsc.contracts import PipelineStatusMap
+from m2s3om_graph.rdamsc.pipeline import (
     load_pipeline_status,
     resolve_crosswalk_status,
     run_bootstrap_pipeline,
     status_label,
 )
+
+
+MAX_LOG_ENTRIES = 2000
+DISPLAY_LOG_LINES = 300
+DISPLAY_BOOTSTRAP_LOG_CHARS = 12000
 
 
 def _status_rows() -> list[dict[str, object]]:
@@ -49,9 +54,9 @@ def _ensure_pipeline_session_state() -> None:
 def _append_pipeline_log(log_box, line: str) -> None:
     logs = st.session_state["pipeline_logs"]
     logs.append(line)
-    if len(logs) > 2000:
-        logs[:] = logs[-2000:]
-    log_box.code("\n".join(logs[-300:]), language="text")
+    if len(logs) > MAX_LOG_ENTRIES:
+        logs[:] = logs[-MAX_LOG_ENTRIES:]
+    log_box.code("\n".join(logs[-DISPLAY_LOG_LINES:]), language="text")
 
 
 def _run_pipeline_action(
@@ -124,7 +129,7 @@ def _render_pipeline_controls(store, selected, log_box) -> None:
 def _render_pipeline_logs(log_box) -> None:
     logs = st.session_state["pipeline_logs"]
     if logs:
-        log_box.code("\n".join(logs[-300:]), language="text")
+        log_box.code("\n".join(logs[-DISPLAY_LOG_LINES:]), language="text")
         return
     st.code("No pipeline run in this session yet.", language="text")
 
@@ -152,7 +157,7 @@ def _render_status_file_and_bootstrap_log() -> None:
     st.subheader("Startup bootstrap log")
     bootstrap_log = Path(".local/bootstrap_rdamsc.log")
     if bootstrap_log.exists():
-        st.code(bootstrap_log.read_text(encoding="utf-8")[-12000:], language="text")
+        st.code(bootstrap_log.read_text(encoding="utf-8")[-DISPLAY_BOOTSTRAP_LOG_CHARS:], language="text")
         return
     st.caption("No startup bootstrap log found yet.")
 

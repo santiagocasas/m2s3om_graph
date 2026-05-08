@@ -1,6 +1,6 @@
 import pytest
 
-from kaigraph.rdamsc.api import RDAMSCClient, RDAMSCClientError
+from m2s3om_graph.rdamsc.api import RDAMSCClient, RDAMSCClientError
 
 
 class _FakeResponse:
@@ -20,7 +20,7 @@ def test_list_mappings_returns_items(monkeypatch: pytest.MonkeyPatch) -> None:
             {"data": {"items": [{"uri": "https://example.org/mapping"}]}}
         )
 
-    monkeypatch.setattr("kaigraph.rdamsc.api.requests.get", _fake_get)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.api.requests.get", _fake_get)
 
     client = RDAMSCClient()
     items = client.list_mappings()
@@ -34,7 +34,7 @@ def test_list_mappings_raises_on_malformed_data(
     def _fake_get(*args: object, **kwargs: object) -> _FakeResponse:
         return _FakeResponse({"data": []})
 
-    monkeypatch.setattr("kaigraph.rdamsc.api.requests.get", _fake_get)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.api.requests.get", _fake_get)
 
     client = RDAMSCClient()
     with pytest.raises(RDAMSCClientError) as exc_info:
@@ -49,7 +49,7 @@ def test_get_mapping_detail_raises_on_malformed_data(
     def _fake_get(*args: object, **kwargs: object) -> _FakeResponse:
         return _FakeResponse({"data": []})
 
-    monkeypatch.setattr("kaigraph.rdamsc.api.requests.get", _fake_get)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.api.requests.get", _fake_get)
 
     client = RDAMSCClient()
     with pytest.raises(RDAMSCClientError) as exc_info:

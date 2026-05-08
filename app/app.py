@@ -5,7 +5,7 @@ from state import ensure_seeded
 
 
 def main() -> None:
-    st.set_page_config(page_title="kaigraph crosswalks", layout="wide")
+    st.set_page_config(page_title="m2s3om_graph crosswalks", layout="wide")
     st.title("Evidence-Based Metadata Crosswalk Workbench")
     st.caption(
         "Authoritative mapping rules + explainable conversion + AI-assisted candidate suggestions."

@@ -1,6 +1,6 @@
-from kaigraph.crosswalk.reverse import _reverse_target_paths, derive_reverse_rules
-from kaigraph.db import CrosswalkBundle, CrosswalkRecord, MappingRuleRecord, MappingType
-from kaigraph.db.models import StandardRecord
+from m2s3om_graph.crosswalk.reverse import _reverse_target_paths, derive_reverse_rules
+from m2s3om_graph.db import CrosswalkBundle, CrosswalkRecord, MappingRuleRecord, MappingType
+from m2s3om_graph.db.models import StandardRecord
 
 
 def _forward_bundle() -> CrosswalkBundle:

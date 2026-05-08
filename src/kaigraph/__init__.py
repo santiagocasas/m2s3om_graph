@@ -1,1 +1,0 @@
-"""kaigraph package."""

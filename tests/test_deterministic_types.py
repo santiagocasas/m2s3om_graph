@@ -1,5 +1,5 @@
-from kaigraph.db import MappingType
-from kaigraph.ingest.deterministic.types import (
+from m2s3om_graph.db import MappingType
+from m2s3om_graph.ingest.deterministic.types import (
     DeterministicCandidate,
     DeterministicDiagnostics,
 )

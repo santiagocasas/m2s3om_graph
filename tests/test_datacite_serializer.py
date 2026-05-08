@@ -1,5 +1,5 @@
-from kaigraph.transform.ir import IRValue
-from kaigraph.transform.serializers import ir_to_datacite_xml
+from m2s3om_graph.transform.ir import IRValue
+from m2s3om_graph.transform.serializers import ir_to_datacite_xml
 
 
 def test_datacite_serializer_accepts_common_alias_keys() -> None:

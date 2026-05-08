@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CONTAINER_NAME="${CONTAINER_NAME:-kaigraph-surrealdb}"
+CONTAINER_NAME="${CONTAINER_NAME:-m2s3om_graph-surrealdb}"
 
 if ! command -v docker >/dev/null 2>&1; then
     echo "Docker is required but not installed." >&2

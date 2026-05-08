@@ -1,6 +1,6 @@
-# kaigraph
+# m2s3om_graph
 
-`kaigraph` is an evidence-based metadata crosswalk workbench.
+`m2s3om_graph` is an evidence-based metadata crosswalk workbench.
 
 It now supports:
 
@@ -16,7 +16,7 @@ It now supports:
 uv sync
 uv run --with pytest pytest
 uv run streamlit run app/app.py
-uv run python -m kaigraph.cli.main demo-convert
+uv run python -m m2s3om_graph.cli.main demo-convert
 ```
 
 ## Run with local SurrealDB (Docker)
@@ -34,20 +34,20 @@ The launcher waits for SurrealDB sign-in readiness. If readiness fails, startup 
 Optional wait tuning:
 
 ```bash
-KAIGRAPH_DB_WAIT_ATTEMPTS=60 KAIGRAPH_DB_WAIT_DELAY=1 ./scripts/run_app_local.sh
+M2S3OM_DB_WAIT_ATTEMPTS=60 M2S3OM_DB_WAIT_DELAY=1 ./scripts/run_app_local.sh
 ```
 
 To run a quick catalog metadata sync on startup:
 
 ```bash
-KAIGRAPH_AUTO_SYNC_ON_START=1 \
-KAIGRAPH_SYNC_RDAMSC_CATALOG=1 ./scripts/run_app_local.sh
+M2S3OM_AUTO_SYNC_ON_START=1 \
+M2S3OM_SYNC_RDAMSC_CATALOG=1 ./scripts/run_app_local.sh
 ```
 
 To run full verbose bootstrap on startup:
 
 ```bash
-KAIGRAPH_BOOTSTRAP_RDAMSC=1 ./scripts/run_app_local.sh
+M2S3OM_BOOTSTRAP_RDAMSC=1 ./scripts/run_app_local.sh
 ```
 
 Bootstrap logs are written to:
@@ -63,12 +63,12 @@ Manual mode:
 ```bash
 ./scripts/run_surrealdb_local.sh
 
-export KAIGRAPH_USE_SURREAL=1
-export KAIGRAPH_DB_URL=ws://localhost:8000/rpc
-export KAIGRAPH_DB_NS=kaigraph
-export KAIGRAPH_DB_NAME=crosswalk
-export KAIGRAPH_DB_USER=root
-export KAIGRAPH_DB_PASSWORD=root
+export M2S3OM_USE_SURREAL=1
+export M2S3OM_DB_URL=ws://localhost:8000/rpc
+export M2S3OM_DB_NS=m2s3om_graph
+export M2S3OM_DB_NAME=crosswalk
+export M2S3OM_DB_USER=root
+export M2S3OM_DB_PASSWORD=root
 ```
 
 Optional stop command:
@@ -81,16 +81,16 @@ Optional stop command:
 
 ```bash
 # 1) sync metadata catalog
-uv run python -m kaigraph.cli.main sync-rdamsc
+uv run python -m m2s3om_graph.cli.main sync-rdamsc
 
 # 2) ingest all supported artifact docs and emit SSSOM files
-uv run python -m kaigraph.cli.main sync-rdamsc --with-ingest
+uv run python -m m2s3om_graph.cli.main sync-rdamsc --with-ingest
 
 # 3) sync catalog and generate missing SSSOM files (skip existing)
-uv run python -m kaigraph.cli.main bootstrap-rdamsc
+uv run python -m m2s3om_graph.cli.main bootstrap-rdamsc
 
 # or ingest one crosswalk already in store
-uv run python -m kaigraph.cli.main ingest-rdamsc --crosswalk-id rdamsc_c5
+uv run python -m m2s3om_graph.cli.main ingest-rdamsc --crosswalk-id rdamsc_c5
 ```
 
 SSSOM output directory defaults to:
@@ -135,14 +135,14 @@ Use it only when you intentionally want to regenerate outputs with current pipel
 
 ## Package layout
 
-- `src/kaigraph/rdamsc`: RDAMSC API sync + artifact ingestion
-- `src/kaigraph/rdamsc/pipeline_stats_*`: pipeline stats/freeze tooling internals (CLI entrypoint: `scripts/rdamsc_pipeline_stats.py`)
-- `src/kaigraph/sssom.py`: authoritative SSSOM read/write
-- `src/kaigraph/ingest`: mapping artifact parsers (including PDF)
-- `src/kaigraph/transform`: IR parsers, deterministic rule application, serializers
-- `src/kaigraph/oai`: OAI-PMH client and metadata format discovery
-- `src/kaigraph/db`: schema and repository layer
-- `src/kaigraph/candidates`: AI-assisted candidate mapping suggestions (non-baseline)
+- `src/m2s3om_graph/rdamsc`: RDAMSC API sync + artifact ingestion
+- `src/m2s3om_graph/rdamsc/pipeline_stats_*`: pipeline stats/freeze tooling internals (CLI entrypoint: `scripts/rdamsc_pipeline_stats.py`)
+- `src/m2s3om_graph/sssom.py`: authoritative SSSOM read/write
+- `src/m2s3om_graph/ingest`: mapping artifact parsers (including PDF)
+- `src/m2s3om_graph/transform`: IR parsers, deterministic rule application, serializers
+- `src/m2s3om_graph/oai`: OAI-PMH client and metadata format discovery
+- `src/m2s3om_graph/db`: schema and repository layer
+- `src/m2s3om_graph/candidates`: AI-assisted candidate mapping suggestions (non-baseline)
 - `app/app.py`: Streamlit app with 3 working tabs (Crosswalks, Pipeline, Convert)
 
 ## Current status

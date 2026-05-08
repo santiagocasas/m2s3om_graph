@@ -1,10 +1,10 @@
-#mapping_set_id: kaigraph:datacite44_to_dcterms
+#mapping_set_id: m2s3om_graph:datacite44_to_dcterms
 #mapping_set_version: '4.4'
 #mapping_set_description: DataCite 4.4 to Dublin Core Terms (DataCite -> Dublin Core
 #  Terms)
 #curie_map:
-#  src: https://kaigraph.local/datacite_4_4/
-#  dst: https://kaigraph.local/dublin_core_terms/
+#  src: https://m2s3om_graph.local/datacite_4_4/
+#  dst: https://m2s3om_graph.local/dublin_core_terms/
 #  skos: http://www.w3.org/2004/02/skos/core#
 #  semapv: https://w3id.org/semapv/vocab/
 #license: https://creativecommons.org/licenses/by/4.0/

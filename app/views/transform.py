@@ -4,32 +4,32 @@ import streamlit as st
 from defusedxml.minidom import parseString as safe_parse_xml
 
 from state import DEFAULT_OAI_BASE_URL, DEFAULT_OAI_IDENTIFIER, ensure_store, sssom_dir
-from kaigraph.crosswalk.route import (
+from m2s3om_graph.crosswalk.route import (
     ConversionStep,
     available_target_formats,
     matched_standards_for_format,
     resolve_conversion_route,
 )
-from kaigraph.interop.elib import parse_openaire_xml_to_ir
-from kaigraph.oai.bridge import ResolvedFormat, bridge_metadata_format
-from kaigraph.oai.client import OAIClient
-from kaigraph.oai.parser import (
+from m2s3om_graph.interop.elib import parse_openaire_xml_to_ir
+from m2s3om_graph.oai.bridge import ResolvedFormat, bridge_metadata_format
+from m2s3om_graph.oai.client import OAIClient
+from m2s3om_graph.oai.parser import (
     MetadataFormatInfo,
     parse_identifiers,
     parse_metadata_formats,
 )
-from kaigraph.oai.registry import (
+from m2s3om_graph.oai.registry import (
     InstitutionEndpoint,
     load_demo_identifiers,
     load_institution_endpoints,
 )
-from kaigraph.transform.apply import TransformationReport, apply_mapping_rules
-from kaigraph.transform.parsers import (
+from m2s3om_graph.transform.apply import TransformationReport, apply_mapping_rules
+from m2s3om_graph.transform.parsers import (
     parse_datacite_xml_to_ir,
     parse_marcxml_to_ir,
     parse_oai_dc_xml_to_ir,
 )
-from kaigraph.transform.serializers import ir_to_datacite_xml, ir_to_dublin_core_xml
+from m2s3om_graph.transform.serializers import ir_to_datacite_xml, ir_to_dublin_core_xml
 
 FORMAT_OPTIONS = {
     "oai_dc_xml": "OAI Dublin Core XML",

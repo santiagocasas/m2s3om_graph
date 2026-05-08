@@ -3,11 +3,11 @@ from pathlib import Path
 
 import pytest
 
-from kaigraph.rdamsc.pipeline_stats_freeze import (
+from m2s3om_graph.rdamsc.pipeline_stats_freeze import (
     write_pipeline_log_snapshot,
     write_sssom_provenance,
 )
-from kaigraph.rdamsc.pipeline_stats_shared import (
+from m2s3om_graph.rdamsc.pipeline_stats_shared import (
     compute_stats,
     load_status_map,
     write_csv,
@@ -120,7 +120,7 @@ def test_write_sssom_provenance_writes_manifest_and_markdown(tmp_path: Path) -> 
             "reason_counts": {},
         },
         git_meta={"commit_short": "abc", "branch": "main", "is_dirty": False},
-        env_meta={"KAIGRAPH_DB_URL": ""},
+        env_meta={"M2S3OM_DB_URL": ""},
         command_line="python scripts/rdamsc_pipeline_stats.py freeze",
     )
 

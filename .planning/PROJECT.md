@@ -21,7 +21,7 @@ Enable cross-walking between metadata standards (DataCite, Dublin Core, etc.) by
 
 ### Active
 
-- [ ] Rename all `kaigraph` references to `m2s3om_graph` — renaming refactor
+- [ ] Rename all `m2s3om_graph` references to `m2s3om_graph` — renaming refactor
 - [ ] Improve documentation clarity and completeness — user onboarding
 - [ ] Add more sample PDF mappings — expand coverage
 - [ ] Enhance semantic loss tracking mechanisms — accuracy improvement
@@ -48,7 +48,7 @@ Enable cross-walking between metadata standards (DataCite, Dublin Core, etc.) by
 - Academic/library metadata transformation workflows
 
 **Known Issues:**
-- Codebase still contains `kaigraph` naming from initial development
+- Codebase still contains `m2s3om_graph` naming from initial development
 - Documentation may not reflect current feature set
 - Need more sample PDFs to demonstrate capability
 
@@ -66,7 +66,7 @@ Enable cross-walking between metadata standards (DataCite, Dublin Core, etc.) by
 | Field-level only mappings | Value transformation too complex; focus on structural alignment | ✓ Good |
 | Graph-based transitive mapping | Enables multi-hop relationships between standards | ✓ Good |
 | Semantic loss tracking | Critical for assessing mapping quality and reliability | ✓ Good |
-| Rename kaigraph → m2s3om_graph | Consistent project naming across codebase | — Pending |
+| Rename m2s3om_graph → m2s3om_graph | Consistent project naming across codebase | — Pending |
 
 ---
 *Last updated: 2026-05-08 after initialization*

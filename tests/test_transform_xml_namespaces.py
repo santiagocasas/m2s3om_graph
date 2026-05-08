@@ -1,4 +1,4 @@
-from kaigraph.transform import xml_namespaces
+from m2s3om_graph.transform import xml_namespaces
 
 
 def test_http_url_builds_expected_shape() -> None:

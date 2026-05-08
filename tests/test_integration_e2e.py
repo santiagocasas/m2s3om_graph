@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from kaigraph.db import InMemoryCrosswalkStore
-from kaigraph.ingest.crosswalk_ingestion import ingest_datacite_to_dc_pdf
-from kaigraph.transform.apply import apply_mapping_rules
-from kaigraph.transform.parsers import parse_oai_dc_xml_to_ir
-from kaigraph.transform.serializers import ir_to_dublin_core_xml
+from m2s3om_graph.db import InMemoryCrosswalkStore
+from m2s3om_graph.ingest.crosswalk_ingestion import ingest_datacite_to_dc_pdf
+from m2s3om_graph.transform.apply import apply_mapping_rules
+from m2s3om_graph.transform.parsers import parse_oai_dc_xml_to_ir
+from m2s3om_graph.transform.serializers import ir_to_dublin_core_xml
 
 
 def test_end_to_end_ingest_and_transform(datacite_mapping_pdf_path: Path) -> None:

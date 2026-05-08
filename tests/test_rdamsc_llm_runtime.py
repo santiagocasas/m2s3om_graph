@@ -1,4 +1,4 @@
-from kaigraph.rdamsc.llm_runtime import (
+from m2s3om_graph.rdamsc.llm_runtime import (
     DEFAULT_BLABLADOR_BASE_URL,
     DEFAULT_LLM_MODEL,
     llm_backend_label,
@@ -12,10 +12,10 @@ from kaigraph.rdamsc.llm_runtime import (
 def test_load_llm_runtime_config_uses_defaults(monkeypatch) -> None:
     monkeypatch.delenv("BLABLADOR_API_KEY", raising=False)
     monkeypatch.delenv("BLABLADOR_BASE_URL", raising=False)
-    monkeypatch.delenv("KAIGRAPH_LLM_MODEL", raising=False)
-    monkeypatch.delenv("KAIGRAPH_LLM_TIMEOUT_S", raising=False)
-    monkeypatch.delenv("KAIGRAPH_LLM_RETRIES", raising=False)
-    monkeypatch.delenv("KAIGRAPH_LLM_MAX_INPUT_CHARS", raising=False)
+    monkeypatch.delenv("M2S3OM_LLM_MODEL", raising=False)
+    monkeypatch.delenv("M2S3OM_LLM_TIMEOUT_S", raising=False)
+    monkeypatch.delenv("M2S3OM_LLM_RETRIES", raising=False)
+    monkeypatch.delenv("M2S3OM_LLM_MAX_INPUT_CHARS", raising=False)
 
     config = load_llm_runtime_config()
     assert config.api_key == ""
@@ -29,10 +29,10 @@ def test_load_llm_runtime_config_uses_defaults(monkeypatch) -> None:
 def test_load_llm_runtime_config_applies_env_and_bounds(monkeypatch) -> None:
     monkeypatch.setenv("BLABLADOR_API_KEY", "secret")
     monkeypatch.setenv("BLABLADOR_BASE_URL", "https://example.org/custom/")
-    monkeypatch.setenv("KAIGRAPH_LLM_MODEL", "model-x")
-    monkeypatch.setenv("KAIGRAPH_LLM_TIMEOUT_S", "999")
-    monkeypatch.setenv("KAIGRAPH_LLM_RETRIES", "-5")
-    monkeypatch.setenv("KAIGRAPH_LLM_MAX_INPUT_CHARS", "100")
+    monkeypatch.setenv("M2S3OM_LLM_MODEL", "model-x")
+    monkeypatch.setenv("M2S3OM_LLM_TIMEOUT_S", "999")
+    monkeypatch.setenv("M2S3OM_LLM_RETRIES", "-5")
+    monkeypatch.setenv("M2S3OM_LLM_MAX_INPUT_CHARS", "100")
 
     config = load_llm_runtime_config()
     assert config.api_key == "secret"
@@ -45,7 +45,7 @@ def test_load_llm_runtime_config_applies_env_and_bounds(monkeypatch) -> None:
 
 def test_llm_enabled_and_backend_label(monkeypatch) -> None:
     monkeypatch.delenv("BLABLADOR_API_KEY", raising=False)
-    monkeypatch.delenv("KAIGRAPH_LLM_MODEL", raising=False)
+    monkeypatch.delenv("M2S3OM_LLM_MODEL", raising=False)
     disabled = load_llm_runtime_config()
     assert llm_enabled(disabled) is False
     assert (
@@ -53,7 +53,7 @@ def test_llm_enabled_and_backend_label(monkeypatch) -> None:
     )
 
     monkeypatch.setenv("BLABLADOR_API_KEY", "secret")
-    monkeypatch.setenv("KAIGRAPH_LLM_MODEL", "model-z")
+    monkeypatch.setenv("M2S3OM_LLM_MODEL", "model-z")
     enabled = load_llm_runtime_config()
     assert llm_enabled(enabled) is True
     assert llm_backend_label(enabled) == "Blablador model=model-z"

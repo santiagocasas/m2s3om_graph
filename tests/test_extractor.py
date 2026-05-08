@@ -1,4 +1,4 @@
-from kaigraph.ingest.extractor import extract_elements_from_text
+from m2s3om_graph.ingest.extractor import extract_elements_from_text
 
 
 def test_extract_elements_from_text() -> None:

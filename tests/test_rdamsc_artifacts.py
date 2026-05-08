@@ -1,4 +1,4 @@
-from kaigraph.rdamsc.artifacts import _normalize_legacy_shifted_text
+from m2s3om_graph.rdamsc.artifacts import _normalize_legacy_shifted_text
 
 
 def test_normalize_legacy_shifted_text_decodes_shifted_pdf_snippet() -> None:

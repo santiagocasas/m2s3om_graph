@@ -6,29 +6,29 @@ from pathlib import Path
 import streamlit as st
 
 from state import ensure_store, sssom_dir
-from kaigraph.candidates.blablador import (
+from m2s3om_graph.candidates.blablador import (
     last_suggestion_error,
     suggest_candidate_mappings,
 )
-from kaigraph.db import (
+from m2s3om_graph.db import (
     CrosswalkBundle,
     CrosswalkRecord,
     CrosswalkStore,
     MappingRuleRecord,
     MappingType,
 )
-from kaigraph.rdamsc.ingest import (
+from m2s3om_graph.rdamsc.ingest import (
     sssom_output_path,
     sync_rdamsc_catalog,
 )
-from kaigraph.rdamsc.contracts import PipelineResult, PipelineStatusMap, result_is_ok
-from kaigraph.rdamsc.pipeline import (
+from m2s3om_graph.rdamsc.contracts import PipelineResult, PipelineStatusMap, result_is_ok
+from m2s3om_graph.rdamsc.pipeline import (
     load_pipeline_status,
     resolve_crosswalk_status,
     run_bootstrap_pipeline,
     status_label,
 )
-from kaigraph.sssom import load_sssom_rules
+from m2s3om_graph.sssom import load_sssom_rules
 
 
 def _stats(rules_count: int, missing: int, conditional: int, aggregation: int) -> None:

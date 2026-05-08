@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from kaigraph.crosswalk.route import resolve_conversion_route
-from kaigraph.db import InMemoryCrosswalkStore
-from kaigraph.ingest.crosswalk_ingestion import ingest_datacite_to_dc_pdf
-from kaigraph.rdamsc.ingest import ensure_sssom_for_bundle
+from m2s3om_graph.crosswalk.route import resolve_conversion_route
+from m2s3om_graph.db import InMemoryCrosswalkStore
+from m2s3om_graph.ingest.crosswalk_ingestion import ingest_datacite_to_dc_pdf
+from m2s3om_graph.rdamsc.ingest import ensure_sssom_for_bundle
 
 
 def test_resolve_conversion_route_for_datacite_and_dc(
@@ -14,7 +14,7 @@ def test_resolve_conversion_route_for_datacite_and_dc(
     bundle = store.get_crosswalk_bundle(crosswalk_id)
     assert bundle is not None
 
-    output_dir = Path("/tmp/kaigraph_route_test")
+    output_dir = Path("/tmp/m2s3om_graph_route_test")
     _ = ensure_sssom_for_bundle(bundle, output_dir)
 
     forward = resolve_conversion_route(store, "datacite_xml", "oai_dc_xml", output_dir)

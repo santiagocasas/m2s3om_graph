@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from kaigraph.ingest.pdf_crosswalk_parser import parse_mapping_page_texts
+from m2s3om_graph.ingest.pdf_crosswalk_parser import parse_mapping_page_texts
 
 
 def test_parser_extracts_expected_rows() -> None:
@@ -31,7 +31,7 @@ Other relation types dcterms:relation
 
 
 def test_real_pdf_is_parsable_if_available(datacite_mapping_pdf_path: Path) -> None:
-    from kaigraph.ingest.pdf_crosswalk_parser import parse_mapping_pdf
+    from m2s3om_graph.ingest.pdf_crosswalk_parser import parse_mapping_pdf
 
     rows = parse_mapping_pdf(datacite_mapping_pdf_path)
     assert len(rows) > 20

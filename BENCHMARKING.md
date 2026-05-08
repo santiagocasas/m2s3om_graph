@@ -9,7 +9,7 @@ For benchmark and statistics work, use the CLI and the frozen pipeline exports.
 ### Fast fixture benchmark
 
 ```bash
-uv run python -m kaigraph.cli.main benchmark-fixture
+uv run python -m m2s3om_graph.cli.main benchmark-fixture
 ```
 
 This is the fastest smoke test for the benchmark/report pipeline.
@@ -55,4 +55,4 @@ There is not yet a dedicated CLI command for full remote eLib batch benchmarking
 
 1. the fixture benchmark command for fast regression checks
 2. frozen pipeline statistics for presentation-ready charts
-3. direct Python/CLI scripting around `kaigraph.benchmark.run_elib_benchmark` if needed
+3. direct Python/CLI scripting around `m2s3om_graph.benchmark.run_elib_benchmark` if needed

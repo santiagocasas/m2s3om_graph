@@ -1,6 +1,6 @@
 import requests
 
-from kaigraph.candidates.blablador import (
+from m2s3om_graph.candidates.blablador import (
     last_suggestion_error,
     suggest_candidate_mappings,
 )
@@ -24,7 +24,7 @@ def test_candidate_suggestions_records_llm_failure(monkeypatch) -> None:
 
     monkeypatch.setenv("BLABLADOR_API_KEY", "demo")
     monkeypatch.setattr(
-        "kaigraph.candidates.blablador.requests.post", _raise_request_error
+        "m2s3om_graph.candidates.blablador.requests.post", _raise_request_error
     )
 
     suggestions = suggest_candidate_mappings(

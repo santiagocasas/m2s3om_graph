@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import cast
 
-from kaigraph.db import CrosswalkRecord, InMemoryCrosswalkStore
-from kaigraph.rdamsc.pipeline import (
+from m2s3om_graph.db import CrosswalkRecord, InMemoryCrosswalkStore
+from m2s3om_graph.rdamsc.pipeline import (
     load_pipeline_status,
     resolve_crosswalk_status,
     run_bootstrap_pipeline,
@@ -33,9 +33,9 @@ def test_pipeline_continues_when_one_mapping_raises(
         )
     )
 
-    monkeypatch.setattr("kaigraph.rdamsc.pipeline.sync_rdamsc_catalog", lambda *_: 2)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.pipeline.sync_rdamsc_catalog", lambda *_: 2)
     monkeypatch.setattr(
-        "kaigraph.rdamsc.pipeline.pipeline_status_path",
+        "m2s3om_graph.rdamsc.pipeline.pipeline_status_path",
         lambda: tmp_path / "rdamsc_pipeline_status.json",
     )
 
@@ -46,7 +46,7 @@ def test_pipeline_continues_when_one_mapping_raises(
         return {"ok": True, "crosswalk_id": crosswalk_id, "total_rules": 3}
 
     monkeypatch.setattr(
-        "kaigraph.rdamsc.pipeline.ingest_rdamsc_crosswalk_docs",
+        "m2s3om_graph.rdamsc.pipeline.ingest_rdamsc_crosswalk_docs",
         fake_ingest,
     )
 
@@ -77,13 +77,13 @@ def test_pipeline_survives_catalog_sync_failure(monkeypatch, tmp_path: Path) -> 
     def _raise_sync(*_args, **_kwargs):
         raise RuntimeError("sync down")
 
-    monkeypatch.setattr("kaigraph.rdamsc.pipeline.sync_rdamsc_catalog", _raise_sync)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.pipeline.sync_rdamsc_catalog", _raise_sync)
     monkeypatch.setattr(
-        "kaigraph.rdamsc.pipeline.pipeline_status_path",
+        "m2s3om_graph.rdamsc.pipeline.pipeline_status_path",
         lambda: tmp_path / "rdamsc_pipeline_status.json",
     )
     monkeypatch.setattr(
-        "kaigraph.rdamsc.pipeline.ingest_rdamsc_crosswalk_docs",
+        "m2s3om_graph.rdamsc.pipeline.ingest_rdamsc_crosswalk_docs",
         lambda *_args, **_kwargs: {
             "ok": True,
             "crosswalk_id": "rdamsc_c1",
@@ -124,9 +124,9 @@ def test_pipeline_persists_status_from_typed_result_transitions(
         )
     )
 
-    monkeypatch.setattr("kaigraph.rdamsc.pipeline.sync_rdamsc_catalog", lambda *_: 0)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.pipeline.sync_rdamsc_catalog", lambda *_: 0)
     monkeypatch.setattr(
-        "kaigraph.rdamsc.pipeline.pipeline_status_path",
+        "m2s3om_graph.rdamsc.pipeline.pipeline_status_path",
         lambda: tmp_path / "rdamsc_pipeline_status.json",
     )
 
@@ -148,7 +148,7 @@ def test_pipeline_persists_status_from_typed_result_transitions(
         }
 
     monkeypatch.setattr(
-        "kaigraph.rdamsc.pipeline.ingest_rdamsc_crosswalk_docs", _fake_ingest
+        "m2s3om_graph.rdamsc.pipeline.ingest_rdamsc_crosswalk_docs", _fake_ingest
     )
 
     result = run_bootstrap_pipeline(store, tmp_path)

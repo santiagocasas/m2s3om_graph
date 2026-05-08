@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from kaigraph.cli.main import run_cli
+from m2s3om_graph.cli.main import run_cli
 
 
 def test_cli_demo_convert_fast() -> None:

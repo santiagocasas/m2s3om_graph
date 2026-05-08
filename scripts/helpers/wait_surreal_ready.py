@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 
-from kaigraph.db.surreal_health import wait_for_surreal_ready
+from m2s3om_graph.db.surreal_health import wait_for_surreal_ready
 
 
 def build_parser() -> argparse.ArgumentParser:
