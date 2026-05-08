@@ -1,4 +1,4 @@
-from kaigraph.rdamsc.contracts import llm_diagnostics_template, result_is_ok
+from m2s3om_graph.rdamsc.contracts import llm_diagnostics_template, result_is_ok
 
 
 def test_llm_diagnostics_template_builds_expected_defaults() -> None:

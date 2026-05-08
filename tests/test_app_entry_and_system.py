@@ -5,7 +5,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 
 _APP_SPEC = spec_from_file_location(
-    "kaigraph_app_entry",
+    "m2s3om_graph_app_entry",
     Path(__file__).resolve().parents[1] / "app" / "app.py",
 )
 assert _APP_SPEC is not None and _APP_SPEC.loader is not None

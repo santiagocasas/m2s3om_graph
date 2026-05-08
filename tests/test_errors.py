@@ -1,4 +1,4 @@
-from kaigraph.errors import make_error_payload
+from m2s3om_graph.errors import make_error_payload
 
 
 def test_make_error_payload_from_exception_with_status() -> None:

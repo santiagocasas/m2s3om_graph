@@ -4,32 +4,32 @@ import streamlit as st
 from defusedxml.minidom import parseString as safe_parse_xml
 
 from state import DEFAULT_OAI_BASE_URL, DEFAULT_OAI_IDENTIFIER, ensure_store, sssom_dir
-from kaigraph.crosswalk.route import (
+from m2s3om_graph.crosswalk.route import (
     ConversionStep,
     available_target_formats,
     matched_standards_for_format,
     resolve_conversion_route,
 )
-from kaigraph.interop.elib import parse_openaire_xml_to_ir
-from kaigraph.oai.bridge import ResolvedFormat, bridge_metadata_format
-from kaigraph.oai.client import OAIClient
-from kaigraph.oai.parser import (
+from m2s3om_graph.interop.elib import parse_openaire_xml_to_ir
+from m2s3om_graph.oai.bridge import ResolvedFormat, bridge_metadata_format
+from m2s3om_graph.oai.client import OAIClient
+from m2s3om_graph.oai.parser import (
     MetadataFormatInfo,
     parse_identifiers,
     parse_metadata_formats,
 )
-from kaigraph.oai.registry import (
+from m2s3om_graph.oai.registry import (
     InstitutionEndpoint,
     load_demo_identifiers,
     load_institution_endpoints,
 )
-from kaigraph.transform.apply import TransformationReport, apply_mapping_rules
-from kaigraph.transform.parsers import (
+from m2s3om_graph.transform.apply import TransformationReport, apply_mapping_rules
+from m2s3om_graph.transform.parsers import (
     parse_datacite_xml_to_ir,
     parse_marcxml_to_ir,
     parse_oai_dc_xml_to_ir,
 )
-from kaigraph.transform.serializers import ir_to_datacite_xml, ir_to_dublin_core_xml
+from m2s3om_graph.transform.serializers import ir_to_datacite_xml, ir_to_dublin_core_xml
 
 FORMAT_OPTIONS = {
     "oai_dc_xml": "OAI Dublin Core XML",
@@ -314,10 +314,24 @@ def _fetch_source_payload_if_requested(
     st.session_state["transform_source_label"] = selected_prefix
 
 
+def _repo_browser_step_state() -> dict[str, bool]:
+    """Determine which steps have been reached based on session state."""
+    return {
+        "formats_discovered": bool(
+            st.session_state.get("transform_discovered_formats")
+        ),
+        "prefix_selected": bool(st.session_state.get("transform_discovered_formats")),
+        "record_fetched": bool(st.session_state.get("transform_source_payload")),
+    }
+
+
 def _repository_source_panel(store) -> tuple[str, str | None, str, str | None]:
     institutions = _institution_options()
     names = [item.name for item in institutions]
     default_index = names.index("DLR") if "DLR" in names else 0
+
+    # Step 1: Discover formats (always active)
+    st.markdown("**Step 1 — Select institution & endpoint**")
     institution_name = st.selectbox(
         "Institution", [*names, "Custom endpoint"], index=default_index
     )
@@ -338,13 +352,40 @@ def _repository_source_panel(store) -> tuple[str, str | None, str, str | None]:
     )
 
     discovered = _discover_and_render_formats(store, endpoint)
+    st.divider()
+
+    # Step 2: Select metadata prefix (reached after discovery)
+    step_state = _repo_browser_step_state()
+    if not step_state["formats_discovered"]:
+        st.markdown("**Step 2 — Select a metadata prefix**")
+        st.caption("⬜ Discover formats first (Step 1).")
+        st.divider()
+        return "", None, endpoint, None
+
+    st.markdown("**Step 2 — Select a metadata prefix**")
     selected_source = _select_resolved_source(discovered)
     if selected_source is None:
+        st.divider()
         return "", None, endpoint, None
 
     selected_prefix, resolved = selected_source
+    st.divider()
+
+    # Step 3: Load identifiers (reached after prefix selection)
+    step_state = _repo_browser_step_state()
+    if not step_state["prefix_selected"]:
+        st.markdown("**Step 3 — Load sample record IDs**")
+        st.caption("⬜ Select a metadata prefix first (Step 2).")
+        st.divider()
+        return "", None, endpoint, None
+
+    st.markdown("**Step 3 — Load sample record IDs**")
     _load_identifiers_if_requested(institution_name, endpoint, selected_prefix)
     identifier = _pick_identifier_input()
+    st.divider()
+
+    # Step 4: Fetch record (reached after identifier available)
+    st.markdown("**Step 4 — Fetch source record**")
     _fetch_source_payload_if_requested(endpoint, identifier, selected_prefix, resolved)
 
     return (

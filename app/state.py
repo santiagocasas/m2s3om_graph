@@ -5,22 +5,22 @@ from pathlib import Path
 import streamlit as st
 import yaml
 
-from kaigraph.db import (
+from m2s3om_graph.db import (
     CrosswalkRecord,
     CrosswalkStore,
     StandardRecord,
     build_default_store,
 )
-from kaigraph.errors import make_error_payload
-from kaigraph.rdamsc.ingest import (
+from m2s3om_graph.errors import make_error_payload
+from m2s3om_graph.rdamsc.ingest import (
     sssom_output_path,
     sync_rdamsc_catalog,
 )
-from kaigraph.rdamsc.pipeline import (
+from m2s3om_graph.rdamsc.pipeline import (
     backfill_kg_from_sssom,
     load_pipeline_status,
 )
-from kaigraph.sssom import load_sssom_rules
+from m2s3om_graph.sssom import load_sssom_rules
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_SSSOM_DIR = BASE_DIR / "exports" / "sssom"
@@ -32,7 +32,7 @@ DESCRIPTION_RE = re.compile(r"^(?P<crosswalk>.*) \((?P<source>.*) -> (?P<target>
 
 
 def _auto_sync_enabled() -> bool:
-    value = os.getenv("KAIGRAPH_AUTO_SYNC_ON_START", "0").strip().lower()
+    value = os.getenv("M2S3OM_AUTO_SYNC_ON_START", "0").strip().lower()
     return value in {"1", "true", "yes", "on"}
 
 
@@ -104,7 +104,7 @@ def _seed_store_from_sssom_exports(store: CrosswalkStore, out_dir: Path) -> int:
     for path in sorted(out_dir.glob("*.sssom.tsv")):
         metadata = _parse_sssom_metadata(path)
         mapping_set_id = str(metadata.get("mapping_set_id", "")).strip()
-        if not mapping_set_id.startswith("kaigraph:"):
+        if not mapping_set_id.startswith("m2s3om_graph:"):
             continue
         crosswalk_id = mapping_set_id.split(":", 1)[1]
         rules = load_sssom_rules(path, crosswalk_id)

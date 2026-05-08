@@ -1,9 +1,9 @@
-from kaigraph.mapping.exporters import (
+from m2s3om_graph.mapping.exporters import (
     export_crosswalk_csv,
     export_crosswalk_json,
     export_crosswalk_yaml,
 )
-from kaigraph.models.crosswalk import Crosswalk, MappingRecord
+from m2s3om_graph.models.crosswalk import Crosswalk, MappingRecord
 
 
 def test_exporters() -> None:

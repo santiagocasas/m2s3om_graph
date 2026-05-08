@@ -1,5 +1,5 @@
-from kaigraph.transform.ir import IRValue
-from kaigraph.transform.serializers import ir_to_dublin_core_xml
+from m2s3om_graph.transform.ir import IRValue
+from m2s3om_graph.transform.serializers import ir_to_dublin_core_xml
 
 
 def test_dublin_core_serializer_deduplicates_same_value() -> None:

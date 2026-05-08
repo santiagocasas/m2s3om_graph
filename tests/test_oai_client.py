@@ -1,4 +1,4 @@
-from kaigraph.oai.client import OAIClient
+from m2s3om_graph.oai.client import OAIClient
 
 
 class _Response:
@@ -20,7 +20,7 @@ def test_oai_client_identify_uses_base_url_and_timeout(monkeypatch) -> None:
         calls["timeout"] = timeout
         return response
 
-    monkeypatch.setattr("kaigraph.oai.client.requests.get", _fake_get)
+    monkeypatch.setattr("m2s3om_graph.oai.client.requests.get", _fake_get)
 
     client = OAIClient(base_url="https://repo.example/oai", timeout_s=11)
     text = client.identify()
@@ -41,7 +41,7 @@ def test_oai_client_verbs_build_expected_params(monkeypatch) -> None:
         captured.append(params)
         return _Response()
 
-    monkeypatch.setattr("kaigraph.oai.client.requests.get", _fake_get)
+    monkeypatch.setattr("m2s3om_graph.oai.client.requests.get", _fake_get)
 
     client = OAIClient(base_url="https://repo.example/oai")
     _ = client.list_metadata_formats()

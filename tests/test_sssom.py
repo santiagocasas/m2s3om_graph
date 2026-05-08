@@ -1,14 +1,14 @@
 import csv
 import io
 
-from kaigraph.db import (
+from m2s3om_graph.db import (
     CrosswalkBundle,
     CrosswalkRecord,
     MappingRuleRecord,
     MappingType,
     StandardRecord,
 )
-from kaigraph.sssom import bundle_to_sssom_tsv, sssom_tsv_to_rules
+from m2s3om_graph.sssom import bundle_to_sssom_tsv, sssom_tsv_to_rules
 
 
 def test_sssom_roundtrip_preserves_rule_core_fields() -> None:

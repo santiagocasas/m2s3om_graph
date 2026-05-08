@@ -3,8 +3,8 @@ import importlib.util
 from pathlib import Path
 import sys
 
-from kaigraph.db.surreal_health import SurrealProbeResult
-from kaigraph.rdamsc.pipeline_stats_cli import main as pipeline_stats_main
+from m2s3om_graph.db.surreal_health import SurrealProbeResult
+from m2s3om_graph.rdamsc.pipeline_stats_cli import main as pipeline_stats_main
 
 HELPERS_DIR = Path(__file__).resolve().parents[1] / "scripts" / "helpers"
 sys.path.insert(0, str(HELPERS_DIR))
@@ -100,7 +100,7 @@ def test_wait_surreal_ready_main_success(monkeypatch, capsys) -> None:
             "--password",
             "secret",
             "--namespace",
-            "kaigraph",
+            "m2s3om_graph",
             "--database",
             "crosswalk",
             "--attempts",
@@ -135,7 +135,7 @@ def test_wait_surreal_ready_main_failure(monkeypatch, capsys) -> None:
             "--password",
             "secret",
             "--namespace",
-            "kaigraph",
+            "m2s3om_graph",
             "--database",
             "crosswalk",
         ],

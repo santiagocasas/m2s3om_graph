@@ -1,6 +1,6 @@
 import requests
 
-from kaigraph.rdamsc.llm_extract import extract_mapping_candidates_with_meta
+from m2s3om_graph.rdamsc.llm_extract import extract_mapping_candidates_with_meta
 
 
 class _FakeResponse:
@@ -32,8 +32,8 @@ def test_extract_with_meta_missing_api_key_uses_heuristic(monkeypatch) -> None:
 
 def test_extract_with_meta_retries_then_succeeds(monkeypatch) -> None:
     monkeypatch.setenv("BLABLADOR_API_KEY", "test-key")
-    monkeypatch.setenv("KAIGRAPH_LLM_RETRIES", "2")
-    monkeypatch.setenv("KAIGRAPH_LLM_TIMEOUT_S", "15")
+    monkeypatch.setenv("M2S3OM_LLM_RETRIES", "2")
+    monkeypatch.setenv("M2S3OM_LLM_TIMEOUT_S", "15")
     calls = {"count": 0}
 
     def _fake_post(*_args, **_kwargs):
@@ -55,8 +55,8 @@ def test_extract_with_meta_retries_then_succeeds(monkeypatch) -> None:
             }
         )
 
-    monkeypatch.setattr("kaigraph.rdamsc.llm_extract.requests.post", _fake_post)
-    monkeypatch.setattr("kaigraph.rdamsc.llm_extract.time.sleep", lambda *_args: None)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.llm_extract.requests.post", _fake_post)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.llm_extract.time.sleep", lambda *_args: None)
 
     candidates, meta = extract_mapping_candidates_with_meta("x", "A", "B")
     assert meta["backend"] == "llm_json"
@@ -78,7 +78,7 @@ def test_extract_with_meta_relaxed_fallback(monkeypatch) -> None:
             {"choices": [{"message": {"content": "fieldA\tfieldB\tevidence line"}}]}
         )
 
-    monkeypatch.setattr("kaigraph.rdamsc.llm_extract.requests.post", _fake_post)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.llm_extract.requests.post", _fake_post)
 
     candidates, meta = extract_mapping_candidates_with_meta("x", "A", "B")
     assert meta["backend"] == "llm_relaxed"

@@ -3,7 +3,7 @@ import os
 import requests
 import streamlit as st
 
-from kaigraph.rdamsc.llm_runtime import (
+from m2s3om_graph.rdamsc.llm_runtime import (
     DEFAULT_BLABLADOR_BASE_URL,
     DEFAULT_LLM_MODEL,
 )
@@ -12,16 +12,16 @@ from kaigraph.rdamsc.llm_runtime import (
 def _env_rows() -> dict[str, str]:
     has_key = bool(os.getenv("BLABLADOR_API_KEY"))
     return {
-        "KAIGRAPH_USE_SURREAL": os.getenv("KAIGRAPH_USE_SURREAL", "0"),
-        "KAIGRAPH_DB_URL": os.getenv("KAIGRAPH_DB_URL", "ws://localhost:8000/rpc"),
-        "KAIGRAPH_DB_NS": os.getenv("KAIGRAPH_DB_NS", "kaigraph"),
-        "KAIGRAPH_DB_NAME": os.getenv("KAIGRAPH_DB_NAME", "crosswalk"),
+        "M2S3OM_USE_SURREAL": os.getenv("M2S3OM_USE_SURREAL", "0"),
+        "M2S3OM_DB_URL": os.getenv("M2S3OM_DB_URL", "ws://localhost:8000/rpc"),
+        "M2S3OM_DB_NS": os.getenv("M2S3OM_DB_NS", "m2s3om_graph"),
+        "M2S3OM_DB_NAME": os.getenv("M2S3OM_DB_NAME", "crosswalk"),
         "BLABLADOR_API_KEY": "loaded" if has_key else "missing",
         "BLABLADOR_BASE_URL": os.getenv(
             "BLABLADOR_BASE_URL",
             DEFAULT_BLABLADOR_BASE_URL,
         ),
-        "KAIGRAPH_LLM_MODEL": os.getenv("KAIGRAPH_LLM_MODEL", DEFAULT_LLM_MODEL),
+        "M2S3OM_LLM_MODEL": os.getenv("M2S3OM_LLM_MODEL", DEFAULT_LLM_MODEL),
     }
 
 
@@ -77,7 +77,7 @@ def _render_model_selector(use_sidebar: bool) -> None:
 
     default_model = st.session_state.get(
         "selected_blablador_model",
-        rows["KAIGRAPH_LLM_MODEL"],
+        rows["M2S3OM_LLM_MODEL"],
     )
 
     if not st.session_state.get(loaded_key, False):
@@ -87,7 +87,7 @@ def _render_model_selector(use_sidebar: bool) -> None:
             key=f"{key_prefix}_blablador_model_manual",
         )
         st.session_state["selected_blablador_model"] = selected
-        os.environ["KAIGRAPH_LLM_MODEL"] = selected
+        os.environ["M2S3OM_LLM_MODEL"] = selected
         target.caption(
             "Remote model discovery is skipped during startup for faster app load."
         )
@@ -121,7 +121,7 @@ def _render_model_selector(use_sidebar: bool) -> None:
             target.caption(f"Model list unavailable: {error}")
 
     st.session_state["selected_blablador_model"] = selected
-    os.environ["KAIGRAPH_LLM_MODEL"] = selected
+    os.environ["M2S3OM_LLM_MODEL"] = selected
     target.write(f"Using model: `{selected}`")
 
 
@@ -136,21 +136,21 @@ def render_sidebar() -> None:
         operation = str(sync_error.get("operation", "catalog sync"))
         message = str(sync_error.get("message", "unknown error"))
         st.sidebar.caption(f"Catalog sync fallback: {operation} ({message})")
-    st.sidebar.write(f"DB URL: `{rows['KAIGRAPH_DB_URL']}`")
+    st.sidebar.write(f"DB URL: `{rows['M2S3OM_DB_URL']}`")
     st.sidebar.write(
-        f"Namespace/DB: `{rows['KAIGRAPH_DB_NS']}/{rows['KAIGRAPH_DB_NAME']}`"
+        f"Namespace/DB: `{rows['M2S3OM_DB_NS']}/{rows['M2S3OM_DB_NAME']}`"
     )
     st.sidebar.write(f"Blablador key: `{rows['BLABLADOR_API_KEY']}`")
     _render_model_selector(use_sidebar=True)
 
     with st.sidebar.expander("Full runtime variables", expanded=False):
-        st.write(f"`KAIGRAPH_USE_SURREAL={rows['KAIGRAPH_USE_SURREAL']}`")
-        st.write(f"`KAIGRAPH_DB_URL={rows['KAIGRAPH_DB_URL']}`")
-        st.write(f"`KAIGRAPH_DB_NS={rows['KAIGRAPH_DB_NS']}`")
-        st.write(f"`KAIGRAPH_DB_NAME={rows['KAIGRAPH_DB_NAME']}`")
+        st.write(f"`M2S3OM_USE_SURREAL={rows['M2S3OM_USE_SURREAL']}`")
+        st.write(f"`M2S3OM_DB_URL={rows['M2S3OM_DB_URL']}`")
+        st.write(f"`M2S3OM_DB_NS={rows['M2S3OM_DB_NS']}`")
+        st.write(f"`M2S3OM_DB_NAME={rows['M2S3OM_DB_NAME']}`")
         st.write(f"`BLABLADOR_API_KEY={rows['BLABLADOR_API_KEY']}`")
         st.write(f"`BLABLADOR_BASE_URL={rows['BLABLADOR_BASE_URL']}`")
-        st.write(f"`KAIGRAPH_LLM_MODEL={rows['KAIGRAPH_LLM_MODEL']}`")
+        st.write(f"`M2S3OM_LLM_MODEL={rows['M2S3OM_LLM_MODEL']}`")
         st.caption("Artifacts are converted to markdown via MarkItDown.")
 
 

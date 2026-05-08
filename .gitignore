@@ -4,3 +4,4 @@
 *.pyc
 .claude/
 .agents/
+.sisyphus/

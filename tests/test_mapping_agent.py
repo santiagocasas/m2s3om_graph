@@ -1,7 +1,7 @@
-from kaigraph.db.repository import InMemoryCrosswalkRepository
-from kaigraph.ingest.pipeline import StandardSource, ingest_standard_source
-from kaigraph.mapping.agent import MappingAgent
-from kaigraph.models.standards import Standard
+from m2s3om_graph.db.repository import InMemoryCrosswalkRepository
+from m2s3om_graph.ingest.pipeline import StandardSource, ingest_standard_source
+from m2s3om_graph.mapping.agent import MappingAgent
+from m2s3om_graph.models.standards import Standard
 
 
 def test_generate_crosswalk_creates_mappings() -> None:

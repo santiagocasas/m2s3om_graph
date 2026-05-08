@@ -6,7 +6,7 @@ Guidance for coding agents working in this repository.
 
 - Language: Python 3.12+
 - Package manager/runtime: `uv`
-- Main code: `src/kaigraph/`
+- Main code: `src/m2s3om_graph/`
 - App entrypoint: `app/app.py`
 - Surreal schema: `surql/schema.surql`
 
@@ -19,7 +19,7 @@ Guidance for coding agents working in this repository.
 3. Run Streamlit:
    - `uv run streamlit run app/app.py`
 4. Run quick CLI smoke:
-   - `uv run python -m kaigraph.cli.main demo-convert`
+   - `uv run python -m m2s3om_graph.cli.main demo-convert`
 
 ## Build/lint/type-check/test commands
 
@@ -54,9 +54,9 @@ Guidance for coding agents working in this repository.
 ### Fast CLI checks
 
 - Convert synthetic fixture using ingested PDF rules:
-  - `uv run python -m kaigraph.cli.main demo-convert`
+  - `uv run python -m m2s3om_graph.cli.main demo-convert`
 - Ingest authoritative PDF explicitly:
-  - `uv run python -m kaigraph.cli.main ingest-pdf --pdf /home/casas/AI/Metadata-Mappings/DataCite_DublinCore_Mapping.pdf`
+  - `uv run python -m m2s3om_graph.cli.main ingest-pdf --pdf /home/casas/AI/Metadata-Mappings/DataCite_DublinCore_Mapping.pdf`
 
 ## Coding conventions
 

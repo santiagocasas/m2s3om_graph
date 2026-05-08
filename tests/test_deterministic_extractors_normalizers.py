@@ -1,9 +1,9 @@
-from kaigraph.db import MappingType
-from kaigraph.ingest.deterministic.extractors import (
+from m2s3om_graph.db import MappingType
+from m2s3om_graph.ingest.deterministic.extractors import (
     extract_assignment_candidates,
     extract_markdown_table_candidates,
 )
-from kaigraph.ingest.deterministic.normalizers import normalize_text_for_deterministic
+from m2s3om_graph.ingest.deterministic.normalizers import normalize_text_for_deterministic
 
 
 def test_normalize_text_for_deterministic_cleans_rtf_controls() -> None:

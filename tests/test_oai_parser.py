@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from kaigraph.oai.bridge import bridge_metadata_format
-from kaigraph.oai.parser import (
+from m2s3om_graph.oai.bridge import bridge_metadata_format
+from m2s3om_graph.oai.parser import (
     parse_identifiers,
     parse_metadata_formats,
     parse_metadata_prefixes,
 )
-from kaigraph.transform.parsers import (
+from m2s3om_graph.transform.parsers import (
     parse_datacite_xml_to_ir,
     parse_marcxml_to_ir,
     parse_oai_dc_xml_to_ir,

@@ -1,11 +1,11 @@
 from pathlib import Path
 from typing import cast
 
-from kaigraph.db import InMemoryCrosswalkStore
-from kaigraph.rdamsc.artifacts import ArtifactFetchError
-from kaigraph.rdamsc.api import RDAMSCClient
-from kaigraph.rdamsc.artifacts import ArtifactText
-from kaigraph.rdamsc.ingest import ingest_rdamsc_crosswalk_docs, sync_rdamsc_catalog
+from m2s3om_graph.db import InMemoryCrosswalkStore
+from m2s3om_graph.rdamsc.artifacts import ArtifactFetchError
+from m2s3om_graph.rdamsc.api import RDAMSCClient
+from m2s3om_graph.rdamsc.artifacts import ArtifactText
+from m2s3om_graph.rdamsc.ingest import ingest_rdamsc_crosswalk_docs, sync_rdamsc_catalog
 
 
 class _FakeClient:
@@ -99,9 +99,9 @@ def test_ingest_docs_generates_rules_and_sssom(monkeypatch, tmp_path: Path) -> N
             },
         )
 
-    monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
     monkeypatch.setattr(
-        "kaigraph.rdamsc.ingest.extract_mapping_candidates_with_meta", _fake_extract
+        "m2s3om_graph.rdamsc.ingest.extract_mapping_candidates_with_meta", _fake_extract
     )
 
     result = ingest_rdamsc_crosswalk_docs(
@@ -145,9 +145,9 @@ def test_ingest_docs_no_rules_does_not_write_sssom(monkeypatch, tmp_path: Path) 
     ) -> tuple[list[dict[str, object]], dict[str, object]]:
         return ([], {"backend": "heuristic", "llm_error": "none"})
 
-    monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
     monkeypatch.setattr(
-        "kaigraph.rdamsc.ingest.extract_mapping_candidates_with_meta", _fake_extract
+        "m2s3om_graph.rdamsc.ingest.extract_mapping_candidates_with_meta", _fake_extract
     )
 
     result = ingest_rdamsc_crosswalk_docs(
@@ -170,7 +170,7 @@ def test_ingest_docs_unreachable_is_classified(monkeypatch, tmp_path: Path) -> N
     ) -> ArtifactText:
         raise ArtifactFetchError("upstream unavailable", status_code=503)
 
-    monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _raise_fetch)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.ingest.fetch_artifact_text", _raise_fetch)
 
     result = ingest_rdamsc_crosswalk_docs(
         store,
@@ -210,7 +210,7 @@ def test_ingest_docs_conversion_error_is_classified_unsupported(
     ) -> ArtifactText:
         raise ArtifactFetchError("conversion failed", reason="conversion_error")
 
-    monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _raise_conversion)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.ingest.fetch_artifact_text", _raise_conversion)
 
     result = ingest_rdamsc_crosswalk_docs(
         store,
@@ -282,9 +282,9 @@ def test_ingest_docs_attempts_non_easy_extensions(monkeypatch, tmp_path: Path) -
             },
         )
 
-    monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
     monkeypatch.setattr(
-        "kaigraph.rdamsc.ingest.extract_mapping_candidates_with_meta", _fake_extract
+        "m2s3om_graph.rdamsc.ingest.extract_mapping_candidates_with_meta", _fake_extract
     )
 
     result = ingest_rdamsc_crosswalk_docs(
@@ -360,9 +360,9 @@ def test_ingest_docs_uses_deterministic_generic_when_strong_signal(
             },
         )
 
-    monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
     monkeypatch.setattr(
-        "kaigraph.rdamsc.ingest.extract_mapping_candidates_with_meta", _fake_llm_extract
+        "m2s3om_graph.rdamsc.ingest.extract_mapping_candidates_with_meta", _fake_llm_extract
     )
 
     result = ingest_rdamsc_crosswalk_docs(
@@ -419,7 +419,7 @@ def test_datacite_like_ingest_reuses_element_for_same_source_path(
             self.snippet = f"{row_id} snippet"
 
     def _fake_parse(*_args, **_kwargs):
-        from kaigraph.db import MappingType
+        from m2s3om_graph.db import MappingType
 
         row1 = _Row("2.1", "schemeURI")
         row1.mapping_type = MappingType.DIRECT
@@ -427,8 +427,8 @@ def test_datacite_like_ingest_reuses_element_for_same_source_path(
         row2.mapping_type = MappingType.DIRECT
         return [row1, row2]
 
-    monkeypatch.setattr("kaigraph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
-    monkeypatch.setattr("kaigraph.rdamsc.ingest.parse_mapping_page_texts", _fake_parse)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.ingest.fetch_artifact_text", _fake_fetch)
+    monkeypatch.setattr("m2s3om_graph.rdamsc.ingest.parse_mapping_page_texts", _fake_parse)
 
     result = ingest_rdamsc_crosswalk_docs(
         store,

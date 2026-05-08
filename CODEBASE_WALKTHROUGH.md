@@ -1,7 +1,7 @@
 # Kaigraph Codebase: Complete Linear Walkthrough
 
 **Date**: March 2026  
-**Project**: kaigraph - Evidence-based metadata crosswalk workbench  
+**Project**: m2s3om_graph - Evidence-based metadata crosswalk workbench  
 **Language**: Python 3.12+  
 **Runtime**: uv + Streamlit + SurrealDB
 
@@ -27,7 +27,7 @@
 
 ### CLI Entry Point
 
-**File**: `src/kaigraph/cli/main.py`
+**File**: `src/m2s3om_graph/cli/main.py`
 
 The CLI provides the following commands:
 
@@ -42,7 +42,7 @@ The CLI provides the following commands:
 
 Each command uses `build_default_store()` to instantiate either:
 - **InMemoryCrosswalkStore**: In-process key-value (default)
-- **SurrealCrosswalkStore**: Persistent SurrealDB instance (if `KAIGRAPH_USE_SURREAL=1`)
+- **SurrealCrosswalkStore**: Persistent SurrealDB instance (if `M2S3OM_USE_SURREAL=1`)
 
 ### Streamlit App
 
@@ -59,7 +59,7 @@ Launches a web UI with 4 tabs and a sidebar:
 **Session Management**: `app/state.py`
 - `get_store()`: Lazy-loads CrosswalkStore into Streamlit session
 - `sssom_dir()`: Ensures SSSOM export directory exists
-- `ensure_seeded()`: seeds the app from committed SSSOM exports first and skips remote RDAMSC catalog sync unless `KAIGRAPH_AUTO_SYNC_ON_START=1`
+- `ensure_seeded()`: seeds the app from committed SSSOM exports first and skips remote RDAMSC catalog sync unless `M2S3OM_AUTO_SYNC_ON_START=1`
 
 **Sidebar**: `app/views/system.py`
 - Displays runtime config (DB URL, Blablador API key status)
@@ -71,7 +71,7 @@ Launches a web UI with 4 tabs and a sidebar:
 
 ### High-Level Models
 
-**File**: `src/kaigraph/models/`
+**File**: `src/m2s3om_graph/models/`
 
 ```python
 # standards.py
@@ -98,7 +98,7 @@ Citation(chunk_id, url?, anchor?, snippet)
 
 ### Database Models
 
-**File**: `src/kaigraph/db/models.py`
+**File**: `src/m2s3om_graph/db/models.py`
 
 ```python
 StandardRecord(
@@ -166,7 +166,7 @@ CrosswalkBundle(
 
 ### Storage Backends
 
-**File**: `src/kaigraph/db/crosswalk_repository.py`
+**File**: `src/m2s3om_graph/db/crosswalk_repository.py`
 
 Both backends implement the `CrosswalkStore` interface:
 
@@ -193,7 +193,7 @@ class CrosswalkStore:
 
 ### SurrealDB Schema
 
-**File**: `src/kaigraph/db/surreal_schema.py`
+**File**: `src/m2s3om_graph/db/surreal_schema.py`
 
 8 tables:
 - `standard`, `element`, `crosswalk`, `mapping_rule`, `evidence`
@@ -217,7 +217,7 @@ Indexes on frequently-queried fields:
 
 ### Step 1: Sync Catalog
 
-**Files**: `src/kaigraph/rdamsc/api.py`, `ingest.py:sync_rdamsc_catalog()`
+**Files**: `src/m2s3om_graph/rdamsc/api.py`, `ingest.py:sync_rdamsc_catalog()`
 
 ```
 RDAMSCClient.list_mappings()
@@ -240,7 +240,7 @@ RDAMSCClient.list_mappings()
 
 ### Step 2: Fetch Artifacts
 
-**File**: `src/kaigraph/rdamsc/artifacts.py`
+**File**: `src/m2s3om_graph/rdamsc/artifacts.py`
 
 Converts documentation (PDF, HTML, TXT, XML, XSL) into normalized markdown text.
 
@@ -313,7 +313,7 @@ Selects extraction strategy based on artifact URL:
 
 ### Architecture
 
-**Files**: `src/kaigraph/ingest/deterministic/`
+**Files**: `src/m2s3om_graph/ingest/deterministic/`
 
 ```
 normalize_text_for_deterministic(text)
@@ -393,7 +393,7 @@ class DeterministicDiagnostics:
 
 ### Architecture
 
-**Files**: `src/kaigraph/candidates/blablador.py`, `rdamsc/llm_extract.py`
+**Files**: `src/m2s3om_graph/candidates/blablador.py`, `rdamsc/llm_extract.py`
 
 ```
 extract_mapping_candidates_with_meta(merged_markdown, source_std_name, target_std_name)
@@ -425,7 +425,7 @@ For each rule, return JSON:
 ```
 
 **Config**:
-- Model: Read from `KAIGRAPH_LLM_MODEL` (default: "alias-fast")
+- Model: Read from `M2S3OM_LLM_MODEL` (default: "alias-fast")
 - API base: `BLABLADOR_BASE_URL` (default: Helmholtz Blablador)
 - Timeout: 120 seconds per request
 
@@ -448,7 +448,7 @@ Simple TF-IDF-like scoring:
 
 ### Intermediate Representation (IR)
 
-**File**: `src/kaigraph/transform/ir.py`
+**File**: `src/m2s3om_graph/transform/ir.py`
 
 ```python
 @dataclass
@@ -541,7 +541,7 @@ Converts IR → target metadata formats:
 
 ### Metrics
 
-**File**: `src/kaigraph/benchmark/metrics.py`
+**File**: `src/m2s3om_graph/benchmark/metrics.py`
 
 ```python
 compare_ir(actual: IR, expected: IR) 
@@ -613,7 +613,7 @@ Export functions:
 
 ### Standard for Sharing Ontology Mappings (SSSOM)
 
-**File**: `src/kaigraph/sssom.py`
+**File**: `src/m2s3om_graph/sssom.py`
 
 SSSOM is a TSV-based format for mapping sets. Kaigraph uses it as authoritative export/import.
 
@@ -621,12 +621,12 @@ SSSOM is a TSV-based format for mapping sets. Kaigraph uses it as authoritative 
 
 **File Structure**:
 ```
-# mapping_set_id: kaigraph:rdamsc_c5
+# mapping_set_id: m2s3om_graph:rdamsc_c5
 # mapping_set_version: 1.0
 # mapping_set_description: RDA to Dublin Core (source -> target)
 # curie_map:
-#   src: https://kaigraph.local/source_standard_id/
-#   dst: https://kaigraph.local/target_standard_id/
+#   src: https://m2s3om_graph.local/source_standard_id/
+#   dst: https://m2s3om_graph.local/target_standard_id/
 #   skos: http://www.w3.org/2004/02/skos/core#
 #   semapv: https://w3id.org/semapv/vocab/
 
@@ -763,13 +763,13 @@ For the current CLI-oriented workflow, see `BENCHMARKING.md`.
 
 ### Settings
 
-**File**: `src/kaigraph/config/settings.py`
+**File**: `src/m2s3om_graph/config/settings.py`
 
 ```python
 @dataclass(frozen=True)
 class Settings:
     db_url: str              # default: ws://localhost:8000/rpc
-    db_namespace: str        # default: kaigraph
+    db_namespace: str        # default: m2s3om_graph
     db_name: str             # default: crosswalk
     db_user: str             # default: root
     db_password: str         # default: root
@@ -779,14 +779,14 @@ class Settings:
 ```
 
 **Environment Variables**:
-- `KAIGRAPH_DB_URL`, `KAIGRAPH_DB_NS`, `KAIGRAPH_DB_NAME`, `KAIGRAPH_DB_USER`, `KAIGRAPH_DB_PASSWORD`
-- `KAIGRAPH_LLM_MODEL`, `KAIGRAPH_EMBEDDINGS_MODEL`, `KAIGRAPH_RETRIEVAL_TOP_K`
-- `KAIGRAPH_USE_SURREAL` (0 or 1)
+- `M2S3OM_DB_URL`, `M2S3OM_DB_NS`, `M2S3OM_DB_NAME`, `M2S3OM_DB_USER`, `M2S3OM_DB_PASSWORD`
+- `M2S3OM_LLM_MODEL`, `M2S3OM_EMBEDDINGS_MODEL`, `M2S3OM_RETRIEVAL_TOP_K`
+- `M2S3OM_USE_SURREAL` (0 or 1)
 - `BLABLADOR_API_KEY`, `BLABLADOR_BASE_URL`
 
 ### Pipeline Orchestration
 
-**File**: `src/kaigraph/rdamsc/pipeline.py`
+**File**: `src/m2s3om_graph/rdamsc/pipeline.py`
 
 ```python
 run_bootstrap_pipeline(
@@ -829,14 +829,14 @@ status_map: Dict[crosswalk_id, {
 
 **User Command**:
 ```bash
-uv run python -m kaigraph.cli.main bootstrap-rdamsc --sssom-dir exports/sssom --verbose
+uv run python -m m2s3om_graph.cli.main bootstrap-rdamsc --sssom-dir exports/sssom --verbose
 ```
 
 **Execution Flow**:
 ```
 run_cli(["bootstrap-rdamsc", ...])
   └─ build_default_store()
-      ├─ Check KAIGRAPH_USE_SURREAL env var
+      ├─ Check M2S3OM_USE_SURREAL env var
       └─ Return InMemoryCrosswalkStore or SurrealCrosswalkStore
   
   └─ run_bootstrap_pipeline(store, Path("exports/sssom"), force=False)
@@ -945,7 +945,7 @@ _render_report(converted_ir, report, expected_ir?)
 
 ### Scenario 3: Deterministic PDF Parsing
 
-**File**: `src/kaigraph/ingest/pdf_crosswalk_parser.py`
+**File**: `src/m2s3om_graph/ingest/pdf_crosswalk_parser.py`
 
 For DataCite↔Dublin Core PDF:
 

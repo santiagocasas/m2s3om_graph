@@ -5,7 +5,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 
 from views import crosswalks
-from kaigraph.db import CrosswalkRecord, InMemoryCrosswalkStore
+from m2s3om_graph.db import CrosswalkRecord, InMemoryCrosswalkStore
 
 
 def _store_with_crosswalks() -> tuple[

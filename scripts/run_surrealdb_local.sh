@@ -5,7 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 DB_DIR="${DB_DIR:-${ROOT_DIR}/.local/surrealdb}"
 PORT="${PORT:-8000}"
-CONTAINER_NAME="${CONTAINER_NAME:-kaigraph-surrealdb}"
+CONTAINER_NAME="${CONTAINER_NAME:-m2s3om_graph-surrealdb}"
 PORT_CHECK_SCRIPT="${ROOT_DIR}/scripts/helpers/is_port_open.py"
 
 if ! command -v docker >/dev/null 2>&1; then
@@ -48,9 +48,9 @@ if docker ps -a --format '{{.Names}}' | grep -q "^${CONTAINER_NAME}$"; then
 else
     docker run -d --name "${CONTAINER_NAME}" -p "${PORT}:8000" \
         -u "$(id -u):$(id -g)" \
-        -v "${DB_DIR}:/dbs/kaigraph" \
+        -v "${DB_DIR}:/dbs/m2s3om_graph" \
         surrealdb/surrealdb:latest \
-        start --user root --pass root rocksdb:/dbs/kaigraph >/dev/null
+        start --user root --pass root rocksdb:/dbs/m2s3om_graph >/dev/null
 fi
 
 if ! wait_for_port "${PORT}" 30; then
@@ -61,9 +61,9 @@ fi
 
 echo "SurrealDB running at ws://localhost:${PORT}/rpc"
 echo "Use env:"
-echo "  export KAIGRAPH_USE_SURREAL=1"
-echo "  export KAIGRAPH_DB_URL=ws://localhost:${PORT}/rpc"
-echo "  export KAIGRAPH_DB_NS=kaigraph"
-echo "  export KAIGRAPH_DB_NAME=crosswalk"
-echo "  export KAIGRAPH_DB_USER=root"
-echo "  export KAIGRAPH_DB_PASSWORD=root"
+echo "  export M2S3OM_USE_SURREAL=1"
+echo "  export M2S3OM_DB_URL=ws://localhost:${PORT}/rpc"
+echo "  export M2S3OM_DB_NS=m2s3om_graph"
+echo "  export M2S3OM_DB_NAME=crosswalk"
+echo "  export M2S3OM_DB_USER=root"
+echo "  export M2S3OM_DB_PASSWORD=root"
