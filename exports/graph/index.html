@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M²S³OM-graph: Crosswalk Network Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/graphology@0.25.4/dist/graphology.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@3.0.0-beta.20/build/sigma.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            overflow: hidden;
+        }
+        
+        #header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 26, 26, 0.95);
+            padding: 20px;
+            border-bottom: 1px solid #333;
+            z-index: 100;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        #stats {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            background: rgba(26, 26, 26, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            z-index: 100;
+            min-width: 250px;
+        }
+        
+        .stat-item {
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        
+        .stat-label {
+            color: #999;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #4A90E2;
+        }
+        
+        .legend {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 12px;
+            margin-right: 8px;
+            border-radius: 2px;
+        }
+        
+        #info-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(26, 26, 26, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            z-index: 100;
+            max-width: 400px;
+            display: none;
+        }
+        
+        #info-panel.active {
+            display: block;
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #4A90E2;
+        }
+        
+        .info-row {
+            font-size: 12px;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+        
+        .info-label {
+            color: #999;
+            display: inline-block;
+            min-width: 100px;
+        }
+        
+        .strategy-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .strategy-deterministic {
+            background: #50C878;
+            color: #000;
+        }
+        
+        .strategy-llm {
+            background: #FFB84D;
+            color: #000;
+        }
+        
+        .strategy-unknown {
+            background: #95A5A6;
+            color: #fff;
+        }
+        
+        #graph-container {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        
+        #controls {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(26, 26, 26, 0.95);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            z-index: 100;
+        }
+        
+        button {
+            background: #4A90E2;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-bottom: 8px;
+            width: 100%;
+        }
+        
+        button:hover {
+            background: #357ABD;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>M²S³OM-graph: Metadata Crosswalk Network</h1>
+        <div class="subtitle">Graph-Grounded Interoperability Visualization</div>
+    </div>
+    
+    <div id="stats">
+        <div class="stat-item">
+            <div class="stat-label">Standards</div>
+            <div class="stat-value" id="stat-nodes">0</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Crosswalks</div>
+            <div class="stat-value" id="stat-edges">0</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-label">Total Rules</div>
+            <div class="stat-value" id="stat-rules">0</div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #50C878;"></div>
+                <span>Deterministic Extraction</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #FFB84D;"></div>
+                <span>LLM Extraction</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #95A5A6;"></div>
+                <span>Unknown Strategy</span>
+            </div>
+        </div>
+    </div>
+    
+    <div id="controls">
+        <button id="reset-camera">Reset View</button>
+        <button id="toggle-labels">Toggle Labels</button>
+    </div>
+    
+    <div id="info-panel">
+        <div class="info-title" id="info-title">Select a node or edge</div>
+        <div id="info-content"></div>
+    </div>
+    
+    <div id="graph-container"></div>
+    
+    <script>
+        // Load graph data
+        fetch('crosswalk_graph.json')
+            .then(response => response.json())
+            .then(data => {
+                initializeGraph(data);
+            })
+            .catch(error => {
+                console.error('Error loading graph data:', error);
+                alert('Failed to load graph data. Make sure crosswalk_graph.json exists.');
+            });
+        
+        function initializeGraph(graphData) {
+            // Create graphology instance
+            const graph = new graphology.Graph();
+            
+            // Add nodes
+            graphData.nodes.forEach(node => {
+                graph.addNode(node.id, {
+                    label: node.label,
+                    x: node.x,
+                    y: node.y,
+                    size: node.size,
+                    color: node.color,
+                });
+            });
+            
+            // Add edges
+            graphData.edges.forEach(edge => {
+                graph.addEdge(edge.source, edge.target, {
+                    size: edge.size,
+                    color: edge.color,
+                    label: edge.label,
+                    metadata: edge.metadata,
+                });
+            });
+            
+            // Update stats
+            const totalRules = graphData.edges.reduce((sum, e) => sum + e.metadata.rule_count, 0);
+            document.getElementById('stat-nodes').textContent = graphData.nodes.length;
+            document.getElementById('stat-edges').textContent = graphData.edges.length;
+            document.getElementById('stat-rules').textContent = totalRules;
+            
+            // Initialize Sigma
+            const container = document.getElementById('graph-container');
+            const renderer = new Sigma(graph, container, {
+                renderEdgeLabels: false,
+                defaultNodeColor: '#4A90E2',
+                defaultEdgeColor: '#666',
+                labelColor: { color: '#fff' },
+                labelSize: 12,
+                enableEdgeClickEvents: true,
+                enableEdgeHoverEvents: true,
+            });
+            
+            // State
+            let showLabels = true;
+            const infoPanel = document.getElementById('info-panel');
+            const infoTitle = document.getElementById('info-title');
+            const infoContent = document.getElementById('info-content');
+            
+            // Node click handler
+            renderer.on('clickNode', ({ node }) => {
+                const nodeData = graph.getNodeAttributes(node);
+                const neighbors = graph.neighbors(node);
+                const degree = graph.degree(node);
+                
+                infoTitle.textContent = nodeData.label;
+                infoContent.innerHTML = `
+                    <div class="info-row"><span class="info-label">Standard ID:</span> ${node}</div>
+                    <div class="info-row"><span class="info-label">Connections:</span> ${degree} crosswalks</div>
+                    <div class="info-row"><span class="info-label">Connected to:</span> ${neighbors.map(n => graph.getNodeAttribute(n, 'label')).join(', ')}</div>
+                `;
+                infoPanel.classList.add('active');
+            });
+            
+            // Edge click handler
+            renderer.on('clickEdge', ({ edge }) => {
+                const edgeData = graph.getEdgeAttributes(edge);
+                const { source, target } = graph.extremities(edge);
+                const sourceLabel = graph.getNodeAttribute(source, 'label');
+                const targetLabel = graph.getNodeAttribute(target, 'label');
+                const meta = edgeData.metadata;
+                
+                infoTitle.textContent = meta.crosswalk_name;
+                infoContent.innerHTML = `
+                    <div class="info-row"><span class="info-label">Route:</span> ${sourceLabel} → ${targetLabel}</div>
+                    <div class="info-row"><span class="info-label">Rules:</span> ${meta.rule_count}</div>
+                    <div class="info-row">
+                        <span class="info-label">Strategy:</span> 
+                        <span class="strategy-badge strategy-${meta.strategy}">${meta.strategy}</span>
+                    </div>
+                    <div class="info-row"><span class="info-label">Version:</span> ${meta.version}</div>
+                    ${meta.source_doc ? `<div class="info-row"><span class="info-label">Source:</span> <span style="font-size: 10px;">${meta.source_doc}</span></div>` : ''}
+                `;
+                infoPanel.classList.add('active');
+            });
+            
+            // Click on stage to deselect
+            renderer.on('clickStage', () => {
+                infoPanel.classList.remove('active');
+            });
+            
+            // Reset camera button
+            document.getElementById('reset-camera').addEventListener('click', () => {
+                renderer.getCamera().reset();
+            });
+            
+            // Toggle labels button
+            document.getElementById('toggle-labels').addEventListener('click', () => {
+                showLabels = !showLabels;
+                renderer.setSetting('renderLabels', showLabels);
+                renderer.refresh();
+            });
+            
+            console.log('Graph initialized:', {
+                nodes: graph.order,
+                edges: graph.size,
+                totalRules: totalRules
+            });
+        }
+    </script>
+</body>
+</html>

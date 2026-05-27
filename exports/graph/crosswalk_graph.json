@@ -1,0 +1,566 @@
+{
+  "nodes": [
+    {
+      "id": "datacite_4_4",
+      "label": "DataCite",
+      "size": 26.195965417867434,
+      "color": "#4A90E2",
+      "x": 300.0,
+      "y": 0.0
+    },
+    {
+      "id": "dublin_core_terms",
+      "label": "Dublin Core Terms",
+      "size": 26.195965417867434,
+      "color": "#4A90E2",
+      "x": 287.8478920843492,
+      "y": 84.5197670524289
+    },
+    {
+      "id": "rdamsc_m1",
+      "label": "ABCD (Access to Biological Collection Data)",
+      "size": 24.07780979827089,
+      "color": "#4A90E2",
+      "x": 252.37605984935436,
+      "y": 162.19224523667927
+    },
+    {
+      "id": "rdamsc_m9",
+      "label": "Darwin Core",
+      "size": 16.81556195965418,
+      "color": "#4A90E2",
+      "x": 42.69445148198546,
+      "y": -296.94643256427986
+    },
+    {
+      "id": "rdamsc_m15",
+      "label": "Dublin Core",
+      "size": 45.158501440922194,
+      "color": "#4A90E2",
+      "x": -124.6245039005659,
+      "y": 272.88959860635555
+    },
+    {
+      "id": "rdamsc_m88",
+      "label": "MARC (Machine-Readable Cataloging)",
+      "size": 44.048991354466864,
+      "color": "#4A90E2",
+      "x": -124.62450390056615,
+      "y": -272.8895986063554
+    },
+    {
+      "id": "rdamsc_m16",
+      "label": "EML (Ecological Metadata Language)",
+      "size": 18.8328530259366,
+      "color": "#4A90E2",
+      "x": -196.4582201835855,
+      "y": 226.7248723062775
+    },
+    {
+      "id": "rdamsc_m22",
+      "label": "ISO 19115",
+      "size": 27.809798270893374,
+      "color": "#4A90E2",
+      "x": -252.37605984935433,
+      "y": 162.19224523667933
+    },
+    {
+      "id": "rdamsc_m85",
+      "label": "EURISCO Descriptors",
+      "size": 18.429394812680115,
+      "color": "#4A90E2",
+      "x": -196.45822018358555,
+      "y": -226.72487230627746
+    },
+    {
+      "id": "rdamsc_m64",
+      "label": "HISPID (Herbarium Information Standards and Protocols for Interchange of Data)",
+      "size": 16.412103746397694,
+      "color": "#4A90E2",
+      "x": -252.37605984935436,
+      "y": -162.19224523667927
+    },
+    {
+      "id": "rdamsc_m13",
+      "label": "DDI (Data Documentation Initiative)",
+      "size": 19.13544668587896,
+      "color": "#4A90E2",
+      "x": -42.6944514819855,
+      "y": 296.94643256427986
+    },
+    {
+      "id": "rdamsc_m89",
+      "label": "NetCDF Attribute Convention for Dataset Discovery",
+      "size": 19.84149855907781,
+      "color": "#4A90E2",
+      "x": -42.69445148198557,
+      "y": -296.9464325642798
+    },
+    {
+      "id": "rdamsc_m90",
+      "label": "OECD Dataset Metadata",
+      "size": 17.420749279538903,
+      "color": "#4A90E2",
+      "x": 124.62450390056581,
+      "y": -272.88959860635555
+    },
+    {
+      "id": "rdamsc_m39",
+      "label": "SPASE Data Model",
+      "size": 16.412103746397694,
+      "color": "#4A90E2",
+      "x": -300.0,
+      "y": 1.6996616692943938e-13
+    },
+    {
+      "id": "rdamsc_m97",
+      "label": "MODS (Metadata Object Description Schema)",
+      "size": 30.835734870317005,
+      "color": "#4A90E2",
+      "x": 252.37605984935436,
+      "y": -162.19224523667924
+    },
+    {
+      "id": "rdamsc_m46",
+      "label": "ANZLIC Metadata Profile",
+      "size": 16.613832853025936,
+      "color": "#4A90E2",
+      "x": -287.84789208434927,
+      "y": -84.51976705242882
+    },
+    {
+      "id": "rdamsc_m98",
+      "label": "RIF-CS (Registry Interchange Format \u2013 Collections and Services)",
+      "size": 17.521613832853028,
+      "color": "#4A90E2",
+      "x": 287.8478920843492,
+      "y": -84.51976705242893
+    },
+    {
+      "id": "rdamsc_m109",
+      "label": "LIDO (Lightweight Information Describing Objects)",
+      "size": 15.201729106628243,
+      "color": "#4A90E2",
+      "x": 196.45822018358552,
+      "y": 226.7248723062775
+    },
+    {
+      "id": "rdamsc_m114",
+      "label": "CIDOC CRM",
+      "size": 31.340057636887607,
+      "color": "#4A90E2",
+      "x": 42.69445148198553,
+      "y": 296.9464325642798
+    },
+    {
+      "id": "rdamsc_m24",
+      "label": "MIDAS-Heritage",
+      "size": 20.7492795389049,
+      "color": "#4A90E2",
+      "x": -287.8478920843492,
+      "y": 84.5197670524289
+    },
+    {
+      "id": "rdamsc_m96",
+      "label": "EAD (Encoded Archival Description)",
+      "size": 16.10951008645533,
+      "color": "#4A90E2",
+      "x": 196.45822018358535,
+      "y": -226.7248723062776
+    },
+    {
+      "id": "rdamsc_m11",
+      "label": "DataCite profile of DCAT-AP) (DataCite Metadata Schema",
+      "size": 50.0,
+      "color": "#4A90E2",
+      "x": 124.62450390056593,
+      "y": 272.8895986063555
+    }
+  ],
+  "edges": [
+    {
+      "id": "datacite_4_4-dublin_core_terms-datacite44_to_dcterms",
+      "source": "datacite_4_4",
+      "target": "dublin_core_terms",
+      "size": 5.55,
+      "label": "111 rules",
+      "color": "#95A5A6",
+      "metadata": {
+        "crosswalk_id": "datacite44_to_dcterms",
+        "crosswalk_name": "DataCite 4.4 to Dublin Core Terms",
+        "rule_count": 111,
+        "strategy": "unknown",
+        "source_doc": "file:///home/casas/AI/Metadata-Mappings/DataCite_DublinCore_Mapping.pdf",
+        "version": "4.4"
+      }
+    },
+    {
+      "id": "rdamsc_m1-rdamsc_m9-rdamsc_c1",
+      "source": "rdamsc_m1",
+      "target": "rdamsc_m9",
+      "size": 1,
+      "label": "16 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c1",
+        "crosswalk_name": "abcd-access-biological_TO_darwin-core",
+        "rule_count": 16,
+        "strategy": "llm",
+        "source_doc": "http://www.bgbm.org/tdwg/CODATA/Schema/Mappings/DwCAndExtensions.htm",
+        "version": "2007-06-09"
+      }
+    },
+    {
+      "id": "rdamsc_m15-rdamsc_m88-rdamsc_c11",
+      "source": "rdamsc_m15",
+      "target": "rdamsc_m88",
+      "size": 3.05,
+      "label": "61 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c11",
+        "crosswalk_name": "dublin-core_TO_marc-machine-readable",
+        "rule_count": 61,
+        "strategy": "llm",
+        "source_doc": "http://www.loc.gov/marc/dccross.html",
+        "version": "1999"
+      }
+    },
+    {
+      "id": "rdamsc_m16-rdamsc_m22-rdamsc_c13",
+      "source": "rdamsc_m16",
+      "target": "rdamsc_m22",
+      "size": 1.9,
+      "label": "38 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c13",
+        "crosswalk_name": "eml-ecological-metadata_TO_iso-19115",
+        "rule_count": 38,
+        "strategy": "llm",
+        "source_doc": "https://github.com/gbif/eml-profile/raw/master/eml2iso19139.xsl",
+        "version": "1.0.2"
+      }
+    },
+    {
+      "id": "rdamsc_m85-rdamsc_m1-rdamsc_c14",
+      "source": "rdamsc_m85",
+      "target": "rdamsc_m1",
+      "size": 1.7,
+      "label": "34 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c14",
+        "crosswalk_name": "eurisco-descriptors_TO_abcd-access-biological",
+        "rule_count": 34,
+        "strategy": "llm",
+        "source_doc": "http://www.bgbm.org/tdwg/codata/Schema/Mappings/EURISCO-2-ABCD.pdf",
+        "version": "2006-01-31"
+      }
+    },
+    {
+      "id": "rdamsc_m64-rdamsc_m1-rdamsc_c18",
+      "source": "rdamsc_m64",
+      "target": "rdamsc_m1",
+      "size": 1,
+      "label": "14 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c18",
+        "crosswalk_name": "hispid-herbarium-information_TO_abcd-access-biological",
+        "rule_count": 14,
+        "strategy": "llm",
+        "source_doc": "http://www.bgbm.org/tdwg/codata/Schema/Mappings/HISPID3.htm",
+        "version": "2005-03-06"
+      }
+    },
+    {
+      "id": "rdamsc_m22-rdamsc_m13-rdamsc_c20",
+      "source": "rdamsc_m22",
+      "target": "rdamsc_m13",
+      "size": 2.05,
+      "label": "41 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c20",
+        "crosswalk_name": "iso-19115_TO_ddi-data-documentation",
+        "rule_count": 41,
+        "strategy": "llm",
+        "source_doc": "http://web.archive.org/web/20110523210427/http://www.gogeo.ac.uk/files/GoGeo%20to%20DDI%20to%20ISO%20mapping.pdf",
+        "version": "unknown"
+      }
+    },
+    {
+      "id": "rdamsc_m88-rdamsc_m15-rdamsc_c21",
+      "source": "rdamsc_m88",
+      "target": "rdamsc_m15",
+      "size": 4.2,
+      "label": "84 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c21",
+        "crosswalk_name": "marc-machine-readable_TO_dublin-core",
+        "rule_count": 84,
+        "strategy": "llm",
+        "source_doc": "http://www.loc.gov/marc/marc2dc.html",
+        "version": "2001"
+      }
+    },
+    {
+      "id": "rdamsc_m89-rdamsc_m22-rdamsc_c22",
+      "source": "rdamsc_m89",
+      "target": "rdamsc_m22",
+      "size": 2.4,
+      "label": "48 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c22",
+        "crosswalk_name": "netcdf-attribute-convention_TO_iso-19115",
+        "rule_count": 48,
+        "strategy": "llm",
+        "source_doc": "https://github.com/Unidata/threddsIso/raw/master/src/main/resources/xsl/nciso/UnidataDD2MI.xsl",
+        "version": "2.0.2"
+      }
+    },
+    {
+      "id": "rdamsc_m90-rdamsc_m1-rdamsc_c23",
+      "source": "rdamsc_m90",
+      "target": "rdamsc_m1",
+      "size": 1.2,
+      "label": "24 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c23",
+        "crosswalk_name": "oecd-minimum-data_TO_abcd-access-biological",
+        "rule_count": 24,
+        "strategy": "llm",
+        "source_doc": "http://www.bgbm.org/tdwg/codata/Schema/ABCD_1.30/OECD-MDS-2-ABCD130.pdf",
+        "version": "2004-01-28"
+      }
+    },
+    {
+      "id": "rdamsc_m39-rdamsc_m15-rdamsc_c24",
+      "source": "rdamsc_m39",
+      "target": "rdamsc_m15",
+      "size": 1,
+      "label": "14 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c24",
+        "crosswalk_name": "spase-data-model_TO_dublin-core",
+        "rule_count": 14,
+        "strategy": "llm",
+        "source_doc": "https://spase-group.org/tools/stylesheet/oai.xsl",
+        "version": "unknown"
+      }
+    },
+    {
+      "id": "rdamsc_m15-rdamsc_m97-rdamsc_c26",
+      "source": "rdamsc_m15",
+      "target": "rdamsc_m97",
+      "size": 1.85,
+      "label": "37 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c26",
+        "crosswalk_name": "dublin-core_TO_mods-metadata-object",
+        "rule_count": 37,
+        "strategy": "llm",
+        "source_doc": "http://www.loc.gov/standards/mods/dcsimple-mods.html",
+        "version": "2012"
+      }
+    },
+    {
+      "id": "rdamsc_m97-rdamsc_m15-rdamsc_c27",
+      "source": "rdamsc_m97",
+      "target": "rdamsc_m15",
+      "size": 1.35,
+      "label": "27 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c27",
+        "crosswalk_name": "mods-metadata-object_TO_dublin-core",
+        "rule_count": 27,
+        "strategy": "llm",
+        "source_doc": "http://www.loc.gov/standards/mods/mods-dcsimple.html",
+        "version": "2012"
+      }
+    },
+    {
+      "id": "rdamsc_m88-rdamsc_m97-rdamsc_c28",
+      "source": "rdamsc_m88",
+      "target": "rdamsc_m97",
+      "size": 4.65,
+      "label": "93 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c28",
+        "crosswalk_name": "marc-machine-readable_TO_mods-metadata-object",
+        "rule_count": 93,
+        "strategy": "llm",
+        "source_doc": "http://www.loc.gov/standards/mods/v3/mods-mapping-3-6.html",
+        "version": "2016"
+      }
+    },
+    {
+      "id": "rdamsc_m9-rdamsc_m1-rdamsc_c3",
+      "source": "rdamsc_m9",
+      "target": "rdamsc_m1",
+      "size": 1,
+      "label": "2 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c3",
+        "crosswalk_name": "darwin-core_TO_abcd-access-biological",
+        "rule_count": 2,
+        "strategy": "llm",
+        "source_doc": "http://rs.tdwg.org/dwc/terms/history/dwctoabcd/",
+        "version": "2015-06-02"
+      }
+    },
+    {
+      "id": "rdamsc_m46-rdamsc_m98-rdamsc_c30",
+      "source": "rdamsc_m46",
+      "target": "rdamsc_m98",
+      "size": 1,
+      "label": "16 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c30",
+        "crosswalk_name": "iso-19115_TO_rif-cs-registry",
+        "rule_count": 16,
+        "strategy": "llm",
+        "source_doc": "https://www.ands.org.au/__data/assets/file/0011/397235/anzlic-rifcs.zip",
+        "version": "unknown"
+      }
+    },
+    {
+      "id": "rdamsc_m15-rdamsc_m98-rdamsc_c32",
+      "source": "rdamsc_m15",
+      "target": "rdamsc_m98",
+      "size": 1,
+      "label": "9 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c32",
+        "crosswalk_name": "dublin-core_TO_rif-cs-registry",
+        "rule_count": 9,
+        "strategy": "llm",
+        "source_doc": "https://www.ands.org.au/__data/assets/file/0004/397237/dublincore-rifcs.zip",
+        "version": "unknown"
+      }
+    },
+    {
+      "id": "rdamsc_m109-rdamsc_m114-rdamsc_c33",
+      "source": "rdamsc_m109",
+      "target": "rdamsc_m114",
+      "size": 1,
+      "label": "2 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c33",
+        "crosswalk_name": "LIDO to CIDOC CRM",
+        "rule_count": 2,
+        "strategy": "llm",
+        "source_doc": "https://cidoc-crm.org/Resources/mappings-between-lido-v1.0-and-cidoc-crm-v6.0-in-x3ml-ver.1",
+        "version": "unknown"
+      }
+    },
+    {
+      "id": "rdamsc_m24-rdamsc_m114-rdamsc_c34",
+      "source": "rdamsc_m24",
+      "target": "rdamsc_m114",
+      "size": 2.85,
+      "label": "57 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c34",
+        "crosswalk_name": "MIDAS-Heritage to CIDOC CRM",
+        "rule_count": 57,
+        "strategy": "llm",
+        "source_doc": "https://www.cidoc-crm.org/sites/default/files/midas_map.xls",
+        "version": "unknown"
+      }
+    },
+    {
+      "id": "rdamsc_m15-rdamsc_m114-rdamsc_c35",
+      "source": "rdamsc_m15",
+      "target": "rdamsc_m114",
+      "size": 2.1,
+      "label": "42 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c35",
+        "crosswalk_name": "Dublin Core to CIDOC CRM",
+        "rule_count": 42,
+        "strategy": "llm",
+        "source_doc": "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.pdf",
+        "version": "unknown"
+      }
+    },
+    {
+      "id": "rdamsc_m96-rdamsc_m114-rdamsc_c36",
+      "source": "rdamsc_m96",
+      "target": "rdamsc_m114",
+      "size": 1,
+      "label": "11 rules",
+      "color": "#50C878",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c36",
+        "crosswalk_name": "EAD to CIDOC CRM",
+        "rule_count": 11,
+        "strategy": "deterministic",
+        "source_doc": "https://www.cidoc-crm.org/sites/default/files/ead.rtf",
+        "version": "unknown"
+      }
+    },
+    {
+      "id": "rdamsc_m88-rdamsc_m114-rdamsc_c37",
+      "source": "rdamsc_m88",
+      "target": "rdamsc_m114",
+      "size": 2.5,
+      "label": "50 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c37",
+        "crosswalk_name": "MARC",
+        "rule_count": 50,
+        "strategy": "llm",
+        "source_doc": "https://www.cidoc-crm.org/sites/default/files/UNIMARCB_CRM.zip",
+        "version": "unknown"
+      }
+    },
+    {
+      "id": "rdamsc_m11-rdamsc_m11-rdamsc_c38",
+      "source": "rdamsc_m11",
+      "target": "rdamsc_m11",
+      "size": 8.05,
+      "label": "161 rules",
+      "color": "#50C878",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c38",
+        "crosswalk_name": "CiteDCAT-AP",
+        "rule_count": 161,
+        "strategy": "deterministic",
+        "source_doc": "https://ec-jrc.github.io/datacite-to-dcat-ap/",
+        "version": "unknown"
+      }
+    },
+    {
+      "id": "rdamsc_m11-rdamsc_m15-rdamsc_c5",
+      "source": "rdamsc_m11",
+      "target": "rdamsc_m15",
+      "size": 1.25,
+      "label": "25 rules",
+      "color": "#FFB84D",
+      "metadata": {
+        "crosswalk_id": "rdamsc_c5",
+        "crosswalk_name": "DataCite to Dublin Core Mapping 4.4",
+        "rule_count": 25,
+        "strategy": "llm",
+        "source_doc": "https://schema.datacite.org/meta/kernel-4.4/doc/DataCite_DublinCore_Mapping.pdf",
+        "version": "4.4"
+      }
+    }
+  ]
+}
