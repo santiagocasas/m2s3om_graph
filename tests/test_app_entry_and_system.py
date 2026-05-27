@@ -12,7 +12,7 @@ assert _APP_SPEC is not None and _APP_SPEC.loader is not None
 app_entry = module_from_spec(_APP_SPEC)
 _APP_SPEC.loader.exec_module(app_entry)
 
-from views import system
+from views import system  # noqa: E402
 
 
 class _FakeTab:
