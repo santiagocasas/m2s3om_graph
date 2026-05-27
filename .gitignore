@@ -5,3 +5,7 @@
 .claude/
 .agents/
 .sisyphus/
+.coverage
+htmlcov/
+.pytest_cache/
+.opencode/
