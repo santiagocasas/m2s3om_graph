@@ -617,11 +617,14 @@ def render() -> None:
     if not crosswalks:
         return
 
+    # Create index mapping for numbering
+    crosswalk_index = {cw.id: idx + 1 for idx, cw in enumerate(crosswalks)}
+
     selected = st.selectbox(
         "Crosswalk",
         crosswalks,
         format_func=lambda x: (
-            f"{x.name} ({x.msc_id}) "
+            f"{crosswalk_index[x.id]}. {x.name} ({x.msc_id}) "
             f"[{status_label(_status_code(store, out_dir, x, status_map))}]"
         ),
         key="crosswalk_browser_select",

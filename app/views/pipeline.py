@@ -182,10 +182,13 @@ def render() -> None:
 
     selected = None
     if msc_crosswalks:
+        # Create index mapping for numbering
+        crosswalk_index = {cw.id: idx + 1 for idx, cw in enumerate(msc_crosswalks)}
+        
         selected = st.selectbox(
             "Mapping (for single-run)",
             msc_crosswalks,
-            format_func=lambda x: f"{x.name} ({x.msc_id})",
+            format_func=lambda x: f"{crosswalk_index[x.id]}. {x.name} ({x.msc_id})",
             key="pipeline_selected_crosswalk",
         )
 
