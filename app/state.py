@@ -24,8 +24,9 @@ from m2s3om_graph.sssom import load_sssom_rules
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_SSSOM_DIR = BASE_DIR / "exports" / "sssom"
-DEFAULT_OAI_BASE_URL = "https://elib.dlr.de/cgi/oai2"
-DEFAULT_OAI_IDENTIFIER = "oai:elib.dlr.de:19460"
+# Using HZI (Helmholtz Centre for Infection Research) - DLR endpoint only accessible via VPN
+DEFAULT_OAI_BASE_URL = "https://repository.helmholtz-hzi.de/oai/request"
+DEFAULT_OAI_IDENTIFIER = "oai:repository.helmholtz-hzi.de:10033/8408"
 DEFAULT_OAI_PREFIX = "oai_dc"
 
 DESCRIPTION_RE = re.compile(r"^(?P<crosswalk>.*) \((?P<source>.*) -> (?P<target>.*)\)$")

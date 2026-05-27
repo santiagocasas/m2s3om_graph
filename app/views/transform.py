@@ -130,7 +130,7 @@ def _render_route(
 def _institution_options() -> list[InstitutionEndpoint]:
     institutions = load_institution_endpoints()
     if not institutions:
-        return [InstitutionEndpoint(name="DLR", oai_endpoint=DEFAULT_OAI_BASE_URL)]
+        return [InstitutionEndpoint(name="HZI", oai_endpoint=DEFAULT_OAI_BASE_URL)]
     return institutions
 
 
@@ -328,7 +328,8 @@ def _repo_browser_step_state() -> dict[str, bool]:
 def _repository_source_panel(store) -> tuple[str, str | None, str, str | None]:
     institutions = _institution_options()
     names = [item.name for item in institutions]
-    default_index = names.index("DLR") if "DLR" in names else 0
+    # Default to HZI (Helmholtz Centre for Infection Research)
+    default_index = names.index("HZI") if "HZI" in names else 0
 
     # Step 1: Discover formats (always active)
     st.markdown("**Step 1 — Select institution & endpoint**")
