@@ -9,3 +9,6 @@
 htmlcov/
 .pytest_cache/
 .opencode/
+data/crosswalks.human.json
+exports/graph/graph_data.txt
+exports/graph_visualizer_web/
