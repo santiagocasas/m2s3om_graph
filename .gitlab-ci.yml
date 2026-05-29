@@ -27,5 +27,3 @@ pages:
     - public
   rules:
   - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  needs:
-  - job: test
