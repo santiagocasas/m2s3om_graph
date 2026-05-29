@@ -212,17 +212,23 @@ def copy_assets() -> None:
 def ensure_graphology_files(graphs_dir: Path) -> None:
     """Ensure the bundled visualizer has graph data in CI-friendly builds."""
     graphs_dir.mkdir(parents=True, exist_ok=True)
+    legacy_graph = read_json(ROOT / "exports" / "graph" / "crosswalk_graph.json", {})
+
     automatic = graphs_dir / "automatic_hm_graph.graphology.json"
     if not automatic.exists():
+        # Prefer the richer human graph; fall back to the committed legacy export.
         human_graph = read_json(ROOT / "data" / "crosswalks.human.json", {})
         if human_graph:
             automatic.write_text(
                 json.dumps(human_to_graphology(human_graph), indent=2), encoding="utf-8"
             )
+        elif legacy_graph:
+            automatic.write_text(
+                json.dumps(legacy_to_graphology(legacy_graph), indent=2), encoding="utf-8"
+            )
 
     crosswalks = graphs_dir / "crosswalks.graphology.json"
     if not crosswalks.exists():
-        legacy_graph = read_json(ROOT / "exports" / "graph" / "crosswalk_graph.json", {})
         if legacy_graph:
             crosswalks.write_text(
                 json.dumps(legacy_to_graphology(legacy_graph), indent=2), encoding="utf-8"
