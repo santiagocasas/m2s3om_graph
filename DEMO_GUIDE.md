@@ -9,7 +9,7 @@ Before your presentation:
 - [ ] Run graph visualization server: `uv run python scripts/serve_graph.py`
 - [ ] Start Streamlit app: `uv run streamlit run app/app.py`
 - [ ] Open browser tabs:
-  - Tab 1: http://localhost:8000 (graph visualization)
+  - Tab 1: http://localhost:8080 (graph visualization)
   - Tab 2: http://localhost:8501 (Streamlit UI)
 - [ ] Test HZI endpoint is working (Streamlit Tab 3 → Repository Browser)
 - [ ] Have backup: Take screenshots of graph + successful conversion

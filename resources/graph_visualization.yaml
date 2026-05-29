@@ -1,0 +1,102 @@
+# Graph visualization styling for scripts/convert_to_human_graph.py.
+# Keep HMC palette values here so developers can tune colors and grouping
+# without editing Python code.
+
+palette:
+  hmc_dark_blue: "#002864"
+  hmc_light_blue: "#14c8ff"
+  hmc_ast: "#50c8aa"
+  hmc_earth_environment: "#326468"
+  hmc_energy: "#ffd228"
+  hmc_health: "#D23264"
+  hmc_information: "#a0235a"
+  hmc_matter: "#f0781e"
+  fair_data_commons: "#8cd600"
+  projects: "#5e3b99"
+  mint_highlight: "#05e5ba"
+  blue_highlight: "#cdeefb"
+
+topics:
+  FAIR data commons:
+    color: fair_data_commons
+    x: 0
+    y: 0
+  Information:
+    color: hmc_information
+    x: -250
+    y: -80
+  Health:
+    color: hmc_health
+    x: 260
+    y: -80
+  Earth and Environment:
+    color: hmc_earth_environment
+    x: 230
+    y: 170
+  Matter and Heritage:
+    color: hmc_matter
+    x: -240
+    y: 170
+  Aeronautics Space Transport:
+    color: hmc_ast
+    x: 0
+    y: -260
+  Projects and Registries:
+    color: projects
+    x: 0
+    y: 270
+
+canonical_standards:
+  datacite_4_4: rdamsc_m11
+  dublin_core_terms: rdamsc_m15
+
+canonical_labels:
+  rdamsc_m11: DataCite
+  rdamsc_m15: Dublin Core
+
+short_labels:
+  rdamsc_m1: ABCD
+  rdamsc_m9: Darwin Core
+  rdamsc_m13: DDI
+  rdamsc_m16: EML
+  rdamsc_m22: ISO 19115
+  rdamsc_m24: MIDAS-Heritage
+  rdamsc_m39: SPASE
+  rdamsc_m46: ANZLIC
+  rdamsc_m64: HISPID
+  rdamsc_m85: EURISCO
+  rdamsc_m88: MARC
+  rdamsc_m89: NetCDF
+  rdamsc_m90: OECD
+  rdamsc_m96: EAD
+  rdamsc_m97: MODS
+  rdamsc_m98: RIF-CS
+  rdamsc_m109: LIDO
+  rdamsc_m114: CIDOC CRM
+
+node_topics:
+  rdamsc_m11: FAIR data commons
+  rdamsc_m15: FAIR data commons
+  rdamsc_m1: Health
+  rdamsc_m9: Health
+  rdamsc_m64: Health
+  rdamsc_m85: Health
+  rdamsc_m16: Earth and Environment
+  rdamsc_m22: Earth and Environment
+  rdamsc_m46: Earth and Environment
+  rdamsc_m89: Earth and Environment
+  rdamsc_m39: Aeronautics Space Transport
+  rdamsc_m88: Information
+  rdamsc_m97: Information
+  rdamsc_m96: Information
+  rdamsc_m13: Information
+  rdamsc_m90: Information
+  rdamsc_m109: Matter and Heritage
+  rdamsc_m114: Matter and Heritage
+  rdamsc_m24: Matter and Heritage
+  rdamsc_m98: Projects and Registries
+
+edge_strategy_colors:
+  deterministic: "#50C878"
+  llm: "#FFB84D"
+  unknown: "#95A5A6"

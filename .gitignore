@@ -9,6 +9,8 @@
 htmlcov/
 .pytest_cache/
 .opencode/
+ara/
+*:Zone.Identifier
 data/crosswalks.human.json
 exports/graph/graph_data.txt
 exports/graph_visualizer_web/

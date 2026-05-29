@@ -5,185 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M²S³OM-graph: Crosswalk Network Visualization</title>
     <script src="https://cdn.jsdelivr.net/npm/graphology@0.25.4/dist/graphology.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sigma@3.0.0-beta.20/build/sigma.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@2.4.2/build/sigma.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: #1a1a1a;
-            color: #fff;
-            overflow: hidden;
+            background: #1a1a1a; color: #fff; overflow: hidden;
         }
-        
         #header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(26, 26, 26, 0.95);
-            padding: 20px;
-            border-bottom: 1px solid #333;
-            z-index: 100;
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(26, 26, 26, 0.95); padding: 20px;
+            border-bottom: 1px solid #333; z-index: 100;
         }
-        
-        h1 {
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-        
-        .subtitle {
-            font-size: 14px;
-            color: #999;
-        }
-        
+        h1 { font-size: 24px; margin-bottom: 8px; }
+        .subtitle { font-size: 14px; color: #999; }
         #stats {
-            position: fixed;
-            top: 100px;
-            left: 20px;
-            background: rgba(26, 26, 26, 0.95);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            z-index: 100;
-            min-width: 250px;
+            position: fixed; top: 100px; left: 20px;
+            background: rgba(26, 26, 26, 0.95); padding: 15px;
+            border-radius: 8px; border: 1px solid #333; z-index: 100; min-width: 250px;
         }
-        
-        .stat-item {
-            margin-bottom: 10px;
-            font-size: 13px;
-        }
-        
-        .stat-label {
-            color: #999;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .stat-value {
-            font-size: 18px;
-            font-weight: 600;
-            color: #4A90E2;
-        }
-        
-        .legend {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #333;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 12px;
-        }
-        
-        .legend-color {
-            width: 20px;
-            height: 12px;
-            margin-right: 8px;
-            border-radius: 2px;
-        }
-        
+        .stat-item { margin-bottom: 10px; font-size: 13px; }
+        .stat-label { color: #999; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value { font-size: 18px; font-weight: 600; color: #4A90E2; }
+        .legend { margin-top: 15px; padding-top: 15px; border-top: 1px solid #333; }
+        .legend-item { display: flex; align-items: center; margin-bottom: 8px; font-size: 12px; }
+        .legend-color { width: 20px; height: 12px; margin-right: 8px; border-radius: 2px; }
         #info-panel {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(26, 26, 26, 0.95);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            z-index: 100;
-            max-width: 400px;
-            display: none;
+            position: fixed; bottom: 20px; right: 20px;
+            background: rgba(26, 26, 26, 0.95); padding: 15px;
+            border-radius: 8px; border: 1px solid #333; z-index: 100;
+            max-width: 400px; display: none;
         }
-        
-        #info-panel.active {
-            display: block;
-        }
-        
-        .info-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #4A90E2;
-        }
-        
-        .info-row {
-            font-size: 12px;
-            margin-bottom: 6px;
-            line-height: 1.4;
-        }
-        
-        .info-label {
-            color: #999;
-            display: inline-block;
-            min-width: 100px;
-        }
-        
+        #info-panel.active { display: block; }
+        .info-title { font-size: 16px; font-weight: 600; margin-bottom: 10px; color: #4A90E2; }
+        .info-row { font-size: 12px; margin-bottom: 6px; line-height: 1.4; }
+        .info-label { color: #999; display: inline-block; min-width: 100px; }
         .strategy-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
+            display: inline-block; padding: 2px 8px; border-radius: 3px;
+            font-size: 10px; font-weight: 600; text-transform: uppercase;
         }
-        
-        .strategy-deterministic {
-            background: #50C878;
-            color: #000;
-        }
-        
-        .strategy-llm {
-            background: #FFB84D;
-            color: #000;
-        }
-        
-        .strategy-unknown {
-            background: #95A5A6;
-            color: #fff;
-        }
-        
-        #graph-container {
-            position: fixed;
-            top: 80px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-        
+        .strategy-deterministic { background: #50C878; color: #000; }
+        .strategy-llm { background: #FFB84D; color: #000; }
+        .strategy-unknown { background: #95A5A6; color: #fff; }
+        #graph-container { position: fixed; top: 80px; left: 0; right: 0; bottom: 0; }
         #controls {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: rgba(26, 26, 26, 0.95);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            z-index: 100;
+            position: fixed; top: 100px; right: 20px;
+            background: rgba(26, 26, 26, 0.95); padding: 15px;
+            border-radius: 8px; border: 1px solid #333; z-index: 100;
         }
-        
         button {
-            background: #4A90E2;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-bottom: 8px;
-            width: 100%;
+            background: #4A90E2; color: #fff; border: none;
+            padding: 8px 16px; border-radius: 4px; cursor: pointer;
+            font-size: 12px; margin-bottom: 8px; width: 100%;
         }
-        
-        button:hover {
-            background: #357ABD;
+        button:hover { background: #357ABD; }
+        #error-banner {
+            position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+            background: #e74c3c; color: #fff; padding: 10px 20px;
+            border-radius: 4px; z-index: 200; display: none; font-size: 13px;
+        }
+        #loading {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 18px; color: #999; z-index: 150;
         }
     </style>
 </head>
@@ -192,7 +75,8 @@
         <h1>M²S³OM-graph: Metadata Crosswalk Network</h1>
         <div class="subtitle">Graph-Grounded Interoperability Visualization</div>
     </div>
-    
+    <div id="error-banner"></div>
+    <div id="loading">Loading graph data...</div>
     <div id="stats">
         <div class="stat-item">
             <div class="stat-label">Standards</div>
@@ -206,7 +90,6 @@
             <div class="stat-label">Total Rules</div>
             <div class="stat-value" id="stat-rules">0</div>
         </div>
-        
         <div class="legend">
             <div class="legend-item">
                 <div class="legend-color" style="background: #50C878;"></div>
@@ -222,139 +105,125 @@
             </div>
         </div>
     </div>
-    
     <div id="controls">
         <button id="reset-camera">Reset View</button>
         <button id="toggle-labels">Toggle Labels</button>
     </div>
-    
     <div id="info-panel">
         <div class="info-title" id="info-title">Select a node or edge</div>
         <div id="info-content"></div>
     </div>
-    
     <div id="graph-container"></div>
-    
     <script>
-        // Load graph data
-        fetch('crosswalk_graph.json')
-            .then(response => response.json())
-            .then(data => {
-                initializeGraph(data);
-            })
-            .catch(error => {
-                console.error('Error loading graph data:', error);
-                alert('Failed to load graph data. Make sure crosswalk_graph.json exists.');
-            });
-        
+        document.addEventListener('DOMContentLoaded', initIfNeeded);
+        function initIfNeeded() {
+            if (typeof Sigma !== 'undefined') {
+                initializeGraphFromJSON();
+            } else {
+                setTimeout(initIfNeeded, 100);
+            }
+        }
+        function fetchData() {
+            fetch('./crosswalk_graph.json?' + Date.now())
+                .then(function(res) {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.json();
+                })
+                .then(function(data) {
+                    document.getElementById('loading').style.display = 'none';
+                    initializeGraph(data);
+                })
+                .catch(function(err) {
+                    var banner = document.getElementById('error-banner');
+                    banner.style.display = 'block';
+                    banner.textContent = 'Error: ' + err.message + ' (open browser console for details)';
+                    console.error('Graph load error:', err);
+                });
+        }
+
         function initializeGraph(graphData) {
-            // Create graphology instance
-            const graph = new graphology.Graph();
-            
-            // Add nodes
-            graphData.nodes.forEach(node => {
-                graph.addNode(node.id, {
-                    label: node.label,
-                    x: node.x,
-                    y: node.y,
-                    size: node.size,
-                    color: node.color,
+            var g = new graphology.Graph();
+            graphData.nodes.forEach(function(n) {
+                g.addNode(n.id, {
+                    label: n.label, x: n.x, y: n.y,
+                    size: n.size, color: n.color
                 });
             });
-            
-            // Add edges
-            graphData.edges.forEach(edge => {
-                graph.addEdge(edge.source, edge.target, {
-                    size: edge.size,
-                    color: edge.color,
-                    label: edge.label,
-                    metadata: edge.metadata,
+            graphData.edges.forEach(function(e) {
+                g.addEdge(e.source, e.target, {
+                    size: e.size, color: e.color,
+                    label: e.label, metadata: e.metadata
                 });
             });
-            
-            // Update stats
-            const totalRules = graphData.edges.reduce((sum, e) => sum + e.metadata.rule_count, 0);
+
+            var totalRules = graphData.edges.reduce(function(s, e) { return s + e.metadata.rule_count; }, 0);
             document.getElementById('stat-nodes').textContent = graphData.nodes.length;
             document.getElementById('stat-edges').textContent = graphData.edges.length;
             document.getElementById('stat-rules').textContent = totalRules;
-            
-            // Initialize Sigma
-            const container = document.getElementById('graph-container');
-            const renderer = new Sigma(graph, container, {
-                renderEdgeLabels: false,
-                defaultNodeColor: '#4A90E2',
-                defaultEdgeColor: '#666',
-                labelColor: { color: '#fff' },
-                labelSize: 12,
-                enableEdgeClickEvents: true,
-                enableEdgeHoverEvents: true,
+
+            var container = document.getElementById('graph-container');
+            var sigma = new Sigma(g, container, {
+                renderEdgeLabels: false, defaultNodeColor: '#4A90E2',
+                defaultEdgeColor: '#666', labelColor: { color: '#fff' },
+                labelSize: 12, enableEdgeClickEvents: true, enableEdgeHoverEvents: true
             });
-            
-            // State
-            let showLabels = true;
-            const infoPanel = document.getElementById('info-panel');
-            const infoTitle = document.getElementById('info-title');
-            const infoContent = document.getElementById('info-content');
-            
-            // Node click handler
-            renderer.on('clickNode', ({ node }) => {
-                const nodeData = graph.getNodeAttributes(node);
-                const neighbors = graph.neighbors(node);
-                const degree = graph.degree(node);
-                
-                infoTitle.textContent = nodeData.label;
-                infoContent.innerHTML = `
-                    <div class="info-row"><span class="info-label">Standard ID:</span> ${node}</div>
-                    <div class="info-row"><span class="info-label">Connections:</span> ${degree} crosswalks</div>
-                    <div class="info-row"><span class="info-label">Connected to:</span> ${neighbors.map(n => graph.getNodeAttribute(n, 'label')).join(', ')}</div>
-                `;
+
+            var infoPanel = document.getElementById('info-panel');
+            var infoTitle = document.getElementById('info-title');
+            var infoContent = document.getElementById('info-content');
+            var showLabels = true;
+
+            sigma.once('renderNode', function(e) {
+                if (!LOADED) {
+                    console.log('Loaded', g.order, 'nodes,', g.size, 'edges');
+                    // nothing needed, we rely on sigma rendering
+                }
+            });
+
+            sigma.on('clickNode', function(e) {
+                var nd = g.getNodeAttributes(e.node);
+                var neighbors = g.neighbors(e.node);
+                var degree = g.degree(e.node);
+                infoTitle.textContent = nd.label;
+                infoContent.innerHTML =
+                    '<div class="info-row"><span class="info-label">Standard ID:</span> ' + e.node + '</div>' +
+                    '<div class="info-row"><span class="info-label">Connections:</span> ' + degree + ' crosswalks</div>' +
+                    '<div class="info-row"><span class="info-label">Connected to:</span> ' +
+                    neighbors.map(function(n) { return g.getNodeAttribute(n, 'label'); }).join(', ') + '</div>';
                 infoPanel.classList.add('active');
             });
-            
-            // Edge click handler
-            renderer.on('clickEdge', ({ edge }) => {
-                const edgeData = graph.getEdgeAttributes(edge);
-                const { source, target } = graph.extremities(edge);
-                const sourceLabel = graph.getNodeAttribute(source, 'label');
-                const targetLabel = graph.getNodeAttribute(target, 'label');
-                const meta = edgeData.metadata;
-                
-                infoTitle.textContent = meta.crosswalk_name;
-                infoContent.innerHTML = `
-                    <div class="info-row"><span class="info-label">Route:</span> ${sourceLabel} → ${targetLabel}</div>
-                    <div class="info-row"><span class="info-label">Rules:</span> ${meta.rule_count}</div>
-                    <div class="info-row">
-                        <span class="info-label">Strategy:</span> 
-                        <span class="strategy-badge strategy-${meta.strategy}">${meta.strategy}</span>
-                    </div>
-                    <div class="info-row"><span class="info-label">Version:</span> ${meta.version}</div>
-                    ${meta.source_doc ? `<div class="info-row"><span class="info-label">Source:</span> <span style="font-size: 10px;">${meta.source_doc}</span></div>` : ''}
-                `;
+
+            sigma.on('clickEdge', function(e) {
+                var ed = g.getEdgeAttributes(e.edge);
+                var ext = g.extremities(e.edge);
+                var sLabel = g.getNodeAttribute(ext[0], 'label');
+                var tLabel = g.getNodeAttribute(ext[1], 'label');
+                var mt = ed.metadata;
+                infoTitle.textContent = mt.crosswalk_name;
+                infoContent.innerHTML =
+                    '<div class="info-row"><span class="info-label">Route:</span> ' + sLabel + ' → ' + tLabel + '</div>' +
+                    '<div class="info-row"><span class="info-label">Rules:</span> ' + mt.rule_count + '</div>' +
+                    '<div class="info-row"><span class="info-label">Strategy:</span> <span class="strategy-badge strategy-' + mt.strategy + '">' + mt.strategy + '</span></div>' +
+                    '<div class="info-row"><span class="info-label">Version:</span> ' + mt.version + '</div>' +
+                    (mt.source_doc ? '<div class="info-row"><span class="info-label">Source:</span> <span style="font-size:10px;">' + mt.source_doc + '</span></div>' : '');
                 infoPanel.classList.add('active');
             });
-            
-            // Click on stage to deselect
-            renderer.on('clickStage', () => {
+
+            sigma.on('clickStage', function(e) {
                 infoPanel.classList.remove('active');
             });
-            
-            // Reset camera button
-            document.getElementById('reset-camera').addEventListener('click', () => {
-                renderer.getCamera().reset();
+
+            document.getElementById('reset-camera').addEventListener('click', function() {
+                sigma.getCamera().animate({ x: 0, y: 0, ratio: 1 }, { duration: 500 });
             });
-            
-            // Toggle labels button
-            document.getElementById('toggle-labels').addEventListener('click', () => {
+
+            document.getElementById('toggle-labels').addEventListener('click', function() {
                 showLabels = !showLabels;
-                renderer.setSetting('renderLabels', showLabels);
-                renderer.refresh();
+                sigma.setSetting('renderLabels', showLabels);
+                sigma.refresh();
             });
-            
-            console.log('Graph initialized:', {
-                nodes: graph.order,
-                edges: graph.size,
-                totalRules: totalRules
-            });
+
+            console.log('Graph initialized:', { nodes: g.order, edges: g.size, rules: totalRules });
         }
     </script>
 </body>

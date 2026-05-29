@@ -12,8 +12,8 @@ uv run python scripts/serve_graph.py
 ```
 
 This will:
-1. Start a local HTTP server on port 8000
-2. Automatically open http://localhost:8000 in your browser
+1. Start a local HTTP server on port 8080
+2. Automatically open http://localhost:8080 in your browser
 3. Display the interactive graph
 
 ### Option 2: Direct File Open
