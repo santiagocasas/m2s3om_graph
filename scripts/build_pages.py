@@ -428,10 +428,20 @@ def build() -> None:
         )
     type_rows = [[esc(k), esc(v)] for k, v in graph["human_types"].most_common()]
     relationship_rows = [[esc(k), esc(v)] for k, v in graph["relationships"].most_common()]
-    graph_links = []
-    if (PUBLIC / "graph-visualizer" / "cytoscape_graph.html").exists():
-        graph_links.append('<a class="badge" href="graph-visualizer/cytoscape_graph.html">Open Cytoscape renderer</a>')
-    graph_link_html = " ".join(graph_links) or "<span class=\"badge\">No interactive graph renderer available in this build</span>"
+    has_cytoscape = (PUBLIC / "graph-visualizer" / "cytoscape_graph.html").exists()
+    cytoscape_embed = (
+        '<div class="card graph-embed-card">'
+        '<h3>Interactive graph</h3>'
+        '<iframe class="graph-embed"'
+        ' src="graph-visualizer/cytoscape_graph.html?embed=1"'
+        ' title="Interactive Cytoscape crosswalk graph"'
+        ' loading="lazy"></iframe>'
+        '<a class="graph-open-link" href="graph-visualizer/cytoscape_graph.html"'
+        ' target="_blank">Open full screen ↗</a>'
+        '</div>'
+        if has_cytoscape
+        else '<div class="card"><p>Interactive graph renderer not available in this build.</p></div>'
+    )
 
     asset_cards = []
     if (PUBLIC / "assets" / "legend.svg").exists():
@@ -439,18 +449,17 @@ def build() -> None:
     if (PUBLIC / "assets" / "crosswalk-network.svg").exists():
         asset_cards.append('<div class="card"><h3>Static crosswalk network</h3><img src="assets/crosswalk-network.svg" alt="Crosswalk graph"></div>')
     if not asset_cards:
-        asset_cards.append('<div class="card"><h3>Static assets</h3><p>No optional graph images were present in this build. Use the interactive graph links or regenerate the assets locally.</p></div>')
+        asset_cards.append('<div class="card"><h3>Static assets</h3><p>No optional graph images were present in this build. Regenerate assets locally with <code>scripts/export_legend.py</code>.</p></div>')
 
     graph_body = f"""
 <section class="panel">
   <div class="eyebrow">Network view</div>
-  <h2>Crosswalk graph and legend</h2>
-  <p class="lead">Open the interactive Cytoscape renderer, or use the static exported legend and graph assets in slides.</p>
-  <p>{graph_link_html}</p>
+  <h2>Crosswalk graph</h2>
+  <p class="lead">Explore the interactive Cytoscape graph below, or open it full screen. Static legend and graph assets are available for slides.</p>
 </section>
 
-<section class="section asset-grid">
-  {''.join(asset_cards)}
+<section class="section cards">
+  {cytoscape_embed}
 </section>
 
 <section class="section two-col">
