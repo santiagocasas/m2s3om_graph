@@ -20,6 +20,8 @@ include:
 pages:
   image: python:3.12-slim
   stage: deploy
+  variables:
+    GIT_SUBMODULE_STRATEGY: none
   script:
   - python scripts/build_pages.py
   artifacts:
