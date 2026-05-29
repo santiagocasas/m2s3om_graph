@@ -11,7 +11,7 @@ htmlcov/
 .opencode/
 ara/
 *:Zone.Identifier
-data/crosswalks.human.json
+# data/crosswalks.human.json  # committed as frozen graph snapshot for CI/Pages
 exports/graph/graph_data.txt
 exports/graph_visualizer_web/
 public/

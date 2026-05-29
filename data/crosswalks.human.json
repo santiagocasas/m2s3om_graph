@@ -1,0 +1,543 @@
+{
+  "meta": {
+    "schemaVersion": "1",
+    "title": "M\u00b2S\u00b3OM Crosswalk Network",
+    "notes": "Graph-derived from SSSOM crosswalk mappings",
+    "directed": true
+  },
+  "nodes": [
+    {
+      "id": "rdamsc_m1",
+      "type": "Health",
+      "label": "ABCD",
+      "attrRef": "rdamsc_m1"
+    },
+    {
+      "id": "rdamsc_m109",
+      "type": "Matter and Heritage",
+      "label": "LIDO",
+      "attrRef": "rdamsc_m109"
+    },
+    {
+      "id": "rdamsc_m11",
+      "type": "FAIR data commons",
+      "label": "DataCite",
+      "attrRef": "rdamsc_m11"
+    },
+    {
+      "id": "rdamsc_m114",
+      "type": "Matter and Heritage",
+      "label": "CIDOC CRM",
+      "attrRef": "rdamsc_m114"
+    },
+    {
+      "id": "rdamsc_m13",
+      "type": "Information",
+      "label": "DDI",
+      "attrRef": "rdamsc_m13"
+    },
+    {
+      "id": "rdamsc_m15",
+      "type": "FAIR data commons",
+      "label": "Dublin Core",
+      "attrRef": "rdamsc_m15"
+    },
+    {
+      "id": "rdamsc_m16",
+      "type": "Earth and Environment",
+      "label": "EML",
+      "attrRef": "rdamsc_m16"
+    },
+    {
+      "id": "rdamsc_m22",
+      "type": "Earth and Environment",
+      "label": "ISO 19115",
+      "attrRef": "rdamsc_m22"
+    },
+    {
+      "id": "rdamsc_m24",
+      "type": "Matter and Heritage",
+      "label": "MIDAS-Heritage",
+      "attrRef": "rdamsc_m24"
+    },
+    {
+      "id": "rdamsc_m39",
+      "type": "Aeronautics Space Transport",
+      "label": "SPASE",
+      "attrRef": "rdamsc_m39"
+    },
+    {
+      "id": "rdamsc_m46",
+      "type": "Earth and Environment",
+      "label": "ANZLIC",
+      "attrRef": "rdamsc_m46"
+    },
+    {
+      "id": "rdamsc_m64",
+      "type": "Health",
+      "label": "HISPID",
+      "attrRef": "rdamsc_m64"
+    },
+    {
+      "id": "rdamsc_m85",
+      "type": "Health",
+      "label": "EURISCO",
+      "attrRef": "rdamsc_m85"
+    },
+    {
+      "id": "rdamsc_m88",
+      "type": "Information",
+      "label": "MARC",
+      "attrRef": "rdamsc_m88"
+    },
+    {
+      "id": "rdamsc_m89",
+      "type": "Earth and Environment",
+      "label": "NetCDF",
+      "attrRef": "rdamsc_m89"
+    },
+    {
+      "id": "rdamsc_m9",
+      "type": "Health",
+      "label": "Darwin Core",
+      "attrRef": "rdamsc_m9"
+    },
+    {
+      "id": "rdamsc_m90",
+      "type": "Information",
+      "label": "OECD",
+      "attrRef": "rdamsc_m90"
+    },
+    {
+      "id": "rdamsc_m96",
+      "type": "Information",
+      "label": "EAD",
+      "attrRef": "rdamsc_m96"
+    },
+    {
+      "id": "rdamsc_m97",
+      "type": "Information",
+      "label": "MODS",
+      "attrRef": "rdamsc_m97"
+    },
+    {
+      "id": "rdamsc_m98",
+      "type": "Projects and Registries",
+      "label": "RIF-CS",
+      "attrRef": "rdamsc_m98"
+    }
+  ],
+  "edges": [
+    {
+      "source": "rdamsc_m11",
+      "target": "rdamsc_m15",
+      "relationship": "LLM extraction",
+      "attrRef": "datacite_4_4-dublin_core_terms-datacite44_to_dcterms"
+    },
+    {
+      "source": "rdamsc_m1",
+      "target": "rdamsc_m9",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m1-rdamsc_m9-rdamsc_c1"
+    },
+    {
+      "source": "rdamsc_m15",
+      "target": "rdamsc_m88",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m15-rdamsc_m88-rdamsc_c11"
+    },
+    {
+      "source": "rdamsc_m16",
+      "target": "rdamsc_m22",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m16-rdamsc_m22-rdamsc_c13"
+    },
+    {
+      "source": "rdamsc_m85",
+      "target": "rdamsc_m1",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m85-rdamsc_m1-rdamsc_c14"
+    },
+    {
+      "source": "rdamsc_m64",
+      "target": "rdamsc_m1",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m64-rdamsc_m1-rdamsc_c18"
+    },
+    {
+      "source": "rdamsc_m22",
+      "target": "rdamsc_m13",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m22-rdamsc_m13-rdamsc_c20"
+    },
+    {
+      "source": "rdamsc_m88",
+      "target": "rdamsc_m15",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m88-rdamsc_m15-rdamsc_c21"
+    },
+    {
+      "source": "rdamsc_m89",
+      "target": "rdamsc_m22",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m89-rdamsc_m22-rdamsc_c22"
+    },
+    {
+      "source": "rdamsc_m90",
+      "target": "rdamsc_m1",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m90-rdamsc_m1-rdamsc_c23"
+    },
+    {
+      "source": "rdamsc_m39",
+      "target": "rdamsc_m15",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m39-rdamsc_m15-rdamsc_c24"
+    },
+    {
+      "source": "rdamsc_m15",
+      "target": "rdamsc_m97",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m15-rdamsc_m97-rdamsc_c26"
+    },
+    {
+      "source": "rdamsc_m97",
+      "target": "rdamsc_m15",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m97-rdamsc_m15-rdamsc_c27"
+    },
+    {
+      "source": "rdamsc_m88",
+      "target": "rdamsc_m97",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m88-rdamsc_m97-rdamsc_c28"
+    },
+    {
+      "source": "rdamsc_m9",
+      "target": "rdamsc_m1",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m9-rdamsc_m1-rdamsc_c3"
+    },
+    {
+      "source": "rdamsc_m46",
+      "target": "rdamsc_m98",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m46-rdamsc_m98-rdamsc_c30"
+    },
+    {
+      "source": "rdamsc_m15",
+      "target": "rdamsc_m98",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m15-rdamsc_m98-rdamsc_c32"
+    },
+    {
+      "source": "rdamsc_m109",
+      "target": "rdamsc_m114",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m109-rdamsc_m114-rdamsc_c33"
+    },
+    {
+      "source": "rdamsc_m24",
+      "target": "rdamsc_m114",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m24-rdamsc_m114-rdamsc_c34"
+    },
+    {
+      "source": "rdamsc_m15",
+      "target": "rdamsc_m114",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m15-rdamsc_m114-rdamsc_c35"
+    },
+    {
+      "source": "rdamsc_m96",
+      "target": "rdamsc_m114",
+      "relationship": "Deterministic extraction",
+      "attrRef": "rdamsc_m96-rdamsc_m114-rdamsc_c36"
+    },
+    {
+      "source": "rdamsc_m88",
+      "target": "rdamsc_m114",
+      "relationship": "LLM extraction",
+      "attrRef": "rdamsc_m88-rdamsc_m114-rdamsc_c37"
+    },
+    {
+      "source": "rdamsc_m11",
+      "target": "rdamsc_m11",
+      "relationship": "Deterministic extraction",
+      "attrRef": "rdamsc_m11-rdamsc_m11-rdamsc_c38"
+    }
+  ],
+  "nodeAttributes": {
+    "rdamsc_m11": {
+      "color": "#8cd600",
+      "topic": "FAIR data commons",
+      "x": 56.0,
+      "y": 0.0,
+      "merged_from": [
+        "datacite_4_4"
+      ]
+    },
+    "rdamsc_m15": {
+      "color": "#8cd600",
+      "topic": "FAIR data commons",
+      "x": -56.0,
+      "y": 0.0,
+      "merged_from": [
+        "dublin_core_terms"
+      ]
+    },
+    "rdamsc_m1": {
+      "color": "#D23264",
+      "topic": "Health",
+      "x": 324.0,
+      "y": -80.0
+    },
+    "rdamsc_m9": {
+      "color": "#D23264",
+      "topic": "Health",
+      "x": 260.0,
+      "y": -16.0
+    },
+    "rdamsc_m85": {
+      "color": "#D23264",
+      "topic": "Health",
+      "x": 196.0,
+      "y": -80.0
+    },
+    "rdamsc_m64": {
+      "color": "#D23264",
+      "topic": "Health",
+      "x": 260.0,
+      "y": -144.0
+    },
+    "rdamsc_m13": {
+      "color": "#a0235a",
+      "topic": "Information",
+      "x": -182.0,
+      "y": -80.0
+    },
+    "rdamsc_m96": {
+      "color": "#a0235a",
+      "topic": "Information",
+      "x": -228.99,
+      "y": -15.33
+    },
+    "rdamsc_m88": {
+      "color": "#a0235a",
+      "topic": "Information",
+      "x": -305.01,
+      "y": -40.03
+    },
+    "rdamsc_m97": {
+      "color": "#a0235a",
+      "topic": "Information",
+      "x": -305.01,
+      "y": -119.97
+    },
+    "rdamsc_m90": {
+      "color": "#a0235a",
+      "topic": "Information",
+      "x": -228.99,
+      "y": -144.67
+    },
+    "rdamsc_m46": {
+      "color": "#326468",
+      "topic": "Earth and Environment",
+      "x": 294.0,
+      "y": 170.0
+    },
+    "rdamsc_m16": {
+      "color": "#326468",
+      "topic": "Earth and Environment",
+      "x": 230.0,
+      "y": 234.0
+    },
+    "rdamsc_m22": {
+      "color": "#326468",
+      "topic": "Earth and Environment",
+      "x": 166.0,
+      "y": 170.0
+    },
+    "rdamsc_m89": {
+      "color": "#326468",
+      "topic": "Earth and Environment",
+      "x": 230.0,
+      "y": 106.0
+    },
+    "rdamsc_m39": {
+      "color": "#50c8aa",
+      "topic": "Aeronautics Space Transport",
+      "x": 0.0,
+      "y": -260.0
+    },
+    "rdamsc_m98": {
+      "color": "#5e3b99",
+      "topic": "Projects and Registries",
+      "x": 0.0,
+      "y": 270.0
+    },
+    "rdamsc_m114": {
+      "color": "#f0781e",
+      "topic": "Matter and Heritage",
+      "x": -180.0,
+      "y": 170.0
+    },
+    "rdamsc_m109": {
+      "color": "#f0781e",
+      "topic": "Matter and Heritage",
+      "x": -270.0,
+      "y": 221.96
+    },
+    "rdamsc_m24": {
+      "color": "#f0781e",
+      "topic": "Matter and Heritage",
+      "x": -270.0,
+      "y": 118.04
+    }
+  },
+  "edgeAttributes": {
+    "datacite_4_4-dublin_core_terms-datacite44_to_dcterms": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 136,
+      "size": 8.39,
+      "merged_crosswalk_ids": [
+        "datacite_4_4-dublin_core_terms-datacite44_to_dcterms",
+        "rdamsc_m11-rdamsc_m15-rdamsc_c5"
+      ],
+      "merged_count": 2
+    },
+    "rdamsc_m1-rdamsc_m9-rdamsc_c1": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 16,
+      "size": 3.86
+    },
+    "rdamsc_m15-rdamsc_m88-rdamsc_c11": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 61,
+      "size": 6.12
+    },
+    "rdamsc_m16-rdamsc_m22-rdamsc_c13": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 38,
+      "size": 5.14
+    },
+    "rdamsc_m85-rdamsc_m1-rdamsc_c14": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 34,
+      "size": 4.95
+    },
+    "rdamsc_m64-rdamsc_m1-rdamsc_c18": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 14,
+      "size": 3.71
+    },
+    "rdamsc_m22-rdamsc_m13-rdamsc_c20": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 41,
+      "size": 5.28
+    },
+    "rdamsc_m88-rdamsc_m15-rdamsc_c21": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 84,
+      "size": 6.92
+    },
+    "rdamsc_m89-rdamsc_m22-rdamsc_c22": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 48,
+      "size": 5.6
+    },
+    "rdamsc_m90-rdamsc_m1-rdamsc_c23": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 24,
+      "size": 4.4
+    },
+    "rdamsc_m39-rdamsc_m15-rdamsc_c24": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 14,
+      "size": 3.71
+    },
+    "rdamsc_m15-rdamsc_m97-rdamsc_c26": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 37,
+      "size": 5.1
+    },
+    "rdamsc_m97-rdamsc_m15-rdamsc_c27": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 27,
+      "size": 4.57
+    },
+    "rdamsc_m88-rdamsc_m97-rdamsc_c28": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 93,
+      "size": 7.2
+    },
+    "rdamsc_m9-rdamsc_m1-rdamsc_c3": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 2,
+      "size": 2.34
+    },
+    "rdamsc_m46-rdamsc_m98-rdamsc_c30": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 16,
+      "size": 3.86
+    },
+    "rdamsc_m15-rdamsc_m98-rdamsc_c32": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 9,
+      "size": 3.27
+    },
+    "rdamsc_m109-rdamsc_m114-rdamsc_c33": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 2,
+      "size": 2.34
+    },
+    "rdamsc_m24-rdamsc_m114-rdamsc_c34": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 57,
+      "size": 5.96
+    },
+    "rdamsc_m15-rdamsc_m114-rdamsc_c35": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 42,
+      "size": 5.33
+    },
+    "rdamsc_m96-rdamsc_m114-rdamsc_c36": {
+      "color": "#50C878",
+      "strategy": "deterministic",
+      "rule_count": 11,
+      "size": 3.46
+    },
+    "rdamsc_m88-rdamsc_m114-rdamsc_c37": {
+      "color": "#FFB84D",
+      "strategy": "llm",
+      "rule_count": 50,
+      "size": 5.68
+    },
+    "rdamsc_m11-rdamsc_m11-rdamsc_c38": {
+      "color": "#50C878",
+      "strategy": "deterministic",
+      "rule_count": 161,
+      "size": 9.0
+    }
+  }
+}
