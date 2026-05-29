@@ -18,7 +18,7 @@ m2s3om_graph is an **evidence-based metadata crosswalk workbench** that automati
 ### Pipeline Performance
 - **37 RDAMSC crosswalks** processed
 - **19 crosswalks ready** with authoritative SSSOM output (51.35% success rate)
-- **1,280+ mapping rules** extracted across 24 SSSOM files
+- **993 SSSOM mapping rows** across 24 SSSOM files (1,017 rules in graph metadata)
 - **71% artifact fetch success rate** (32/45 documents successfully retrieved)
 
 ### Extraction Strategy
@@ -29,13 +29,21 @@ m2s3om_graph is an **evidence-based metadata crosswalk workbench** that automati
 ### Notable Success Stories
 - **rdamsc_c38** (CiteDCAT-AP ↔ DataCite): 160 rules extracted deterministically
 - **rdamsc_c36** (EAD ↔ CIDOC CRM): Solved via deterministic extraction
-- **datacite44 ↔ dcterms**: 45KB SSSOM file (largest crosswalk)
+- **datacite44 ↔ dcterms**: 110 curated rows in a 45KB SSSOM file
 
 ### Challenge Areas
 - **11 crosswalks failed** due to unreachable artifacts (29.73%)
   - Top failing hosts: service.ncddc.noaa.gov, gcmd.nasa.gov, schema.datacite.org
 - **7 crosswalks failed parsing** despite successful fetch (18.92%)
   - Complex formats: MARC↔MODS, MIDAS-Heritage↔CIDOC, ISA-TAB↔MAGE-TAB
+
+### SSSOM Predicate Breakdown
+- **800 exact matches** (80.6%)
+- **152 related matches** (15.3%)
+- **28 broad matches** (2.8%)
+- **13 narrow matches** (1.3%)
+
+**Counting note**: Earlier draft numbers used approximately 1,280 because that is the total line count of the SSSOM files, including metadata comments and headers. The strict mapping-rule count is 993 data rows.
 
 ---
 

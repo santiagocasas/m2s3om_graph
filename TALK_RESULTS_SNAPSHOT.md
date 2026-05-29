@@ -10,8 +10,13 @@ This note pulls together the current demo-ready results from the frozen pipeline
 - failed after fetching because no rules were extracted: `7` (`18.92%`)
 - total artifact checks: `45`
 - artifact fetch success rate: `71.11%`
+- SSSOM files currently on disk: `24`
+- strict SSSOM mapping rows: `993`
+- graph metadata rule count: `1,017`
 
 Source: `exports/pipeline/latest/rdamsc_stats_summary.json`
+
+Counting note: older draft material used `1,280+` rules because that was the total line count of the SSSOM files, including comments and headers. Use `993` for strict SSSOM data rows in slides, or `1,017` when citing the graph metadata rule-count field.
 
 ## Demo-Friendly Wins
 
@@ -28,6 +33,20 @@ Source: `exports/pipeline/latest/rdamsc_stats_summary.json`
 - ready: `19`
 - failed_unreachable: `11`
 - failed_parse: `7`
+
+### SSSOM predicate breakdown
+
+- `skos:exactMatch`: `800` (`80.6%`)
+- `skos:relatedMatch`: `152` (`15.3%`)
+- `skos:broadMatch`: `28` (`2.8%`)
+- `skos:narrowMatch`: `13` (`1.3%`)
+
+### Graph and extraction strategy breakdown
+
+- human graph: `20` standards, `23` crosswalk edges
+- legacy graph export: `22` nodes, `24` edges
+- graph extraction strategies: `21` LLM edges, `2` deterministic edges, `1` legacy/file-based edge
+- frozen pipeline strategy attempts: `20` LLM, `2` deterministic_generic
 
 ### Artifact hosts with most successful fetches
 
