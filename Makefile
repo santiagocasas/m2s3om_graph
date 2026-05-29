@@ -1,4 +1,4 @@
-.PHONY: pipeline-run pipeline-run-force pipeline-freeze pipeline-run-freeze pipeline-run-freeze-force pipeline-stats pipeline-stats-stdout
+.PHONY: pipeline-run pipeline-run-force pipeline-freeze pipeline-run-freeze pipeline-run-freeze-force pipeline-stats pipeline-stats-stdout pages
 
 UV ?= uv
 PYTHON ?= python
@@ -27,3 +27,6 @@ pipeline-stats:
 
 pipeline-stats-stdout:
 	$(UV) run --with matplotlib $(PYTHON) scripts/rdamsc_pipeline_stats.py stats --status-file $(PIPELINE_STATUS_FILE) --print-json
+
+pages:
+	$(PYTHON) scripts/build_pages.py
