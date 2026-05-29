@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="674" height="441" viewBox="0 0 674 441">
+  <rect width="100%" height="100%" fill="#ffffff"/>
+  <g id="edges">
+    <line x1="334.11" y1="289.46" x2="334.11" y2="289.46" stroke="#9ca3af" stroke-width="9.00" stroke-linecap="round" opacity="0.72"/>
+    <line x1="151.38" y1="136.20" x2="249.04" y2="101.96" stroke="#9ca3af" stroke-width="3.46" stroke-linecap="round" opacity="0.72"/>
+    <line x1="426.00" y1="339.01" x2="463.80" y2="256.13" stroke="#9ca3af" stroke-width="3.86" stroke-linecap="round" opacity="0.72"/>
+    <line x1="313.59" y1="13.44" x2="249.04" y2="101.96" stroke="#9ca3af" stroke-width="2.34" stroke-linecap="round" opacity="0.72"/>
+    <line x1="334.11" y1="289.46" x2="262.42" y2="247.39" stroke="#9ca3af" stroke-width="4.46" stroke-linecap="round" opacity="0.72"/>
+    <line x1="262.42" y1="247.39" x2="249.04" y2="101.96" stroke="#9ca3af" stroke-width="5.33" stroke-linecap="round" opacity="0.72"/>
+    <line x1="262.42" y1="247.39" x2="158.77" y2="244.32" stroke="#9ca3af" stroke-width="6.12" stroke-linecap="round" opacity="0.72"/>
+    <line x1="262.42" y1="247.39" x2="204.54" y2="383.06" stroke="#9ca3af" stroke-width="5.10" stroke-linecap="round" opacity="0.72"/>
+    <line x1="262.42" y1="247.39" x2="334.11" y2="148.83" stroke="#9ca3af" stroke-width="3.27" stroke-linecap="round" opacity="0.72"/>
+    <line x1="398.34" y1="34.25" x2="458.85" y2="142.95" stroke="#9ca3af" stroke-width="5.14" stroke-linecap="round" opacity="0.72"/>
+    <line x1="458.85" y1="142.95" x2="390.66" y2="217.08" stroke="#9ca3af" stroke-width="5.28" stroke-linecap="round" opacity="0.72"/>
+    <line x1="195.22" y1="46.41" x2="249.04" y2="101.96" stroke="#9ca3af" stroke-width="5.96" stroke-linecap="round" opacity="0.72"/>
+    <line x1="304.13" y1="356.47" x2="262.42" y2="247.39" stroke="#9ca3af" stroke-width="3.71" stroke-linecap="round" opacity="0.72"/>
+    <line x1="445.57" y1="62.54" x2="334.11" y2="148.83" stroke="#9ca3af" stroke-width="3.86" stroke-linecap="round" opacity="0.72"/>
+    <line x1="504.44" y1="323.19" x2="426.00" y2="339.01" stroke="#9ca3af" stroke-width="3.71" stroke-linecap="round" opacity="0.72"/>
+    <line x1="367.97" y1="428.98" x2="426.00" y2="339.01" stroke="#9ca3af" stroke-width="4.95" stroke-linecap="round" opacity="0.72"/>
+    <line x1="158.77" y1="244.32" x2="249.04" y2="101.96" stroke="#9ca3af" stroke-width="5.68" stroke-linecap="round" opacity="0.72"/>
+    <line x1="158.77" y1="244.32" x2="262.42" y2="247.39" stroke="#9ca3af" stroke-width="6.92" stroke-linecap="round" opacity="0.72"/>
+    <line x1="158.77" y1="244.32" x2="204.54" y2="383.06" stroke="#9ca3af" stroke-width="7.20" stroke-linecap="round" opacity="0.72"/>
+    <line x1="522.56" y1="193.74" x2="458.85" y2="142.95" stroke="#9ca3af" stroke-width="5.60" stroke-linecap="round" opacity="0.72"/>
+    <line x1="463.80" y1="256.13" x2="426.00" y2="339.01" stroke="#9ca3af" stroke-width="2.34" stroke-linecap="round" opacity="0.72"/>
+    <line x1="281.87" y1="419.05" x2="426.00" y2="339.01" stroke="#9ca3af" stroke-width="4.40" stroke-linecap="round" opacity="0.72"/>
+    <line x1="204.54" y1="383.06" x2="262.42" y2="247.39" stroke="#9ca3af" stroke-width="4.57" stroke-linecap="round" opacity="0.72"/>
+    <line x1="334.11" y1="289.46" x2="262.42" y2="247.39" stroke="#9ca3af" stroke-width="7.73" stroke-linecap="round" opacity="0.72"/>
+  </g>
+  <g id="nodes">
+    <circle cx="304.13" cy="356.47" r="6.60" fill="#50c8aa" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="398.34" cy="34.25" r="6.60" fill="#326468" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="458.85" cy="142.95" r="7.80" fill="#326468" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="445.57" cy="62.54" r="6.60" fill="#326468" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="522.56" cy="193.74" r="6.60" fill="#326468" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="334.11" cy="289.46" r="8.40" fill="#8cd600" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="262.42" cy="247.39" r="11.40" fill="#8cd600" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="426.00" cy="339.01" r="9.00" fill="#D23264" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="504.44" cy="323.19" r="6.60" fill="#D23264" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="367.97" cy="428.98" r="6.60" fill="#D23264" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="463.80" cy="256.13" r="7.20" fill="#D23264" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="390.66" cy="217.08" r="6.60" fill="#a0235a" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="158.77" cy="244.32" r="8.40" fill="#a0235a" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="281.87" cy="419.05" r="6.60" fill="#a0235a" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="151.38" cy="136.20" r="6.60" fill="#a0235a" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="204.54" cy="383.06" r="7.80" fill="#a0235a" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="313.59" cy="13.44" r="6.60" fill="#f0781e" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="249.04" cy="101.96" r="9.00" fill="#f0781e" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="195.22" cy="46.41" r="6.60" fill="#f0781e" stroke="#ffffff" stroke-width="1.5"/>
+    <circle cx="334.11" cy="148.83" r="7.20" fill="#5e3b99" stroke="#ffffff" stroke-width="1.5"/>
+  </g>
+  <g id="labels">
+    <text x="315.73" y="360.47" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">SPASE</text>
+    <text x="409.94" y="38.25" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">EML</text>
+    <text x="471.65" y="146.95" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">ISO 19115</text>
+    <text x="457.17" y="66.54" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">ANZLIC</text>
+    <text x="534.16" y="197.74" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">NetCDF</text>
+    <text x="347.51" y="293.46" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">DataCite</text>
+    <text x="278.82" y="251.39" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">Dublin Core</text>
+    <text x="440.00" y="343.01" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">ABCD</text>
+    <text x="516.04" y="327.19" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">HISPID</text>
+    <text x="379.57" y="432.98" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">EURISCO</text>
+    <text x="476.00" y="260.13" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">Darwin Core</text>
+    <text x="402.26" y="221.08" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">DDI</text>
+    <text x="172.17" y="248.32" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">MARC</text>
+    <text x="293.47" y="423.05" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">OECD</text>
+    <text x="162.98" y="140.20" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">EAD</text>
+    <text x="217.34" y="387.06" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">MODS</text>
+    <text x="325.19" y="17.44" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">LIDO</text>
+    <text x="263.04" y="105.96" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">CIDOC CRM</text>
+    <text x="206.82" y="50.41" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">MIDAS-Heritage</text>
+    <text x="346.31" y="152.83" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" fill="#1f2933" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round">RIF-CS</text>
+  </g>
+</svg>
