@@ -30,6 +30,14 @@ class OAIClient:
             }
         )
 
+    def list_identifiers_resumption(self, resumption_token: str) -> str:
+        return self._request(
+            {
+                "verb": "ListIdentifiers",
+                "resumptionToken": resumption_token,
+            }
+        )
+
     def get_record(self, identifier: str, metadata_prefix: str = "oai_dc") -> str:
         return self._request(
             {
