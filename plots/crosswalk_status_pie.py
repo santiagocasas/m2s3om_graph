@@ -124,7 +124,8 @@ def main() -> None:
     fig.savefig(
         OUTPUT,
         dpi=400,
-        facecolor=fig.get_facecolor(),
+        facecolor="#ffffff",
+        transparent=False,
         bbox_inches="tight",
         pad_inches=0.18,
     )
