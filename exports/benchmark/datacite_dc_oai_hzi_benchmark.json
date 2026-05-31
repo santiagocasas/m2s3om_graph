@@ -1,0 +1,445 @@
+{
+  "aggregate": {
+    "avg_field_coverage": 0.0,
+    "avg_value_overlap": 0.0,
+    "avg_semantic_loss_rate": 0.2636363636363636,
+    "cases": 1
+  },
+  "cases": [
+    {
+      "case_id": "oai:repository.helmholtz-hzi.de:10033/8408",
+      "direction": "oai_openaire_to_oai_dc",
+      "metrics": {
+        "field_coverage": 0.0,
+        "value_overlap": 0.0,
+        "normalized_difference_rate": 1.0,
+        "semantic_loss_rate": 0.2636363636363636,
+        "missing_field_count": 18,
+        "mismatched_field_count": 18
+      },
+      "unmapped_fields": [
+        "1",
+        "10",
+        "10.a",
+        "11",
+        "12",
+        "12.b",
+        "12.c",
+        "12.f",
+        "13",
+        "14",
+        "16",
+        "16.a",
+        "16.b",
+        "17",
+        "17.a",
+        "18",
+        "18.1",
+        "18.1.1",
+        "18.1.2",
+        "18.2",
+        "18.2.1",
+        "18.2.2",
+        "18.2.3",
+        "18.2.4",
+        "18.3",
+        "18.4",
+        "18.4.1",
+        "18.4.1.1",
+        "18.4.1.2",
+        "18.4.2",
+        "18.4.2.1",
+        "18.4.2.2",
+        "19",
+        "19.1",
+        "19.2",
+        "19.3",
+        "19.3.a",
+        "19.4",
+        "2",
+        "2.1",
+        "2.4",
+        "2.5",
+        "2.5.a",
+        "20",
+        "20.1",
+        "20.1.a",
+        "20.10",
+        "20.11",
+        "20.11.a",
+        "20.11.b",
+        "20.12",
+        "20.12.a",
+        "20.12.b",
+        "20.2",
+        "20.3",
+        "20.4",
+        "20.4.a",
+        "20.5",
+        "20.6",
+        "20.7",
+        "20.8",
+        "20.9",
+        "20.a",
+        "20.b",
+        "20.c",
+        "3",
+        "3.a",
+        "4",
+        "5",
+        "6",
+        "6.c",
+        "6.d",
+        "7",
+        "7.1",
+        "7.4",
+        "7.5",
+        "7.5.a",
+        "8",
+        "8.a",
+        "9",
+        "Affiliation",
+        "Contributor",
+        "Creator",
+        "Date",
+        "Day",
+        "Description",
+        "Edition",
+        "Format",
+        "GeoLocation",
+        "Identifier",
+        "Issue",
+        "Language",
+        "Month",
+        "Number",
+        "Publisher",
+        "RelatedItem",
+        "Rights",
+        "Size",
+        "Subject",
+        "Title",
+        "Type",
+        "Volume",
+        "Year",
+        "affiliationIdentifier",
+        "alternateIdentifier",
+        "awardNumber",
+        "awardTitle",
+        "awardURI",
+        "classificationCode",
+        "contributorName",
+        "creatorName",
+        "dateType",
+        "dateTypei",
+        "descriptionType",
+        "eastBoundLongitude",
+        "firstPage",
+        "funderIdentifier",
+        "funderName",
+        "fundingReference",
+        "geoLocationBox",
+        "geoLocationPlace",
+        "geoLocationPoint",
+        "geoLocationPolygon",
+        "inPolygonPoint",
+        "lastPage",
+        "nameIdentifier",
+        "northBoundLatitude",
+        "pointLatitude",
+        "pointLongitude",
+        "polygonPoint",
+        "publicationYear",
+        "relatedIdentifier",
+        "relatedItemIdentifier",
+        "relatedItemType",
+        "relatedMetadataScheme",
+        "relationTypeii",
+        "resourceType",
+        "resourceTypeGeneral",
+        "rightsIdentifier",
+        "rightsURI",
+        "southBoundLatitude",
+        "titleType",
+        "valueURI",
+        "westBoundLongitude"
+      ],
+      "field_diffs": [
+        {
+          "field": "Creator",
+          "missing_values": [
+            "hauser hansjrg",
+            "hennecke meike",
+            "krger andrea",
+            "kwissa marcin",
+            "metzger karin",
+            "oumard andr",
+            "reimann jrg",
+            "schirmbeck reinhold"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "Date",
+          "missing_values": [
+            "2001-08-15",
+            "2007-02-14t15:49:32z"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "Identifier",
+          "missing_values": [
+            "0305-1048",
+            "11504870",
+            "1362-4962",
+            "55851",
+            "http://hdl.handle.net/10033/8408",
+            "nucleic acids research 2001 2916:3327-3334"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "Title",
+          "missing_values": [
+            "composition and arrangement of genes define the strength of ires-driven translation in bicistronic mrnas"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "creatorName",
+          "missing_values": [
+            "hauser hansjrg",
+            "hennecke meike",
+            "krger andrea",
+            "kwissa marcin",
+            "metzger karin",
+            "oumard andr",
+            "reimann jrg",
+            "schirmbeck reinhold"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "dcterms:creator",
+          "missing_values": [
+            "hauser hansjrg",
+            "hennecke meike",
+            "krger andrea",
+            "kwissa marcin",
+            "metzger karin",
+            "oumard andr",
+            "reimann jrg",
+            "schirmbeck reinhold"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "dcterms:date",
+          "missing_values": [
+            "2001-08-15",
+            "2007-02-14t15:49:32z"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "dcterms:format",
+          "missing_values": [
+            "yes"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "dcterms:identifier",
+          "missing_values": [
+            "0305-1048",
+            "11504870",
+            "1362-4962",
+            "55851",
+            "http://hdl.handle.net/10033/8408",
+            "nucleic acids research 2001 2916:3327-3334"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "dcterms:language",
+          "missing_values": [
+            "en_us"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "dcterms:publisher",
+          "missing_values": [
+            "oxford university press"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "dcterms:relation",
+          "missing_values": [
+            "http://www.nar.oupjournals.org/content/vol29/issue16/"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "dcterms:rights",
+          "missing_values": [
+            "copyright  2001 oxford university press"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "dcterms:title",
+          "missing_values": [
+            "composition and arrangement of genes define the strength of ires-driven translation in bicistronic mrnas"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "identifier",
+          "missing_values": [
+            "0305-1048",
+            "11504870",
+            "1362-4962",
+            "55851",
+            "http://hdl.handle.net/10033/8408",
+            "nucleic acids research 2001 2916:3327-3334"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "publicationYear",
+          "missing_values": [
+            "2001",
+            "2007"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "relatedIdentifier",
+          "missing_values": [
+            "http://www.nar.oupjournals.org/content/vol29/issue16/"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        },
+        {
+          "field": "title",
+          "missing_values": [
+            "composition and arrangement of genes define the strength of ires-driven translation in bicistronic mrnas"
+          ],
+          "extra_values": [],
+          "overlap": 0.0
+        }
+      ],
+      "confusion_matrix": {
+        "Creator": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 8
+        },
+        "Date": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 2
+        },
+        "Identifier": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 6
+        },
+        "Title": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "creatorName": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 8
+        },
+        "dcterms:creator": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 8
+        },
+        "dcterms:date": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 2
+        },
+        "dcterms:format": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "dcterms:identifier": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 6
+        },
+        "dcterms:language": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "dcterms:publisher": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "dcterms:relation": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "dcterms:rights": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "dcterms:title": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "identifier": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 6
+        },
+        "publicationYear": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 2
+        },
+        "relatedIdentifier": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        },
+        "title": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1
+        }
+      }
+    }
+  ]
+}
