@@ -175,6 +175,20 @@ tr:last-child td { border-bottom: 0; }
   border-radius: 16px;
 }
 
+.stats-plot {
+  display: block;
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  margin-top: 14px;
+}
+
+.artifact-format-card p {
+  color: var(--muted);
+  margin-bottom: 0;
+}
+
 .footer {
   color: var(--muted);
   border-top: 1px solid var(--line);
@@ -224,8 +238,49 @@ pre {
   border-top: 1px solid var(--line);
 }
 
+.benchmark-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.85fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.benchmark-copy,
+.benchmark-plot-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  padding: clamp(20px, 3vw, 32px);
+}
+
+.benchmark-copy h2 { color: #002864; }
+
+.benchmark-metrics {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.benchmark-plot-card {
+  overflow: hidden;
+}
+
+.plotly-rings {
+  width: 100%;
+  min-height: 460px;
+}
+
+.plot-fallback {
+  display: block;
+  width: 100%;
+  background: #fff;
+  border-radius: 16px;
+}
+
+.plot-fallback[hidden] { display: none; }
+
 @media (max-width: 820px) {
-  .hero, .two-col { grid-template-columns: 1fr; }
+  .hero, .two-col, .benchmark-panel { grid-template-columns: 1fr; }
   .site-header { padding: 24px 16px; }
   .graph-embed { height: 480px; }
+  .plotly-rings { min-height: 360px; }
 }
