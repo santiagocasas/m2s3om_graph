@@ -1,38 +1,38 @@
 {
-  "generated_at": "2026-03-05T08:51:33.275214+00:00",
+  "generated_at": "2026-06-02T16:22:57.776809+00:00",
   "command": "scripts/rdamsc_pipeline_stats.py freeze --status-file .local/rdamsc_pipeline_status.json --output-dir exports/pipeline/latest --sssom-dir exports/sssom --pipeline-log .local/bootstrap_rdamsc.log --plots",
-  "status_file_used": "/home/casas/AI/kaigraph/.local/rdamsc_pipeline_status.json",
-  "status_file_copied_to": "/home/casas/AI/kaigraph/exports/pipeline/latest/rdamsc_pipeline_status.json",
-  "pipeline_log_source": "/home/casas/AI/kaigraph/.local/bootstrap_rdamsc.log",
+  "status_file_used": "/home/casas/AI/m2s3om_graph/.local/rdamsc_pipeline_status.json",
+  "status_file_copied_to": "/home/casas/AI/m2s3om_graph/exports/pipeline/latest/rdamsc_pipeline_status.json",
+  "pipeline_log_source": "/home/casas/AI/m2s3om_graph/.local/bootstrap_rdamsc.log",
   "pipeline_log_mode": "placeholder",
   "git": {
-    "repo_root": "/home/casas/AI/kaigraph",
-    "commit": "632cb096afd122d5bc4dbbb7b36cdcbcd777c273",
-    "commit_short": "632cb09",
-    "commit_date": "2026-03-04T12:02:40+01:00",
-    "branch": "feat/deterministic-generic-issue-6",
+    "repo_root": "/home/casas/AI/m2s3om_graph",
+    "commit": "a1e6f9985e240da5bde444fba61d52531c4bcdeb",
+    "commit_short": "a1e6f99",
+    "commit_date": "2026-06-02T17:51:07+02:00",
+    "branch": "main",
     "remote_origin": "",
     "is_dirty": true
   },
   "environment": {
-    "KAIGRAPH_USE_SURREAL": "",
-    "KAIGRAPH_DB_URL": "",
-    "KAIGRAPH_DB_NS": "",
-    "KAIGRAPH_DB_NAME": "",
+    "M2S3OM_USE_SURREAL": "",
+    "M2S3OM_DB_URL": "",
+    "M2S3OM_DB_NS": "",
+    "M2S3OM_DB_NAME": "",
     "BLABLADOR_BASE_URL": "",
-    "KAIGRAPH_LLM_MODEL": "",
+    "M2S3OM_LLM_MODEL": "",
     "BLABLADOR_API_KEY_loaded": true
   },
   "summary": {
     "total_crosswalks": 37,
     "status_counts": {
-      "ready": 19,
+      "ready": 23,
       "failed_unreachable": 11,
-      "failed_parse": 7
+      "failed_parse": 3
     },
     "reason_counts": {
       "artifacts_unreachable": 11,
-      "no_rules_extracted": 7
+      "no_rules_extracted": 3
     }
   }
 }

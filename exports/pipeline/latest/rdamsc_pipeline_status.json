@@ -2,45 +2,102 @@
   "rdamsc_c1": {
     "crosswalk_id": "rdamsc_c1",
     "msc_id": "msc:c1",
-    "name": "One",
+    "name": "abcd-access-biological_TO_darwin-core",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-04T11:01:42.291959+00:00",
+    "updated_at": "2026-05-11T10:54:58.846299+00:00",
     "result": {
       "ok": true,
-      "step": "skipped_ready"
+      "crosswalk_id": "rdamsc_c1",
+      "inserted_rules": 15,
+      "artifact_documents": 1,
+      "artifact_chunks": 9,
+      "artifacts": [
+        "http://www.bgbm.org/tdwg/CODATA/Schema/Mappings/DwCAndExtensions.htm"
+      ],
+      "skipped": [],
+      "artifact_checks": [
+        {
+          "url": "http://www.bgbm.org/tdwg/CODATA/Schema/Mappings/DwCAndExtensions.htm",
+          "extension": ".htm",
+          "location_type": "document",
+          "status": "fetched",
+          "resolved_url": "http://www.bgbm.org/tdwg/CODATA/Schema/Mappings/DwCAndExtensions.htm",
+          "content_type": "text/html",
+          "text_chars": 24169
+        }
+      ],
+      "strategy": "deterministic_generic",
+      "llm_augmented_rules": 0,
+      "deterministic_diagnostics": {
+        "total_chars": 27465,
+        "normalized_chars": 27204,
+        "total_lines": 229,
+        "extractor_counts": {
+          "assignment": 0,
+          "markdown_table": 15
+        },
+        "candidates_before_dedupe": 15,
+        "candidates_after_dedupe": 15
+      },
+      "llm_diagnostics": {
+        "backend": "heuristic",
+        "prompt_chars": 27465,
+        "llm_error": "502 Server Error: Proxy Error for url: https://api.helmholtz-blablador.fz-juelich.de/v1/chat/completions",
+        "candidates_before_validation": 98,
+        "candidates_after_validation": 0,
+        "timeout_s": 60,
+        "retries": 2,
+        "max_input_chars": 120000,
+        "attempts_json": 0,
+        "attempts_relaxed": 1
+      },
+      "total_rules": 15,
+      "sssom_path": "/home/casas/AI/m2s3om_graph/exports/sssom/rdamsc_c1.sssom.tsv"
     }
   },
   "rdamsc_c2": {
     "crosswalk_id": "rdamsc_c2",
     "msc_id": "msc:c2",
-    "name": "Two",
-    "status": "ready",
-    "label": "SSSOM ready",
-    "updated_at": "2026-03-04T11:01:42.289884+00:00",
+    "name": "csdgm-extensions-for_TO_iso-19115",
+    "status": "failed_unreachable",
+    "label": "failed: docs unreachable",
+    "updated_at": "2026-05-11T10:55:09.842330+00:00",
     "result": {
-      "ok": true,
+      "ok": false,
+      "reason": "artifacts_unreachable",
       "crosswalk_id": "rdamsc_c2",
-      "total_rules": 3
+      "skipped": [
+        "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/fgdcrse2iso19115-2.xslt"
+      ],
+      "artifact_checks": [
+        {
+          "url": "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/fgdcrse2iso19115-2.xslt",
+          "extension": ".xslt",
+          "location_type": "library (XML)",
+          "status": "fetch_error",
+          "error": "https://service.ncddc.noaa.gov/rdn/www/metadata-standards/metadata-xml/documents/fgdcrse2iso19115-2.xslt -> ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
+          "http_status": null
+        }
+      ]
     }
   },
   "rdamsc_c28": {
     "crosswalk_id": "rdamsc_c28",
     "msc_id": "msc:c28",
     "name": "marc-machine-readable_TO_mods-metadata-object",
-    "status": "failed_parse",
-    "label": "failed: parse/extract",
-    "updated_at": "2026-03-03T12:55:42.363250+00:00",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-05-11T11:02:48.501388+00:00",
     "result": {
-      "ok": false,
-      "reason": "no_rules_extracted",
+      "ok": true,
       "crosswalk_id": "rdamsc_c28",
-      "inserted_rules": 0,
+      "inserted_rules": 92,
       "artifact_documents": 2,
       "artifact_chunks": 87,
       "artifacts": [
-        "http://www.loc.gov/standards/mods/v3/mods-mapping-3-6.html",
-        "http://www.loc.gov/standards/mods/v3/MARC21slim_MODS3-6_XSLT2-0.xsl"
+        "https://www.loc.gov/standards/mods/v3/mods-mapping-3-6.html",
+        "https://www.loc.gov/standards/mods/v3/MARC21slim_MODS3-6_XSLT2-0.xsl"
       ],
       "skipped": [],
       "artifact_checks": [
@@ -49,7 +106,7 @@
           "extension": ".html",
           "location_type": "document",
           "status": "fetched",
-          "resolved_url": "http://www.loc.gov/standards/mods/v3/mods-mapping-3-6.html",
+          "resolved_url": "https://www.loc.gov/standards/mods/v3/mods-mapping-3-6.html",
           "content_type": "text/html; charset=utf-8",
           "text_chars": 47941
         },
@@ -58,12 +115,38 @@
           "extension": ".xsl",
           "location_type": "library (XML)",
           "status": "fetched",
-          "resolved_url": "http://www.loc.gov/standards/mods/v3/MARC21slim_MODS3-6_XSLT2-0.xsl",
+          "resolved_url": "https://www.loc.gov/standards/mods/v3/MARC21slim_MODS3-6_XSLT2-0.xsl",
           "content_type": "application/xslt+xml",
           "text_chars": 200000
         }
       ],
-      "strategy": "llm"
+      "strategy": "deterministic_generic",
+      "llm_augmented_rules": 0,
+      "deterministic_diagnostics": {
+        "total_chars": 139998,
+        "normalized_chars": 132546,
+        "total_lines": 1922,
+        "extractor_counts": {
+          "assignment": 80,
+          "markdown_table": 18
+        },
+        "candidates_before_dedupe": 98,
+        "candidates_after_dedupe": 92
+      },
+      "llm_diagnostics": {
+        "backend": "heuristic",
+        "prompt_chars": 120000,
+        "llm_error": "502 Server Error: Proxy Error for url: https://api.helmholtz-blablador.fz-juelich.de/v1/chat/completions",
+        "candidates_before_validation": 77,
+        "candidates_after_validation": 0,
+        "timeout_s": 60,
+        "retries": 2,
+        "max_input_chars": 120000,
+        "attempts_json": 0,
+        "attempts_relaxed": 1
+      },
+      "total_rules": 92,
+      "sssom_path": "/home/casas/AI/m2s3om_graph/exports/sssom/rdamsc_c28.sssom.tsv"
     }
   },
   "rdamsc_c24": {
@@ -72,41 +155,11 @@
     "name": "spase-data-model_TO_dublin-core",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T12:57:55.201808+00:00",
+    "updated_at": "2026-05-11T10:59:35.964634+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c24",
-      "inserted_rules": 13,
-      "total_rules": 13,
-      "artifact_documents": 2,
-      "artifact_chunks": 3,
-      "artifacts": [
-        "https://spase-group.org/tools/stylesheet/oai.xsl",
-        "https://web.archive.org/web/20150907175700/http://www.spase-group.org/tools/stylesheet/oai/"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "https://spase-group.org/tools/stylesheet/oai.xsl",
-          "extension": ".xsl",
-          "location_type": "library (XML)",
-          "status": "fetched",
-          "resolved_url": "https://spase-group.org/tools/stylesheet/oai.xsl",
-          "content_type": "application/xml",
-          "text_chars": 2770
-        },
-        {
-          "url": "https://web.archive.org/web/20150907175700/http://www.spase-group.org/tools/stylesheet/oai/",
-          "extension": "(none)",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "https://web.archive.org/web/20150907175700/http://www.spase-group.org/tools/stylesheet/oai/",
-          "content_type": "text/html",
-          "text_chars": 2956
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c24.sssom.tsv"
+      "backfilled_rules": 13,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c38": {
@@ -115,53 +168,11 @@
     "name": "CiteDCAT-AP (DataCite profile of DCAT-AP)",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-05T08:51:22.104101+00:00",
+    "updated_at": "2026-05-11T11:10:32.756084+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c38",
-      "inserted_rules": 160,
-      "total_rules": 160,
-      "artifact_documents": 2,
-      "artifact_chunks": 29,
-      "artifacts": [
-        "https://ec-jrc.github.io/datacite-to-dcat-ap/",
-        "https://github.com/ec-jrc/datacite-to-dcat-ap"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "https://ec-jrc.github.io/datacite-to-dcat-ap/",
-          "extension": "(none)",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "https://ec-jrc.github.io/datacite-to-dcat-ap/",
-          "content_type": "text/html; charset=utf-8",
-          "text_chars": 68257
-        },
-        {
-          "url": "https://github.com/ec-jrc/datacite-to-dcat-ap",
-          "extension": "(none)",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "https://github.com/ec-jrc/datacite-to-dcat-ap",
-          "content_type": "text/html; charset=utf-8",
-          "text_chars": 12253
-        }
-      ],
-      "strategy": "deterministic_generic",
-      "llm_augmented_rules": 0,
-      "deterministic_diagnostics": {
-        "total_chars": 90855,
-        "normalized_chars": 90009,
-        "total_lines": 951,
-        "extractor_counts": {
-          "assignment": 0,
-          "markdown_table": 233
-        },
-        "candidates_before_dedupe": 233,
-        "candidates_after_dedupe": 160
-      },
-      "sssom_path": "exports/sssom/rdamsc_c38.sssom.tsv"
+      "backfilled_rules": 160,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c37": {
@@ -170,31 +181,11 @@
     "name": "MARC (Machine-Readable Cataloging) to CIDOC CRM",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T12:47:29.778498+00:00",
+    "updated_at": "2026-05-11T11:10:32.749543+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c37",
-      "inserted_rules": 49,
-      "total_rules": 49,
-      "artifact_documents": 1,
-      "artifact_chunks": 70,
-      "artifacts": [
-        "https://www.cidoc-crm.org/sites/default/files/UNIMARCB_CRM.zip"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "https://www.cidoc-crm.org/sites/default/files/UNIMARCB_CRM.zip",
-          "extension": ".zip",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/UNIMARCB_CRM.zip",
-          "content_type": "application/zip",
-          "text_chars": 200000
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c37.sssom.tsv"
+      "backfilled_rules": 49,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c36": {
@@ -203,53 +194,11 @@
     "name": "EAD to CIDOC CRM",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-04T11:04:55.225943+00:00",
+    "updated_at": "2026-05-11T11:10:32.748045+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c36",
-      "inserted_rules": 10,
-      "total_rules": 10,
-      "artifact_documents": 2,
-      "artifact_chunks": 92,
-      "artifacts": [
-        "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-ead2crm-mapping-060728v0_2-final.doc",
-        "https://www.cidoc-crm.org/sites/default/files/ead.rtf"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-ead2crm-mapping-060728v0_2-final.doc",
-          "extension": ".doc",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-ead2crm-mapping-060728v0_2-final.doc",
-          "content_type": "application/msword",
-          "text_chars": 62219
-        },
-        {
-          "url": "https://www.cidoc-crm.org/sites/default/files/ead.rtf",
-          "extension": ".rtf",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/ead.rtf",
-          "content_type": "application/rtf",
-          "text_chars": 200000
-        }
-      ],
-      "strategy": "deterministic_generic",
-      "llm_augmented_rules": 0,
-      "deterministic_diagnostics": {
-        "total_chars": 139998,
-        "normalized_chars": 111667,
-        "total_lines": 841,
-        "extractor_counts": {
-          "assignment": 13,
-          "markdown_table": 0
-        },
-        "candidates_before_dedupe": 13,
-        "candidates_after_dedupe": 10
-      },
-      "sssom_path": "exports/sssom/rdamsc_c36.sssom.tsv"
+      "backfilled_rules": 10,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c35": {
@@ -258,65 +207,24 @@
     "name": "Dublin Core to CIDOC CRM",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T12:50:11.430304+00:00",
+    "updated_at": "2026-05-11T11:10:32.747561+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c35",
-      "inserted_rules": 41,
-      "total_rules": 41,
-      "artifact_documents": 3,
-      "artifact_chunks": 110,
-      "artifacts": [
-        "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-DC2CRMmapping-060728v0_2-final.doc",
-        "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.pdf",
-        "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.rtf"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-DC2CRMmapping-060728v0_2-final.doc",
-          "extension": ".doc",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/WP5-T5_5-DC2CRMmapping-060728v0_2-final.doc",
-          "content_type": "application/msword",
-          "text_chars": 75736
-        },
-        {
-          "url": "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.pdf",
-          "extension": ".pdf",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.pdf",
-          "content_type": "application/pdf",
-          "text_chars": 130916
-        },
-        {
-          "url": "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.rtf",
-          "extension": ".rtf",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "https://www.cidoc-crm.org/sites/default/files/dc_to_crm_mapping.rtf",
-          "content_type": "application/rtf",
-          "text_chars": 103927
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c35.sssom.tsv"
+      "backfilled_rules": 41,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c34": {
     "crosswalk_id": "rdamsc_c34",
     "msc_id": "msc:c34",
     "name": "MIDAS-Heritage to CIDOC CRM",
-    "status": "failed_parse",
-    "label": "failed: parse/extract",
-    "updated_at": "2026-03-03T12:51:21.833804+00:00",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-05-11T11:10:32.746136+00:00",
     "result": {
-      "ok": false,
-      "reason": "no_rules_extracted",
+      "ok": true,
       "crosswalk_id": "rdamsc_c34",
-      "inserted_rules": 0,
+      "inserted_rules": 56,
       "artifact_documents": 1,
       "artifact_chunks": 39,
       "artifacts": [
@@ -334,7 +242,33 @@
           "text_chars": 111653
         }
       ],
-      "strategy": "llm"
+      "strategy": "deterministic_generic",
+      "llm_augmented_rules": 0,
+      "deterministic_diagnostics": {
+        "total_chars": 126635,
+        "normalized_chars": 126465,
+        "total_lines": 431,
+        "extractor_counts": {
+          "assignment": 0,
+          "markdown_table": 84
+        },
+        "candidates_before_dedupe": 84,
+        "candidates_after_dedupe": 56
+      },
+      "llm_diagnostics": {
+        "backend": "heuristic",
+        "prompt_chars": 120000,
+        "llm_error": "502 Server Error: Proxy Error for url: https://api.helmholtz-blablador.fz-juelich.de/v1/chat/completions",
+        "candidates_before_validation": 60,
+        "candidates_after_validation": 0,
+        "timeout_s": 60,
+        "retries": 2,
+        "max_input_chars": 120000,
+        "attempts_json": 0,
+        "attempts_relaxed": 1
+      },
+      "total_rules": 56,
+      "sssom_path": "/home/casas/AI/m2s3om_graph/exports/sssom/rdamsc_c34.sssom.tsv"
     }
   },
   "rdamsc_c33": {
@@ -343,31 +277,11 @@
     "name": "LIDO to CIDOC CRM",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T12:52:00.488788+00:00",
+    "updated_at": "2026-05-11T11:07:16.492540+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c33",
-      "inserted_rules": 1,
-      "total_rules": 1,
-      "artifact_documents": 1,
-      "artifact_chunks": 2,
-      "artifacts": [
-        "https://cidoc-crm.org/Resources/mappings-between-lido-v1.0-and-cidoc-crm-v6.0-in-x3ml-ver.1"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "https://cidoc-crm.org/Resources/mappings-between-lido-v1.0-and-cidoc-crm-v6.0-in-x3ml-ver.1",
-          "extension": ".1",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "https://cidoc-crm.org/Resources/mappings-between-lido-v1.0-and-cidoc-crm-v6.0-in-x3ml-ver.1",
-          "content_type": "text/html; charset=utf-8",
-          "text_chars": 5178
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c33.sssom.tsv"
+      "backfilled_rules": 1,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c32": {
@@ -376,57 +290,67 @@
     "name": "dublin-core_TO_rif-cs-registry",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T12:52:44.534647+00:00",
+    "updated_at": "2026-05-11T11:07:16.492386+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c32",
-      "inserted_rules": 8,
-      "total_rules": 8,
-      "artifact_documents": 1,
-      "artifact_chunks": 7,
-      "artifacts": [
-        "https://www.ands.org.au/__data/assets/file/0004/397237/dublincore-rifcs.zip"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "https://www.ands.org.au/__data/assets/file/0004/397237/dublincore-rifcs.zip",
-          "extension": ".zip",
-          "location_type": "library (XML)",
-          "status": "fetched",
-          "resolved_url": "https://www.ands.org.au/__data/assets/file/0004/397237/dublincore-rifcs.zip",
-          "content_type": "text/html; charset=utf-8",
-          "text_chars": 19017
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c32.sssom.tsv"
+      "backfilled_rules": 8,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c31": {
     "crosswalk_id": "rdamsc_c31",
     "msc_id": "msc:c31",
     "name": "marine-community-profile_TO_rif-cs-registry",
-    "status": "failed_unreachable",
-    "label": "failed: docs unreachable",
-    "updated_at": "2026-03-03T12:52:45.184961+00:00",
+    "status": "failed_parse",
+    "label": "failed: parse/extract",
+    "updated_at": "2026-05-11T11:07:16.491597+00:00",
     "result": {
       "ok": false,
-      "reason": "artifacts_unreachable",
+      "reason": "no_rules_extracted",
       "crosswalk_id": "rdamsc_c31",
-      "skipped": [
+      "inserted_rules": 0,
+      "artifact_documents": 1,
+      "artifact_chunks": 7,
+      "artifacts": [
         "https://www.ands.org.au/__data/assets/file/0005/397238/mcp-rifcs.zip"
       ],
+      "skipped": [],
       "artifact_checks": [
         {
           "url": "https://www.ands.org.au/__data/assets/file/0005/397238/mcp-rifcs.zip",
           "extension": ".zip",
           "location_type": "library (XML)",
-          "status": "fetch_error",
-          "error": "https://www.ands.org.au/__data/assets/file/0005/397238/mcp-rifcs.zip -> HTTP 403",
-          "http_status": null
+          "status": "fetched",
+          "resolved_url": "https://www.ands.org.au/__data/assets/file/0005/397238/mcp-rifcs.zip",
+          "content_type": "text/html; charset=utf-8",
+          "text_chars": 19484
         }
-      ]
+      ],
+      "strategy": "llm",
+      "llm_augmented_rules": 0,
+      "deterministic_diagnostics": {
+        "total_chars": 21974,
+        "normalized_chars": 21463,
+        "total_lines": 304,
+        "extractor_counts": {
+          "assignment": 0,
+          "markdown_table": 0
+        },
+        "candidates_before_dedupe": 0,
+        "candidates_after_dedupe": 0
+      },
+      "llm_diagnostics": {
+        "backend": "heuristic",
+        "prompt_chars": 21974,
+        "llm_error": null,
+        "candidates_before_validation": 1,
+        "candidates_after_validation": 0,
+        "timeout_s": 60,
+        "retries": 2,
+        "max_input_chars": 120000,
+        "attempts_json": 1,
+        "attempts_relaxed": 1
+      }
     }
   },
   "rdamsc_c30": {
@@ -435,31 +359,11 @@
     "name": "iso-19115_TO_rif-cs-registry",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T12:53:12.012315+00:00",
+    "updated_at": "2026-05-11T11:07:00.555863+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c30",
-      "inserted_rules": 15,
-      "total_rules": 15,
-      "artifact_documents": 1,
-      "artifact_chunks": 7,
-      "artifacts": [
-        "https://www.ands.org.au/__data/assets/file/0011/397235/anzlic-rifcs.zip"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "https://www.ands.org.au/__data/assets/file/0011/397235/anzlic-rifcs.zip",
-          "extension": ".zip",
-          "location_type": "library (XML)",
-          "status": "fetched",
-          "resolved_url": "https://www.ands.org.au/__data/assets/file/0011/397235/anzlic-rifcs.zip",
-          "content_type": "text/html; charset=utf-8",
-          "text_chars": 19017
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c30.sssom.tsv"
+      "backfilled_rules": 15,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c29": {
@@ -468,7 +372,7 @@
     "name": "mods-metadata-object_TO_marc-machine-readable",
     "status": "failed_parse",
     "label": "failed: parse/extract",
-    "updated_at": "2026-03-03T12:54:35.447990+00:00",
+    "updated_at": "2026-05-11T11:07:00.553104+00:00",
     "result": {
       "ok": false,
       "reason": "no_rules_extracted",
@@ -477,8 +381,8 @@
       "artifact_documents": 2,
       "artifact_chunks": 46,
       "artifacts": [
-        "http://www.loc.gov/standards/mods/v3/mods2marc-mapping-3-5.html",
-        "http://www.loc.gov/standards/mods/v3/MODS3-4_MARC21slim_XSLT2-0.xsl"
+        "https://www.loc.gov/standards/mods/v3/mods2marc-mapping-3-5.html",
+        "https://www.loc.gov/standards/mods/v3/MODS3-4_MARC21slim_XSLT2-0.xsl"
       ],
       "skipped": [],
       "artifact_checks": [
@@ -487,21 +391,45 @@
           "extension": ".html",
           "location_type": "document",
           "status": "fetched",
-          "resolved_url": "http://www.loc.gov/standards/mods/v3/mods2marc-mapping-3-5.html",
+          "resolved_url": "https://www.loc.gov/standards/mods/v3/mods2marc-mapping-3-5.html",
           "content_type": "text/html; charset=utf-8",
-          "text_chars": 43840
+          "text_chars": 43784
         },
         {
           "url": "http://www.loc.gov/standards/mods/v3/MODS3-4_MARC21slim_XSLT2-0.xsl",
           "extension": ".xsl",
           "location_type": "library (XML)",
           "status": "fetched",
-          "resolved_url": "http://www.loc.gov/standards/mods/v3/MODS3-4_MARC21slim_XSLT2-0.xsl",
+          "resolved_url": "https://www.loc.gov/standards/mods/v3/MODS3-4_MARC21slim_XSLT2-0.xsl",
           "content_type": "application/xslt+xml",
           "text_chars": 83936
         }
       ],
-      "strategy": "llm"
+      "strategy": "llm",
+      "llm_augmented_rules": 0,
+      "deterministic_diagnostics": {
+        "total_chars": 139998,
+        "normalized_chars": 130170,
+        "total_lines": 2424,
+        "extractor_counts": {
+          "assignment": 5,
+          "markdown_table": 0
+        },
+        "candidates_before_dedupe": 5,
+        "candidates_after_dedupe": 5
+      },
+      "llm_diagnostics": {
+        "backend": "heuristic",
+        "prompt_chars": 120000,
+        "llm_error": "502 Server Error: Proxy Error for url: https://api.helmholtz-blablador.fz-juelich.de/v1/chat/completions",
+        "candidates_before_validation": 96,
+        "candidates_after_validation": 0,
+        "timeout_s": 60,
+        "retries": 2,
+        "max_input_chars": 120000,
+        "attempts_json": 0,
+        "attempts_relaxed": 2
+      }
     }
   },
   "rdamsc_c27": {
@@ -510,41 +438,11 @@
     "name": "mods-metadata-object_TO_dublin-core",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T12:56:23.611125+00:00",
+    "updated_at": "2026-05-11T10:59:35.967277+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c27",
-      "inserted_rules": 26,
-      "total_rules": 26,
-      "artifact_documents": 2,
-      "artifact_chunks": 13,
-      "artifacts": [
-        "http://www.loc.gov/standards/mods/mods-dcsimple.html",
-        "http://www.loc.gov/standards/mods/v3/DC_MODS3-5_XSLT2-0.xsl"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "http://www.loc.gov/standards/mods/mods-dcsimple.html",
-          "extension": ".html",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "http://www.loc.gov/standards/mods/mods-dcsimple.html",
-          "content_type": "text/html; charset=utf-8",
-          "text_chars": 6428
-        },
-        {
-          "url": "http://www.loc.gov/standards/mods/v3/DC_MODS3-5_XSLT2-0.xsl",
-          "extension": ".xsl",
-          "location_type": "library (XML)",
-          "status": "fetched",
-          "resolved_url": "http://www.loc.gov/standards/mods/v3/DC_MODS3-5_XSLT2-0.xsl",
-          "content_type": "application/xslt+xml",
-          "text_chars": 28715
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c27.sssom.tsv"
+      "backfilled_rules": 26,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c26": {
@@ -553,55 +451,24 @@
     "name": "dublin-core_TO_mods-metadata-object",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T12:57:24.049186+00:00",
+    "updated_at": "2026-05-11T10:59:35.966424+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c26",
-      "inserted_rules": 36,
-      "total_rules": 36,
-      "artifact_documents": 2,
-      "artifact_chunks": 10,
-      "artifacts": [
-        "http://www.loc.gov/standards/mods/dcsimple-mods.html",
-        "http://www.loc.gov/standards/mods/v3/MODS3-5_DC_XSLT2-0.xsl"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "http://www.loc.gov/standards/mods/dcsimple-mods.html",
-          "extension": ".html",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "http://www.loc.gov/standards/mods/dcsimple-mods.html",
-          "content_type": "text/html; charset=utf-8",
-          "text_chars": 13546
-        },
-        {
-          "url": "http://www.loc.gov/standards/mods/v3/MODS3-5_DC_XSLT2-0.xsl",
-          "extension": ".xsl",
-          "location_type": "library (XML)",
-          "status": "fetched",
-          "resolved_url": "http://www.loc.gov/standards/mods/v3/MODS3-5_DC_XSLT2-0.xsl",
-          "content_type": "application/xslt+xml",
-          "text_chars": 12944
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c26.sssom.tsv"
+      "backfilled_rules": 36,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c23": {
     "crosswalk_id": "rdamsc_c23",
     "msc_id": "msc:c23",
     "name": "oecd-minimum-data_TO_abcd-access-biological",
-    "status": "failed_parse",
-    "label": "failed: parse/extract",
-    "updated_at": "2026-03-03T12:58:06.522086+00:00",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-05-11T10:59:35.963508+00:00",
     "result": {
-      "ok": false,
-      "reason": "no_rules_extracted",
+      "ok": true,
       "crosswalk_id": "rdamsc_c23",
-      "inserted_rules": 0,
+      "inserted_rules": 23,
       "artifact_documents": 1,
       "artifact_chunks": 2,
       "artifacts": [
@@ -619,7 +486,33 @@
           "text_chars": 5200
         }
       ],
-      "strategy": "llm"
+      "strategy": "llm",
+      "llm_augmented_rules": 0,
+      "deterministic_diagnostics": {
+        "total_chars": 5688,
+        "normalized_chars": 5604,
+        "total_lines": 99,
+        "extractor_counts": {
+          "assignment": 0,
+          "markdown_table": 0
+        },
+        "candidates_before_dedupe": 0,
+        "candidates_after_dedupe": 0
+      },
+      "llm_diagnostics": {
+        "backend": "llm_json",
+        "prompt_chars": 5688,
+        "llm_error": null,
+        "candidates_before_validation": 23,
+        "candidates_after_validation": 23,
+        "timeout_s": 60,
+        "retries": 2,
+        "max_input_chars": 120000,
+        "attempts_json": 1,
+        "attempts_relaxed": 0
+      },
+      "total_rules": 23,
+      "sssom_path": "/home/casas/AI/m2s3om_graph/exports/sssom/rdamsc_c23.sssom.tsv"
     }
   },
   "rdamsc_c22": {
@@ -628,41 +521,11 @@
     "name": "netcdf-attribute-convention_TO_iso-19115",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T12:59:09.056925+00:00",
+    "updated_at": "2026-05-11T10:59:19.585623+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c22",
-      "inserted_rules": 47,
-      "total_rules": 47,
-      "artifact_documents": 2,
-      "artifact_chunks": 56,
-      "artifacts": [
-        "http://wiki.esipfed.org/index.php/Attribute_Convention_for_Data_Discovery_Mappings",
-        "https://raw.githubusercontent.com/Unidata/threddsIso/master/src/main/resources/xsl/nciso/UnidataDD2MI.xsl"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "http://wiki.esipfed.org/index.php/Attribute_Convention_for_Data_Discovery_Mappings",
-          "extension": "(none)",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "http://wiki.esipfed.org/index.php/Attribute_Convention_for_Data_Discovery_Mappings",
-          "content_type": "text/html; charset=utf-8",
-          "text_chars": 25544
-        },
-        {
-          "url": "https://github.com/Unidata/threddsIso/raw/master/src/main/resources/xsl/nciso/UnidataDD2MI.xsl",
-          "extension": ".xsl",
-          "location_type": "library (XML)",
-          "status": "fetched",
-          "resolved_url": "https://raw.githubusercontent.com/Unidata/threddsIso/master/src/main/resources/xsl/nciso/UnidataDD2MI.xsl",
-          "content_type": "text/plain; charset=utf-8",
-          "text_chars": 133908
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c22.sssom.tsv"
+      "backfilled_rules": 47,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c21": {
@@ -671,31 +534,11 @@
     "name": "marc-machine-readable_TO_dublin-core",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T13:00:05.244837+00:00",
+    "updated_at": "2026-05-11T10:59:19.584404+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c21",
-      "inserted_rules": 83,
-      "total_rules": 83,
-      "artifact_documents": 1,
-      "artifact_chunks": 3,
-      "artifacts": [
-        "http://www.loc.gov/marc/marc2dc.html"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "http://www.loc.gov/marc/marc2dc.html",
-          "extension": ".html",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "http://www.loc.gov/marc/marc2dc.html",
-          "content_type": "text/html; charset=utf-8",
-          "text_chars": 8049
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c21.sssom.tsv"
+      "backfilled_rules": 83,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c20": {
@@ -704,31 +547,11 @@
     "name": "iso-19115_TO_ddi-data-documentation",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T13:01:21.482355+00:00",
+    "updated_at": "2026-05-11T10:59:19.582592+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c20",
-      "inserted_rules": 40,
-      "total_rules": 40,
-      "artifact_documents": 1,
-      "artifact_chunks": 35,
-      "artifacts": [
-        "http://web.archive.org/web/20110523210427/http://www.gogeo.ac.uk/files/GoGeo%20to%20DDI%20to%20ISO%20mapping.pdf"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "http://web.archive.org/web/20110523210427/http://www.gogeo.ac.uk/files/GoGeo%20to%20DDI%20to%20ISO%20mapping.pdf",
-          "extension": ".pdf",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "http://web.archive.org/web/20110523210427/http://www.gogeo.ac.uk/files/GoGeo%20to%20DDI%20to%20ISO%20mapping.pdf",
-          "content_type": "application/pdf",
-          "text_chars": 100413
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c20.sssom.tsv"
+      "backfilled_rules": 40,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c19": {
@@ -737,7 +560,7 @@
     "name": "isa-tab_TO_mage-tab",
     "status": "failed_parse",
     "label": "failed: parse/extract",
-    "updated_at": "2026-03-03T13:02:07.080764+00:00",
+    "updated_at": "2026-05-11T10:59:19.581571+00:00",
     "result": {
       "ok": false,
       "reason": "no_rules_extracted",
@@ -757,24 +580,47 @@
           "status": "fetched",
           "resolved_url": "https://github.com/ISA-tools/MAGEtoISAconverter/",
           "content_type": "text/html; charset=utf-8",
-          "text_chars": 10913
+          "text_chars": 10309
         }
       ],
-      "strategy": "llm"
+      "strategy": "llm",
+      "llm_augmented_rules": 0,
+      "deterministic_diagnostics": {
+        "total_chars": 11510,
+        "normalized_chars": 11084,
+        "total_lines": 239,
+        "extractor_counts": {
+          "assignment": 0,
+          "markdown_table": 0
+        },
+        "candidates_before_dedupe": 0,
+        "candidates_after_dedupe": 0
+      },
+      "llm_diagnostics": {
+        "backend": "heuristic",
+        "prompt_chars": 11510,
+        "llm_error": null,
+        "candidates_before_validation": 1,
+        "candidates_after_validation": 0,
+        "timeout_s": 60,
+        "retries": 2,
+        "max_input_chars": 120000,
+        "attempts_json": 1,
+        "attempts_relaxed": 1
+      }
     }
   },
   "rdamsc_c18": {
     "crosswalk_id": "rdamsc_c18",
     "msc_id": "msc:c18",
     "name": "hispid-herbarium-information_TO_abcd-access-biological",
-    "status": "failed_parse",
-    "label": "failed: parse/extract",
-    "updated_at": "2026-03-03T13:03:32.224206+00:00",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-05-11T10:59:15.412482+00:00",
     "result": {
-      "ok": false,
-      "reason": "no_rules_extracted",
+      "ok": true,
       "crosswalk_id": "rdamsc_c18",
-      "inserted_rules": 0,
+      "inserted_rules": 13,
       "artifact_documents": 1,
       "artifact_chunks": 46,
       "artifacts": [
@@ -792,7 +638,33 @@
           "text_chars": 131953
         }
       ],
-      "strategy": "llm"
+      "strategy": "deterministic_generic",
+      "llm_augmented_rules": 0,
+      "deterministic_diagnostics": {
+        "total_chars": 139998,
+        "normalized_chars": 138351,
+        "total_lines": 3066,
+        "extractor_counts": {
+          "assignment": 0,
+          "markdown_table": 13
+        },
+        "candidates_before_dedupe": 13,
+        "candidates_after_dedupe": 13
+      },
+      "llm_diagnostics": {
+        "backend": "heuristic",
+        "prompt_chars": 120000,
+        "llm_error": "502 Server Error: Proxy Error for url: https://api.helmholtz-blablador.fz-juelich.de/v1/chat/completions",
+        "candidates_before_validation": 83,
+        "candidates_after_validation": 0,
+        "timeout_s": 60,
+        "retries": 2,
+        "max_input_chars": 120000,
+        "attempts_json": 0,
+        "attempts_relaxed": 1
+      },
+      "total_rules": 13,
+      "sssom_path": "/home/casas/AI/m2s3om_graph/exports/sssom/rdamsc_c18.sssom.tsv"
     }
   },
   "rdamsc_c17": {
@@ -801,7 +673,7 @@
     "name": "fgdccsdgm-federal-geographic_TO_iso-19115",
     "status": "failed_unreachable",
     "label": "failed: docs unreachable",
-    "updated_at": "2026-03-03T13:03:53.320798+00:00",
+    "updated_at": "2026-05-11T10:56:02.642948+00:00",
     "result": {
       "ok": false,
       "reason": "artifacts_unreachable",
@@ -836,7 +708,7 @@
     "name": "fgdccsdgm-federal-geographic_TO_dif-directory-interchange",
     "status": "failed_unreachable",
     "label": "failed: docs unreachable",
-    "updated_at": "2026-03-03T13:03:54.011295+00:00",
+    "updated_at": "2026-05-11T10:55:42.184867+00:00",
     "result": {
       "ok": false,
       "reason": "artifacts_unreachable",
@@ -862,7 +734,7 @@
     "name": "fgdccsdgm-biological-data_TO_iso-19115",
     "status": "failed_unreachable",
     "label": "failed: docs unreachable",
-    "updated_at": "2026-03-03T13:04:14.713942+00:00",
+    "updated_at": "2026-05-11T10:55:41.643162+00:00",
     "result": {
       "ok": false,
       "reason": "artifacts_unreachable",
@@ -897,31 +769,11 @@
     "name": "eurisco-descriptors_TO_abcd-access-biological",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T13:05:02.135619+00:00",
+    "updated_at": "2026-05-11T10:55:21.088547+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c14",
-      "inserted_rules": 33,
-      "total_rules": 33,
-      "artifact_documents": 1,
-      "artifact_chunks": 8,
-      "artifacts": [
-        "http://www.bgbm.org/tdwg/codata/Schema/Mappings/EURISCO-2-ABCD.pdf"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "http://www.bgbm.org/tdwg/codata/Schema/Mappings/EURISCO-2-ABCD.pdf",
-          "extension": ".pdf",
-          "location_type": "document",
-          "status": "fetched",
-          "resolved_url": "http://www.bgbm.org/tdwg/codata/Schema/Mappings/EURISCO-2-ABCD.pdf",
-          "content_type": "application/pdf",
-          "text_chars": 20464
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c14.sssom.tsv"
+      "backfilled_rules": 33,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c13": {
@@ -930,31 +782,11 @@
     "name": "eml-ecological-metadata_TO_iso-19115",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T13:06:34.772812+00:00",
+    "updated_at": "2026-05-11T10:55:21.087751+00:00",
     "result": {
       "ok": true,
-      "crosswalk_id": "rdamsc_c13",
-      "inserted_rules": 37,
-      "total_rules": 37,
-      "artifact_documents": 1,
-      "artifact_chunks": 6,
-      "artifacts": [
-        "https://github.com/gbif/eml-profile/raw/master/eml2iso19139.xsl"
-      ],
-      "skipped": [],
-      "artifact_checks": [
-        {
-          "url": "https://github.com/gbif/eml-profile/raw/master/eml2iso19139.xsl",
-          "extension": ".xsl",
-          "location_type": "library (XML)",
-          "status": "fetched",
-          "resolved_url": "https://github.com/gbif/eml-profile/raw/master/eml2iso19139.xsl",
-          "content_type": "text/plain; charset=utf-8",
-          "text_chars": 16849
-        }
-      ],
-      "strategy": "llm",
-      "sssom_path": "/home/casas/AI/kaigraph/exports/sssom/rdamsc_c13.sssom.tsv"
+      "backfilled_rules": 37,
+      "step": "kg_backfill"
     }
   },
   "rdamsc_c12": {
@@ -963,7 +795,7 @@
     "name": "dublin-core_TO_prov",
     "status": "failed_unreachable",
     "label": "failed: docs unreachable",
-    "updated_at": "2026-03-03T13:06:35.775183+00:00",
+    "updated_at": "2026-05-11T10:55:21.086458+00:00",
     "result": {
       "ok": false,
       "reason": "artifacts_unreachable",
@@ -989,7 +821,7 @@
     "name": "dublin-core_TO_marc-machine-readable",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T13:06:35.912770+00:00",
+    "updated_at": "2026-05-11T10:55:20.270555+00:00",
     "result": {
       "ok": true,
       "backfilled_rules": 60,
@@ -1002,7 +834,7 @@
     "name": "dif-directory-interchange_TO_iso-19115",
     "status": "failed_unreachable",
     "label": "failed: docs unreachable",
-    "updated_at": "2026-03-03T13:06:36.460012+00:00",
+    "updated_at": "2026-05-11T10:55:20.266451+00:00",
     "result": {
       "ok": false,
       "reason": "artifacts_unreachable",
@@ -1028,7 +860,7 @@
     "name": "dif-directory-interchange_TO_dublin-core",
     "status": "failed_unreachable",
     "label": "failed: docs unreachable",
-    "updated_at": "2026-03-03T13:06:37.018682+00:00",
+    "updated_at": "2026-05-11T10:55:19.779001+00:00",
     "result": {
       "ok": false,
       "reason": "artifacts_unreachable",
@@ -1054,7 +886,7 @@
     "name": "ddi-data-documentation_TO_dublin-core",
     "status": "failed_unreachable",
     "label": "failed: docs unreachable",
-    "updated_at": "2026-03-03T13:06:38.932279+00:00",
+    "updated_at": "2026-05-11T10:55:19.254879+00:00",
     "result": {
       "ok": false,
       "reason": "artifacts_unreachable",
@@ -1080,7 +912,7 @@
     "name": "datacite-metadata-schema_TO_oecd-dataset-metadata",
     "status": "failed_unreachable",
     "label": "failed: docs unreachable",
-    "updated_at": "2026-03-03T13:06:39.729476+00:00",
+    "updated_at": "2026-05-27T23:31:42.516865+00:00",
     "result": {
       "ok": false,
       "reason": "artifacts_unreachable",
@@ -1106,7 +938,7 @@
     "name": "datacite-metadata-schema_TO_idf-international-doi",
     "status": "failed_unreachable",
     "label": "failed: docs unreachable",
-    "updated_at": "2026-03-03T13:06:40.349767+00:00",
+    "updated_at": "2026-05-11T10:55:16.732106+00:00",
     "result": {
       "ok": false,
       "reason": "artifacts_unreachable",
@@ -1132,7 +964,7 @@
     "name": "DataCite to Dublin Core Mapping 4.4",
     "status": "ready",
     "label": "SSSOM ready",
-    "updated_at": "2026-03-03T13:06:40.410920+00:00",
+    "updated_at": "2026-05-11T10:55:16.192264+00:00",
     "result": {
       "ok": true,
       "backfilled_rules": 24,
@@ -1145,7 +977,7 @@
     "name": "datacite-metadata-schema_TO_ddi-data-documentation",
     "status": "failed_unreachable",
     "label": "failed: docs unreachable",
-    "updated_at": "2026-03-03T13:06:41.074332+00:00",
+    "updated_at": "2026-05-11T10:55:16.191142+00:00",
     "result": {
       "ok": false,
       "reason": "artifacts_unreachable",
@@ -1169,14 +1001,13 @@
     "crosswalk_id": "rdamsc_c3",
     "msc_id": "msc:c3",
     "name": "darwin-core_TO_abcd-access-biological",
-    "status": "failed_parse",
-    "label": "failed: parse/extract",
-    "updated_at": "2026-03-03T13:07:21.476395+00:00",
+    "status": "ready",
+    "label": "SSSOM ready",
+    "updated_at": "2026-05-11T10:55:15.514495+00:00",
     "result": {
-      "ok": false,
-      "reason": "no_rules_extracted",
+      "ok": true,
       "crosswalk_id": "rdamsc_c3",
-      "inserted_rules": 0,
+      "inserted_rules": 1,
       "artifact_documents": 1,
       "artifact_chunks": 3,
       "artifacts": [
@@ -1191,10 +1022,36 @@
           "status": "fetched",
           "resolved_url": "http://rs.tdwg.org/dwc/terms/history/dwctoabcd/",
           "content_type": "text/html; charset=utf-8",
-          "text_chars": 7160
+          "text_chars": 8113
         }
       ],
-      "strategy": "llm"
+      "strategy": "llm",
+      "llm_augmented_rules": 0,
+      "deterministic_diagnostics": {
+        "total_chars": 8933,
+        "normalized_chars": 8539,
+        "total_lines": 210,
+        "extractor_counts": {
+          "assignment": 0,
+          "markdown_table": 0
+        },
+        "candidates_before_dedupe": 0,
+        "candidates_after_dedupe": 0
+      },
+      "llm_diagnostics": {
+        "backend": "llm_relaxed",
+        "prompt_chars": 8933,
+        "llm_error": null,
+        "candidates_before_validation": 1,
+        "candidates_after_validation": 1,
+        "timeout_s": 60,
+        "retries": 2,
+        "max_input_chars": 120000,
+        "attempts_json": 1,
+        "attempts_relaxed": 1
+      },
+      "total_rules": 1,
+      "sssom_path": "/home/casas/AI/m2s3om_graph/exports/sssom/rdamsc_c3.sssom.tsv"
     }
   }
 }

@@ -1,38 +1,38 @@
 crosswalk_id,msc_id,name,status,label,reason,strategy,result_ok,inserted_rules,total_rules,backfilled_rules,artifact_documents,artifact_chunks,artifact_total,artifact_fetched,artifact_failed,updated_at
-rdamsc_c1,msc:c1,One,ready,SSSOM ready,,,True,,,,,,0,0,0,2026-03-04T11:01:42.291959+00:00
-rdamsc_c10,msc:c10,dif-directory-interchange_TO_iso-19115,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-03-03T13:06:36.460012+00:00
-rdamsc_c11,msc:c11,dublin-core_TO_marc-machine-readable,ready,SSSOM ready,,,True,,,60,,,0,0,0,2026-03-03T13:06:35.912770+00:00
-rdamsc_c12,msc:c12,dublin-core_TO_prov,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-03-03T13:06:35.775183+00:00
-rdamsc_c13,msc:c13,eml-ecological-metadata_TO_iso-19115,ready,SSSOM ready,,llm,True,37,37,,1,6,1,1,0,2026-03-03T13:06:34.772812+00:00
-rdamsc_c14,msc:c14,eurisco-descriptors_TO_abcd-access-biological,ready,SSSOM ready,,llm,True,33,33,,1,8,1,1,0,2026-03-03T13:05:02.135619+00:00
-rdamsc_c15,msc:c15,fgdccsdgm-biological-data_TO_iso-19115,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,2,0,2,2026-03-03T13:04:14.713942+00:00
-rdamsc_c16,msc:c16,fgdccsdgm-federal-geographic_TO_dif-directory-interchange,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-03-03T13:03:54.011295+00:00
-rdamsc_c17,msc:c17,fgdccsdgm-federal-geographic_TO_iso-19115,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,2,0,2,2026-03-03T13:03:53.320798+00:00
-rdamsc_c18,msc:c18,hispid-herbarium-information_TO_abcd-access-biological,failed_parse,failed: parse/extract,no_rules_extracted,llm,False,0,,,1,46,1,1,0,2026-03-03T13:03:32.224206+00:00
-rdamsc_c19,msc:c19,isa-tab_TO_mage-tab,failed_parse,failed: parse/extract,no_rules_extracted,llm,False,0,,,1,4,1,1,0,2026-03-03T13:02:07.080764+00:00
-rdamsc_c2,msc:c2,Two,ready,SSSOM ready,,,True,,3,,,,0,0,0,2026-03-04T11:01:42.289884+00:00
-rdamsc_c20,msc:c20,iso-19115_TO_ddi-data-documentation,ready,SSSOM ready,,llm,True,40,40,,1,35,1,1,0,2026-03-03T13:01:21.482355+00:00
-rdamsc_c21,msc:c21,marc-machine-readable_TO_dublin-core,ready,SSSOM ready,,llm,True,83,83,,1,3,1,1,0,2026-03-03T13:00:05.244837+00:00
-rdamsc_c22,msc:c22,netcdf-attribute-convention_TO_iso-19115,ready,SSSOM ready,,llm,True,47,47,,2,56,2,2,0,2026-03-03T12:59:09.056925+00:00
-rdamsc_c23,msc:c23,oecd-minimum-data_TO_abcd-access-biological,failed_parse,failed: parse/extract,no_rules_extracted,llm,False,0,,,1,2,1,1,0,2026-03-03T12:58:06.522086+00:00
-rdamsc_c24,msc:c24,spase-data-model_TO_dublin-core,ready,SSSOM ready,,llm,True,13,13,,2,3,2,2,0,2026-03-03T12:57:55.201808+00:00
-rdamsc_c26,msc:c26,dublin-core_TO_mods-metadata-object,ready,SSSOM ready,,llm,True,36,36,,2,10,2,2,0,2026-03-03T12:57:24.049186+00:00
-rdamsc_c27,msc:c27,mods-metadata-object_TO_dublin-core,ready,SSSOM ready,,llm,True,26,26,,2,13,2,2,0,2026-03-03T12:56:23.611125+00:00
-rdamsc_c28,msc:c28,marc-machine-readable_TO_mods-metadata-object,failed_parse,failed: parse/extract,no_rules_extracted,llm,False,0,,,2,87,2,2,0,2026-03-03T12:55:42.363250+00:00
-rdamsc_c29,msc:c29,mods-metadata-object_TO_marc-machine-readable,failed_parse,failed: parse/extract,no_rules_extracted,llm,False,0,,,2,46,2,2,0,2026-03-03T12:54:35.447990+00:00
-rdamsc_c3,msc:c3,darwin-core_TO_abcd-access-biological,failed_parse,failed: parse/extract,no_rules_extracted,llm,False,0,,,1,3,1,1,0,2026-03-03T13:07:21.476395+00:00
-rdamsc_c30,msc:c30,iso-19115_TO_rif-cs-registry,ready,SSSOM ready,,llm,True,15,15,,1,7,1,1,0,2026-03-03T12:53:12.012315+00:00
-rdamsc_c31,msc:c31,marine-community-profile_TO_rif-cs-registry,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-03-03T12:52:45.184961+00:00
-rdamsc_c32,msc:c32,dublin-core_TO_rif-cs-registry,ready,SSSOM ready,,llm,True,8,8,,1,7,1,1,0,2026-03-03T12:52:44.534647+00:00
-rdamsc_c33,msc:c33,LIDO to CIDOC CRM,ready,SSSOM ready,,llm,True,1,1,,1,2,1,1,0,2026-03-03T12:52:00.488788+00:00
-rdamsc_c34,msc:c34,MIDAS-Heritage to CIDOC CRM,failed_parse,failed: parse/extract,no_rules_extracted,llm,False,0,,,1,39,1,1,0,2026-03-03T12:51:21.833804+00:00
-rdamsc_c35,msc:c35,Dublin Core to CIDOC CRM,ready,SSSOM ready,,llm,True,41,41,,3,110,3,3,0,2026-03-03T12:50:11.430304+00:00
-rdamsc_c36,msc:c36,EAD to CIDOC CRM,ready,SSSOM ready,,deterministic_generic,True,10,10,,2,92,2,2,0,2026-03-04T11:04:55.225943+00:00
-rdamsc_c37,msc:c37,MARC (Machine-Readable Cataloging) to CIDOC CRM,ready,SSSOM ready,,llm,True,49,49,,1,70,1,1,0,2026-03-03T12:47:29.778498+00:00
-rdamsc_c38,msc:c38,CiteDCAT-AP (DataCite profile of DCAT-AP),ready,SSSOM ready,,deterministic_generic,True,160,160,,2,29,2,2,0,2026-03-05T08:51:22.104101+00:00
-rdamsc_c4,msc:c4,datacite-metadata-schema_TO_ddi-data-documentation,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-03-03T13:06:41.074332+00:00
-rdamsc_c5,msc:c5,DataCite to Dublin Core Mapping 4.4,ready,SSSOM ready,,,True,,,24,,,0,0,0,2026-03-03T13:06:40.410920+00:00
-rdamsc_c6,msc:c6,datacite-metadata-schema_TO_idf-international-doi,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-03-03T13:06:40.349767+00:00
-rdamsc_c7,msc:c7,datacite-metadata-schema_TO_oecd-dataset-metadata,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-03-03T13:06:39.729476+00:00
-rdamsc_c8,msc:c8,ddi-data-documentation_TO_dublin-core,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-03-03T13:06:38.932279+00:00
-rdamsc_c9,msc:c9,dif-directory-interchange_TO_dublin-core,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-03-03T13:06:37.018682+00:00
+rdamsc_c1,msc:c1,abcd-access-biological_TO_darwin-core,ready,SSSOM ready,,deterministic_generic,True,15,15,,1,9,1,1,0,2026-05-11T10:54:58.846299+00:00
+rdamsc_c10,msc:c10,dif-directory-interchange_TO_iso-19115,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-05-11T10:55:20.266451+00:00
+rdamsc_c11,msc:c11,dublin-core_TO_marc-machine-readable,ready,SSSOM ready,,,True,,,60,,,0,0,0,2026-05-11T10:55:20.270555+00:00
+rdamsc_c12,msc:c12,dublin-core_TO_prov,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-05-11T10:55:21.086458+00:00
+rdamsc_c13,msc:c13,eml-ecological-metadata_TO_iso-19115,ready,SSSOM ready,,,True,,,37,,,0,0,0,2026-05-11T10:55:21.087751+00:00
+rdamsc_c14,msc:c14,eurisco-descriptors_TO_abcd-access-biological,ready,SSSOM ready,,,True,,,33,,,0,0,0,2026-05-11T10:55:21.088547+00:00
+rdamsc_c15,msc:c15,fgdccsdgm-biological-data_TO_iso-19115,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,2,0,2,2026-05-11T10:55:41.643162+00:00
+rdamsc_c16,msc:c16,fgdccsdgm-federal-geographic_TO_dif-directory-interchange,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-05-11T10:55:42.184867+00:00
+rdamsc_c17,msc:c17,fgdccsdgm-federal-geographic_TO_iso-19115,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,2,0,2,2026-05-11T10:56:02.642948+00:00
+rdamsc_c18,msc:c18,hispid-herbarium-information_TO_abcd-access-biological,ready,SSSOM ready,,deterministic_generic,True,13,13,,1,46,1,1,0,2026-05-11T10:59:15.412482+00:00
+rdamsc_c19,msc:c19,isa-tab_TO_mage-tab,failed_parse,failed: parse/extract,no_rules_extracted,llm,False,0,,,1,4,1,1,0,2026-05-11T10:59:19.581571+00:00
+rdamsc_c2,msc:c2,csdgm-extensions-for_TO_iso-19115,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-05-11T10:55:09.842330+00:00
+rdamsc_c20,msc:c20,iso-19115_TO_ddi-data-documentation,ready,SSSOM ready,,,True,,,40,,,0,0,0,2026-05-11T10:59:19.582592+00:00
+rdamsc_c21,msc:c21,marc-machine-readable_TO_dublin-core,ready,SSSOM ready,,,True,,,83,,,0,0,0,2026-05-11T10:59:19.584404+00:00
+rdamsc_c22,msc:c22,netcdf-attribute-convention_TO_iso-19115,ready,SSSOM ready,,,True,,,47,,,0,0,0,2026-05-11T10:59:19.585623+00:00
+rdamsc_c23,msc:c23,oecd-minimum-data_TO_abcd-access-biological,ready,SSSOM ready,,llm,True,23,23,,1,2,1,1,0,2026-05-11T10:59:35.963508+00:00
+rdamsc_c24,msc:c24,spase-data-model_TO_dublin-core,ready,SSSOM ready,,,True,,,13,,,0,0,0,2026-05-11T10:59:35.964634+00:00
+rdamsc_c26,msc:c26,dublin-core_TO_mods-metadata-object,ready,SSSOM ready,,,True,,,36,,,0,0,0,2026-05-11T10:59:35.966424+00:00
+rdamsc_c27,msc:c27,mods-metadata-object_TO_dublin-core,ready,SSSOM ready,,,True,,,26,,,0,0,0,2026-05-11T10:59:35.967277+00:00
+rdamsc_c28,msc:c28,marc-machine-readable_TO_mods-metadata-object,ready,SSSOM ready,,deterministic_generic,True,92,92,,2,87,2,2,0,2026-05-11T11:02:48.501388+00:00
+rdamsc_c29,msc:c29,mods-metadata-object_TO_marc-machine-readable,failed_parse,failed: parse/extract,no_rules_extracted,llm,False,0,,,2,46,2,2,0,2026-05-11T11:07:00.553104+00:00
+rdamsc_c3,msc:c3,darwin-core_TO_abcd-access-biological,ready,SSSOM ready,,llm,True,1,1,,1,3,1,1,0,2026-05-11T10:55:15.514495+00:00
+rdamsc_c30,msc:c30,iso-19115_TO_rif-cs-registry,ready,SSSOM ready,,,True,,,15,,,0,0,0,2026-05-11T11:07:00.555863+00:00
+rdamsc_c31,msc:c31,marine-community-profile_TO_rif-cs-registry,failed_parse,failed: parse/extract,no_rules_extracted,llm,False,0,,,1,7,1,1,0,2026-05-11T11:07:16.491597+00:00
+rdamsc_c32,msc:c32,dublin-core_TO_rif-cs-registry,ready,SSSOM ready,,,True,,,8,,,0,0,0,2026-05-11T11:07:16.492386+00:00
+rdamsc_c33,msc:c33,LIDO to CIDOC CRM,ready,SSSOM ready,,,True,,,1,,,0,0,0,2026-05-11T11:07:16.492540+00:00
+rdamsc_c34,msc:c34,MIDAS-Heritage to CIDOC CRM,ready,SSSOM ready,,deterministic_generic,True,56,56,,1,39,1,1,0,2026-05-11T11:10:32.746136+00:00
+rdamsc_c35,msc:c35,Dublin Core to CIDOC CRM,ready,SSSOM ready,,,True,,,41,,,0,0,0,2026-05-11T11:10:32.747561+00:00
+rdamsc_c36,msc:c36,EAD to CIDOC CRM,ready,SSSOM ready,,,True,,,10,,,0,0,0,2026-05-11T11:10:32.748045+00:00
+rdamsc_c37,msc:c37,MARC (Machine-Readable Cataloging) to CIDOC CRM,ready,SSSOM ready,,,True,,,49,,,0,0,0,2026-05-11T11:10:32.749543+00:00
+rdamsc_c38,msc:c38,CiteDCAT-AP (DataCite profile of DCAT-AP),ready,SSSOM ready,,,True,,,160,,,0,0,0,2026-05-11T11:10:32.756084+00:00
+rdamsc_c4,msc:c4,datacite-metadata-schema_TO_ddi-data-documentation,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-05-11T10:55:16.191142+00:00
+rdamsc_c5,msc:c5,DataCite to Dublin Core Mapping 4.4,ready,SSSOM ready,,,True,,,24,,,0,0,0,2026-05-11T10:55:16.192264+00:00
+rdamsc_c6,msc:c6,datacite-metadata-schema_TO_idf-international-doi,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-05-11T10:55:16.732106+00:00
+rdamsc_c7,msc:c7,datacite-metadata-schema_TO_oecd-dataset-metadata,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-05-27T23:31:42.516865+00:00
+rdamsc_c8,msc:c8,ddi-data-documentation_TO_dublin-core,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-05-11T10:55:19.254879+00:00
+rdamsc_c9,msc:c9,dif-directory-interchange_TO_dublin-core,failed_unreachable,failed: docs unreachable,artifacts_unreachable,,False,,,,,,1,0,1,2026-05-11T10:55:19.779001+00:00
