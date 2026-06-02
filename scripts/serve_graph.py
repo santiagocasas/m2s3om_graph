@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Simple HTTP server to view the crosswalk graph visualization.
 
-Uses the proven graph-visualizer (sigma.js v3) from the submodule.
+Uses the proven graph-visualizer (Cytoscape.js / Sigma.js) from the submodule.
 
 Run this script and open the printed URL.
 """
@@ -206,6 +206,18 @@ def patch_visualizer_html(html_path: Path) -> None:
     html_path.write_text(html, encoding="utf-8")
 
 
+def _patch_cytoscape_graph_names(html_path: Path) -> None:
+    """Rename internal graph-visualizer graph labels to project-specific names."""
+    if not html_path.exists():
+        return
+    html = html_path.read_text(encoding="utf-8")
+    html = html.replace(
+        '<option value="automatic_hm_graph" selected>Automatic HM Graph</option>',
+        '<option value="automatic_hm_graph" selected>M\u00b2S\u00b3OM Crosswalk Network</option>',
+    )
+    html_path.write_text(html, encoding="utf-8")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Serve the M2S3OM graph visualizer")
     parser.add_argument("--open", action="store_true", help="Open the browser automatically")
@@ -221,20 +233,21 @@ def main():
     root = Path(__file__).resolve().parents[1]
     source_web_dir = root / "graph-visualizer" / "web"
     web_dir = root / "exports" / "graph_visualizer_web"
-    human_graph = root / "data" / "crosswalks.human.json"
+    crosswalk_network = root / "data" / "crosswalk_network.json"
     graphology_graph = web_dir / "graphs" / "automatic_hm_graph.graphology.json"
 
     if web_dir.exists():
         shutil.rmtree(web_dir)
     shutil.copytree(source_web_dir, web_dir)
     patch_visualizer_html(web_dir / "sigma_sources_services_graph.html")
+    _patch_cytoscape_graph_names(web_dir / "cytoscape_graph.html")
 
     subprocess.run(
         [
             sys.executable,
-            str(root / "scripts" / "convert_to_human_graph.py"),
+            str(root / "scripts" / "convert_to_crosswalk_network.py"),
             "--output",
-            str(human_graph),
+            str(crosswalk_network),
         ],
         check=True,
     )
@@ -243,7 +256,7 @@ def main():
             sys.executable,
             str(root / "graph-visualizer" / "scripts" / "human_to_graphology.py"),
             "--input",
-            str(human_graph),
+            str(crosswalk_network),
             "--output",
             str(graphology_graph),
         ],

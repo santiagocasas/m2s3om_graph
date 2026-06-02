@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Convert M²S³OM crosswalk_graph.json to graphkit human.json format.
+"""Convert M²S³OM crosswalk_graph.json to graphkit network JSON format.
 
 Usage:
-    uv run python scripts/convert_to_human_graph.py \
+    uv run python scripts/convert_to_crosswalk_network.py \
         --input exports/graph/crosswalk_graph.json \
-        --output data/crosswalks.human.json
+        --output data/crosswalk_network.json
 """
 
 from __future__ import annotations
@@ -186,7 +186,7 @@ def load_crosswalks(data: dict, config: dict) -> CrosswalkData:
     return CrosswalkData(standards=standards, crosswalks=crosswalks)
 
 
-def to_human_graph(data: CrosswalkData, config: dict) -> dict:
+def to_crosswalk_network(data: CrosswalkData, config: dict) -> dict:
     nodes: list[dict] = []
     edge_attributes: dict[str, dict] = {}
     node_attributes: dict[str, dict] = {}
@@ -282,7 +282,7 @@ def main() -> int:
     )
     ap.add_argument(
         "--output", type=Path, default=None,
-        help="Output path for human.json. Default: <repo-root>/data/crosswalks.human.json",
+        help="Output path for crosswalk_network.json. Default: <repo-root>/data/crosswalk_network.json",
     )
     ap.add_argument(
         "--config",
@@ -294,13 +294,13 @@ def main() -> int:
 
     root = Path(__file__).resolve().parents[1]
     in_path = args.input or root / "exports/graph/crosswalk_graph.json"
-    out_path = args.output or root / "data/crosswalks.human.json"
+    out_path = args.output or root / "data/crosswalk_network.json"
     config_path = args.config or root / DEFAULT_CONFIG
 
     data = load(in_path)
     config = load_config(config_path)
     xw = load_crosswalks(data, config)
-    human = to_human_graph(xw, config)
+    human = to_crosswalk_network(xw, config)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(

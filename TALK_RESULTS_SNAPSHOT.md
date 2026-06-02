@@ -43,7 +43,7 @@ Counting note: older draft material used `1,280+` rules because that was the tot
 
 ### Graph and extraction strategy breakdown
 
-- human graph: `20` standards, `23` crosswalk edges
+- crosswalk network: `20` standards, `23` crosswalk edges
 - legacy graph export: `22` nodes, `24` edges
 - graph extraction strategies: `21` LLM edges, `2` deterministic edges, `1` legacy/file-based edge
 - frozen pipeline strategy attempts: `20` LLM, `2` deterministic_generic

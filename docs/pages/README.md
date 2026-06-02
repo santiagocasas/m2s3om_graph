@@ -16,7 +16,7 @@ The generator reads current frozen project outputs from:
 - `exports/pipeline/latest/run_metadata.json`
 - `exports/sssom/*.sssom.tsv`
 - `exports/graph/crosswalk_graph.json`
-- `data/crosswalks.human.json`
+- `data/crosswalk_network.json`
 - graph visualizer files from `exports/graph_visualizer_web/` or `graph-visualizer/web/`
 
 Do not edit `public/` by hand; rebuild it from repository data.
