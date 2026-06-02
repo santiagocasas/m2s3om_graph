@@ -204,11 +204,39 @@ code {
 
 pre {
   overflow: auto;
-  background: #17202a;
-  color: #f7f5ef;
-  padding: 18px;
+  background: #0f1720;
+  color: #cdd9e5;
+  padding: 20px;
   border-radius: 16px;
+  position: relative;
+  border: 1px solid #2f3b49;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  line-height: 1.55;
 }
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #cdd9e5;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.copy-btn:hover { background: rgba(255, 255, 255, 0.22); }
+.copy-btn.copied { color: #8cd600; border-color: #8cd600; }
 
 .graph-embed-card {
   grid-column: 1 / -1;
@@ -277,6 +305,52 @@ pre {
 }
 
 .plot-fallback[hidden] { display: none; }
+
+.topic-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.topic-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.topic-chip-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gitlab-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 999px;
+  padding: 7px 13px;
+  font-size: 0.93rem;
+}
+
+.gitlab-link:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+.footer-repo {
+  margin-top: 10px;
+  font-size: 0.88rem;
+}
+
+.footer-repo a { color: var(--brand); }
 
 @media (max-width: 820px) {
   .hero, .two-col, .benchmark-panel { grid-template-columns: 1fr; }

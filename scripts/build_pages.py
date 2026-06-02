@@ -10,7 +10,7 @@ import csv
 import html
 import json
 import shutil
-from collections import Counter, defaultdict
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -19,6 +19,19 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public"
 SITE_ASSETS = ROOT / "docs" / "pages"
+
+# HMC topic colors — must stay in sync with resources/graph_visualization.yaml
+TOPIC_COLORS: dict[str, str] = {
+    "FAIR data commons": "#8cd600",
+    "Health": "#D23264",
+    "Earth and Environment": "#326468",
+    "Information": "#a0235a",
+    "Matter and Heritage": "#f0781e",
+    "Aeronautics Space Transport": "#50c8aa",
+    "Projects and Registries": "#5e3b99",
+}
+
+GITLAB_REPO_URL = "https://codebase.helmholtz.cloud/santiago.casascastro/MetadataMappingSssOM"
 
 
 @dataclass(frozen=True)
@@ -85,7 +98,11 @@ def collect_sssom_stats() -> tuple[list[SssomFileStats], Counter[str], Counter[s
 
 def collect_graph_stats() -> dict[str, Any]:
     crosswalk_graph = read_json(ROOT / "exports" / "graph" / "crosswalk_graph.json", {})
-    human_graph = read_json(ROOT / "data" / "crosswalks.human.json", {})
+    network_graph = read_json(ROOT / "data" / "crosswalk_network.json", {})
+    graphology_graph = read_json(
+        PUBLIC / "graph-visualizer" / "graphs" / "automatic_hm_graph.graphology.json",
+        {},
+    )
 
     edges = crosswalk_graph.get("edges", [])
     nodes = crosswalk_graph.get("nodes", [])
@@ -96,26 +113,40 @@ def collect_graph_stats() -> dict[str, Any]:
         int(edge.get("metadata", {}).get("rule_count", 0) or 0) for edge in edges
     )
 
-    human_nodes = human_graph.get("nodes", [])
-    human_edges = human_graph.get("edges", [])
-    human_types = Counter(node.get("type", "unknown") for node in human_nodes)
-    relationships = Counter(edge.get("relationship", "unknown") for edge in human_edges)
+    network_nodes = network_graph.get("nodes", [])
+    network_edges = network_graph.get("edges", [])
+    network_types = Counter(node.get("type", "unknown") for node in network_nodes)
+    relationships = Counter(edge.get("relationship", "unknown") for edge in network_edges)
+
+    if not network_nodes and graphology_graph:
+        graphology_nodes = graphology_graph.get("nodes", [])
+        graphology_edges = graphology_graph.get("edges", [])
+        network_nodes = graphology_nodes
+        network_edges = graphology_edges
+        network_types = Counter(
+            node.get("attributes", {}).get("kind", "unknown")
+            for node in graphology_nodes
+        )
+        relationships = Counter(
+            edge.get("attributes", {}).get("relationship", "unknown")
+            for edge in graphology_edges
+        )
 
     return {
         "crosswalk_nodes": len(nodes),
         "crosswalk_edges": len(edges),
         "strategies": strategies,
         "graph_rule_count": graph_rule_count,
-        "human_nodes": len(human_nodes),
-        "human_edges": len(human_edges),
-        "human_types": human_types,
+        "network_nodes": len(network_nodes),
+        "network_edges": len(network_edges),
+        "network_types": network_types,
         "relationships": relationships,
         "largest_edges": sorted(
             edges,
             key=lambda edge: int(edge.get("metadata", {}).get("rule_count", 0) or 0),
             reverse=True,
         )[:8],
-        "has_human_graph": bool(human_graph),
+        "has_network_graph": bool(network_graph or graphology_graph),
     }
 
 
@@ -203,6 +234,7 @@ def render_live_benchmark_plotly(benchmark: dict[str, Any]) -> str:
                     "marker": {"color": ring["color"], "line": {"color": "#ffffff", "width": 2}},
                     "name": f"{ring['label']}: {ring['value']:.1f}%",
                     "hovertemplate": f"{ring['label']}: {ring['value']:.1f}%<extra></extra>",
+                    "showlegend": True,
                 },
             ]
         )
@@ -219,12 +251,23 @@ def render_live_benchmark_plotly(benchmark: dict[str, Any]) -> str:
             }
         )
 
-    config = {"displayModeBar": False, "responsive": True}
+    config = {
+        "displayModeBar": True,
+        "modeBarButtonsToRemove": ["sendDataToCloud", "editInChartStudio", "select2d", "lasso2d"],
+        "responsive": True,
+    }
     layout = {
         "paper_bgcolor": "#ffffff",
         "plot_bgcolor": "#ffffff",
         "margin": {"l": 10, "r": 180, "t": 10, "b": 10},
-        "showlegend": False,
+        "showlegend": True,
+        "legend": {
+            "orientation": "h",
+            "x": 0,
+            "y": -0.08,
+            "xanchor": "left",
+            "font": {"size": 12, "color": "#002864"},
+        },
         "height": 460,
         "polar": {
             "bgcolor": "#ffffff",
@@ -286,21 +329,53 @@ def render_page(title: str, active: str, body: str, subtitle: str) -> str:
         f'<a href="{href}"{(" class=\"active\"" if label == active else "")}>{label}</a>'
         for href, label in nav
     )
+    gitlab_icon = (
+        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 586 559" fill="currentColor" aria-hidden="true">'
+        '<path d="M461 301L293 560 125 301l56-173h224z"/>'
+        '<path d="M293 560L125 301H18L293 560z" opacity=".7"/>'
+        '<path d="M293 560L461 301H568L293 560z" opacity=".7"/>'
+        '<path d="M125 301L56 128 0 301h125z" opacity=".5"/>'
+        '<path d="M461 301l69-173 56 173H461z" opacity=".5"/>'
+        '<path d="M56 128L125 301H293L181 0z"/>'
+        '<path d="M530 128L461 301H293L405 0z"/>'
+        '</svg>'
+    )
+    gitlab_link = (
+        f'<a href="{GITLAB_REPO_URL}" class="gitlab-link" target="_blank" rel="noopener">'
+        f'{gitlab_icon} GitLab repository</a>'
+    )
     return f"""<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{esc(title)} · m2s3om_graph</title>
+  <title>{esc(title)} · M²S³OM Graph</title>
   <link rel="stylesheet" href="assets/site.css">
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {{
+    document.querySelectorAll('pre').forEach(pre => {{
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy';
+      btn.addEventListener('click', () => {{
+        navigator.clipboard.writeText(pre.querySelector('code')?.innerText ?? pre.innerText).then(() => {{
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          setTimeout(() => {{ btn.textContent = 'Copy'; btn.classList.remove('copied'); }}, 1800);
+        }});
+      }});
+      pre.appendChild(btn);
+    }});
+  }});
+  </script>
 </head>
 <body>
   <header class="site-header">
-    <h1>m2s3om_graph</h1>
+    <h1>M<sup>2</sup>S<sup>3</sup>OM Graph</h1>
     <p>{esc(subtitle)}</p>
-    <nav class="nav">{links}</nav>
+    <nav class="nav">{links}{gitlab_link}</nav>
   </header>
-  <main>{body}<footer class="footer">Generated from frozen repository outputs. Rebuild with <code>python scripts/build_pages.py</code>.</footer></main>
+  <main>{body}<footer class="footer">Generated from frozen repository outputs. Rebuild with <code>python scripts/build_pages.py</code>.<div class="footer-repo"><a href="{GITLAB_REPO_URL}" target="_blank" rel="noopener">{GITLAB_REPO_URL}</a></div></footer></main>
 </body>
 </html>
 """
@@ -387,11 +462,11 @@ def ensure_graphology_files(graphs_dir: Path) -> None:
 
     automatic = graphs_dir / "automatic_hm_graph.graphology.json"
     if not automatic.exists():
-        # Prefer the richer human graph; fall back to the committed legacy export.
-        human_graph = read_json(ROOT / "data" / "crosswalks.human.json", {})
-        if human_graph:
+        # Prefer the richer network graph; fall back to the committed legacy export.
+        network_graph = read_json(ROOT / "data" / "crosswalk_network.json", {})
+        if network_graph:
             automatic.write_text(
-                json.dumps(human_to_graphology(human_graph), indent=2), encoding="utf-8"
+                json.dumps(network_to_graphology(network_graph), indent=2), encoding="utf-8"
             )
         elif legacy_graph:
             automatic.write_text(
@@ -406,18 +481,18 @@ def ensure_graphology_files(graphs_dir: Path) -> None:
             )
 
 
-def human_to_graphology(human_graph: dict[str, Any]) -> dict[str, Any]:
-    node_attrs = human_graph.get("nodeAttributes", {})
-    edge_attrs = human_graph.get("edgeAttributes", {})
+def network_to_graphology(network_graph: dict[str, Any]) -> dict[str, Any]:
+    node_attrs = network_graph.get("nodeAttributes", {})
+    edge_attrs = network_graph.get("edgeAttributes", {})
     nodes = []
-    for node in human_graph.get("nodes", []):
+    for node in network_graph.get("nodes", []):
         attrs = dict(node_attrs.get(node.get("attrRef"), {}))
         attrs["label"] = node.get("label", node.get("id", ""))
         attrs["kind"] = node.get("type", attrs.get("kind", "unknown"))
         nodes.append({"key": node.get("id"), "attributes": attrs})
 
     edges = []
-    for index, edge in enumerate(human_graph.get("edges", [])):
+    for index, edge in enumerate(network_graph.get("edges", [])):
         attrs = dict(edge_attrs.get(edge.get("attrRef"), {}))
         attrs["relationship"] = edge.get("relationship", attrs.get("relationship", "crosswalk"))
         edges.append(
@@ -477,63 +552,57 @@ def build() -> None:
     copy_assets()
 
     pipeline = read_json(ROOT / "exports" / "pipeline" / "latest" / "rdamsc_stats_summary.json", {})
-    metadata = read_json(ROOT / "exports" / "pipeline" / "latest" / "run_metadata.json", {})
-    manifest = read_json(ROOT / "exports" / "sssom" / "generation_manifest.json", {})
     sssom_files, predicates, justifications = collect_sssom_stats()
     graph = collect_graph_stats()
     live_benchmark = collect_live_benchmark_stats()
     host_outcomes = collect_artifact_host_outcomes()
 
     total_rows = sum(item.rows for item in sssom_files)
-    total_files = len(sssom_files)
     ready = pipeline.get("status_counts", {}).get("ready", 0)
-    failed_unreachable = pipeline.get("status_counts", {}).get("failed_unreachable", 0)
-    failed_parse = pipeline.get("status_counts", {}).get("failed_parse", 0)
     total_crosswalks = pipeline.get("total_crosswalks", 0)
     artifact_checks = pipeline.get("artifact_checks", {}).get("total", 0)
     fetched = pipeline.get("artifact_checks", {}).get("status_counts", {}).get("fetched", 0)
     fetch_errors = pipeline.get("artifact_checks", {}).get("status_counts", {}).get("fetch_error", 0)
     deterministic = graph["strategies"].get("deterministic", 0)
     llm = graph["strategies"].get("llm", 0)
-    unknown = graph["strategies"].get("unknown", 0)
 
-    human_graph_text = (
-        f"<p><strong>{graph['human_nodes']}</strong> standards in the human graph</p>"
-        f"<p><strong>{graph['human_edges']}</strong> crosswalk edges in the human graph</p>"
-        if graph["has_human_graph"]
-        else "<p>Human graph source not present in this build.</p>"
+    network_graph_text = (
+        f"<p><strong>{graph['network_nodes']}</strong> standards in the crosswalk network</p>"
+        f"<p><strong>{graph['network_edges']}</strong> crosswalk edges in the network</p>"
+        if graph["has_network_graph"]
+        else "<p>Crosswalk network source not present in this build.</p>"
     )
 
     overview = f"""
 <section class="hero">
   <div class="panel">
     <div class="eyebrow">Evidence-based metadata crosswalk workbench</div>
-    <h2>Documentation and presentation numbers for the RDAMSC crosswalk pipeline.</h2>
-    <p class="lead">This site is generated from the frozen pipeline exports, SSSOM files, and graph outputs committed with the project. It is intended for GitLab Pages, talks, posters, and quick project orientation.</p>
+    <h2>Turning scattered metadata mapping documents into reusable crosswalks.</h2>
+    <p class="lead">m2s3om_graph harvests mapping records from the RDA Metadata Standards Catalog, retrieves the original mapping artifacts, extracts field-level rules, and publishes them as transparent SSSOM crosswalks that can be inspected, visualized, and applied to real metadata records.</p>
     <div class="metrics-grid">
       {metric(total_crosswalks, "RDAMSC crosswalks processed")}
       {metric(f"{ready} ({pct(ready, total_crosswalks)})", "ready with SSSOM output")}
       {metric(total_rows, "actual SSSOM mapping rows")}
       {metric(f"{fetched}/{artifact_checks}", "artifacts fetched")}
     </div>
-    <div class="callout"><strong>Rule-count note:</strong> older project notes used approximately 1,280 because that is the total line count of the SSSOM files, including comments and headers. The current strict data-row count is <strong>{total_rows}</strong> mapping rules across <strong>{total_files}</strong> SSSOM files.</div>
+    <div class="callout"><strong>Why it matters:</strong> metadata standards are well documented, but crosswalks are often buried in PDFs, XSL files, web pages, and legacy tables. This project makes those mappings explicit, versioned, machine-readable, and connected in a graph.</div>
   </div>
   <div class="card">
-    <h3>Snapshot provenance</h3>
-    <p><span class="badge">Generated</span> {esc(pipeline.get("generated_at", "unknown"))}</p>
-    <p><span class="badge">Commit</span> {esc(metadata.get("git", {}).get("commit_short", "unknown"))}</p>
-    <p><span class="badge">Branch</span> {esc(metadata.get("git", {}).get("branch", "unknown"))}</p>
-    <p><span class="badge">Pipeline SSSOM files</span> {esc(manifest.get("sssom_file_count", "unknown"))} generated in the frozen run; {total_files} files exist on disk.</p>
+    <h3>What the prototype demonstrates</h3>
+    <p><span class="badge">Extract</span> Fetch mapping artifacts and recover structured field mappings from heterogeneous documents.</p>
+    <p><span class="badge">Standardize</span> Export mappings as SSSOM TSV with predicates, justifications, and provenance.</p>
+    <p><span class="badge">Apply</span> Convert sample metadata records through the extracted rules in a Streamlit workbench.</p>
+    <p><span class="badge">Explore</span> Browse an interactive network of metadata standards and crosswalk relationships.</p>
   </div>
 </section>
 
 <section class="section cards">
-  <div class="card"><h3>Pipeline outcomes</h3><p class="good"><strong>{ready}</strong> ready</p><p class="warn"><strong>{failed_unreachable}</strong> failed due to unreachable artifacts</p><p class="bad"><strong>{failed_parse}</strong> failed after fetch because no rules were extracted</p></div>
-  <div class="card"><h3>Extraction strategies</h3><p><strong>{llm}</strong> LLM extraction graph edges</p><p><strong>{deterministic}</strong> deterministic extraction graph edges</p><p><strong>{unknown}</strong> legacy/file-based graph edge</p></div>
-  <div class="card"><h3>Crosswalk graph</h3>{human_graph_text}<p><strong>{graph['crosswalk_nodes']}</strong> nodes / <strong>{graph['crosswalk_edges']}</strong> edges in the legacy graph export</p></div>
+  <div class="card"><h3>Evidence pipeline</h3><p>Each mapping is tied back to source artifacts and frozen pipeline outputs, so a crosswalk can be audited rather than treated as an opaque model answer.</p></div>
+  <div class="card"><h3>Hybrid extraction</h3><p><strong>{deterministic}</strong> deterministic and <strong>{llm}</strong> LLM-assisted graph edges show how rule extraction can combine stable patterns with language-model assistance.</p></div>
+  <div class="card"><h3>Crosswalk network</h3>{network_graph_text}<p>The graph view highlights domains, standard families, and high-volume mappings for exploration and presentation.</p></div>
 </section>
 """
-    write(PUBLIC / "index.html", render_page("Overview", "Overview", overview, "Evidence-based metadata crosswalk documentation and statistics."))
+    write(PUBLIC / "index.html", render_page("Overview", "Overview", overview, "Evidence-based metadata crosswalk extraction, visualization, and conversion."))
 
     predicate_rows = [
         [esc(name), esc(count), esc(pct(count, total_rows))]
@@ -666,12 +735,23 @@ def build() -> None:
                 esc(metadata_edge.get("rule_count", 0)),
             ]
         )
-    type_rows = [[esc(k), esc(v)] for k, v in graph["human_types"].most_common()]
+    type_rows = [[esc(k), esc(v)] for k, v in graph["network_types"].most_common()]
     relationship_rows = [[esc(k), esc(v)] for k, v in graph["relationships"].most_common()]
     has_cytoscape = (PUBLIC / "graph-visualizer" / "cytoscape_graph.html").exists()
+
+    legend_chips = "".join(
+        f'<span class="topic-chip">'
+        f'<span class="topic-chip-dot" style="background:{TOPIC_COLORS.get(topic, "#888")};"></span>'
+        f'{esc(topic)}'
+        f'</span>'
+        for topic in TOPIC_COLORS
+    )
+    topic_legend_html = f'<div class="topic-legend">{legend_chips}</div>'
+
     cytoscape_embed = (
         '<div class="card graph-embed-card">'
-        '<h3>Interactive graph</h3>'
+        f'<h3 style="padding:16px 22px 0;margin-bottom:8px;">Interactive graph</h3>'
+        f'{topic_legend_html}'
         '<iframe class="graph-embed"'
         ' src="graph-visualizer/cytoscape_graph.html?embed=1"'
         ' title="Interactive Cytoscape crosswalk graph"'
@@ -713,25 +793,58 @@ def build() -> None:
 
     documentation_body = """
 <section class="panel">
-  <div class="eyebrow">How the system works</div>
-  <h2>Project documentation</h2>
-  <p class="lead">m2s3om_graph syncs RDAMSC metadata, fetches mapping artifacts, extracts crosswalk rules, exports authoritative SSSOM TSV files, and applies those rules in a Streamlit workbench.</p>
+  <div class="eyebrow">How to use the project</div>
+  <h2>Documentation</h2>
+  <p class="lead">The project has three practical layers: a Streamlit workbench for browsing and converting metadata, a reproducible RDAMSC pipeline for extracting SSSOM crosswalks, and a static GitLab Pages site for communicating the results.</p>
 </section>
-<section class="section cards">
-  <div class="card"><h3>Run locally</h3><pre><code>uv sync
-uv run streamlit run app/app.py
-uv run python -m m2s3om_graph.cli.main demo-convert</code></pre></div>
-  <div class="card"><h3>Regenerate statistics</h3><pre><code>uv run python scripts/rdamsc_pipeline_stats.py freeze \
+
+<section class="section two-col">
+  <div class="card">
+    <h3>1. Install and run the workbench</h3>
+    <p>Use this path for a local demo. It starts from the committed SSSOM files, so the app can run without re-ingesting the whole catalog.</p>
+    <pre><code>uv sync
+uv run streamlit run app/app.py</code></pre>
+    <p>Then open the local Streamlit URL and use the three tabs: <strong>Crosswalk Browser</strong>, <strong>Pipeline</strong>, and <strong>Convert One Record</strong>.</p>
+  </div>
+  <div class="card">
+    <h3>2. Run a fast conversion smoke test</h3>
+    <p>This checks the package entrypoint and applies the bundled mapping rules to a synthetic record.</p>
+    <pre><code>uv run python -m m2s3om_graph.cli.main demo-convert</code></pre>
+    <p>The command reports how many rules were applied and which source fields remained unmapped.</p>
+  </div>
+</section>
+
+<section class="section two-col">
+  <div class="card">
+    <h3>3. Regenerate frozen statistics</h3>
+    <p>If the RDAMSC pipeline has already run, freeze the current status, plots, CSVs, and SSSOM provenance into <code>exports/pipeline/latest/</code>.</p>
+    <pre><code>make pipeline-freeze</code></pre>
+    <p>Use the explicit command below when you need to point at non-default status, log, or output locations.</p>
+    <pre><code>uv run python scripts/rdamsc_pipeline_stats.py freeze \
   --status-file .local/rdamsc_pipeline_status.json \
   --output-dir exports/pipeline/latest \
   --sssom-dir exports/sssom \
   --pipeline-log .local/bootstrap_rdamsc.log \
-  --plots</code></pre></div>
-  <div class="card"><h3>Build this site</h3><pre><code>python scripts/build_pages.py</code></pre></div>
+  --plots</code></pre>
+  </div>
+  <div class="card">
+    <h3>4. Build and serve this GitLab Pages site</h3>
+    <p>The Pages build is intentionally simple: one Python script writes static HTML into <code>public/</code>.</p>
+    <pre><code>uv run python scripts/build_pages.py
+uv run python -m http.server 8000 --directory public</code></pre>
+    <p>Open <code>http://localhost:8000</code> to inspect the generated site before pushing changes.</p>
+  </div>
 </section>
+
+<section class="section cards">
+  <div class="card"><h3>Crosswalk extraction</h3><p>The pipeline synchronizes RDAMSC mapping records, downloads source artifacts, converts them to text/markdown, extracts mapping rules with deterministic and LLM-assisted strategies, and exports SSSOM TSV files.</p></div>
+  <div class="card"><h3>Conversion engine</h3><p>Records are parsed into an intermediate representation, matched against SSSOM rules, and serialized back to supported target formats such as Dublin Core or DataCite XML.</p></div>
+  <div class="card"><h3>Graph visualization</h3><p>The crosswalk network groups standards by topic, merges known aliases for visualization, weights edges by mapped field count, and can be exported as SVG or PNG for posters and slides.</p></div>
+</section>
+
 <section class="section card">
-  <h3>Source documents</h3>
-  <p>See repository files <code>README.md</code>, <code>BENCHMARKING.md</code>, <code>DEMO_GUIDE.md</code>, <code>POSTER_BRIEF.md</code>, <code>TALK_RESULTS_SNAPSHOT.md</code>, and <code>CODEBASE_WALKTHROUGH.md</code> for the full project narrative.</p>
+  <h3>Further reading</h3>
+  <p>Use <code>README.md</code> for commands, <code>CODEBASE_WALKTHROUGH.md</code> for architecture, <code>POSTER_BRIEF.md</code> for the public-facing story, <code>TALK_RESULTS_SNAPSHOT.md</code> for frozen numbers, and <code>BENCHMARKING.md</code> for evaluation workflows.</p>
 </section>
 """
     write(PUBLIC / "documentation.html", render_page("Documentation", "Documentation", documentation_body, "Usage notes and regeneration commands."))
@@ -742,14 +855,41 @@ uv run python -m m2s3om_graph.cli.main demo-convert</code></pre></div>
         ["SSSOM manifest", "exports/sssom/generation_manifest.json"],
         ["SSSOM exports", "exports/sssom/*.sssom.tsv"],
         ["Legacy graph JSON", "exports/graph/crosswalk_graph.json"],
-        ["Human graph JSON", "data/crosswalks.human.json"],
+        ["Crosswalk network JSON", "data/crosswalk_network.json"],
         ["Live OAI benchmark", "exports/benchmark/datacite_dc_oai_awi_benchmark.json"],
         ["Graph visualizer", "graph-visualizer/web/"],
     ]
+    plot_items = [
+        ("assets/plots/status_counts.png",       "Pipeline status counts"),
+        ("assets/plots/failure_reasons.png",      "Pipeline failure reasons"),
+        ("assets/plots/hosts_errors.png",         "Artifact host errors"),
+        ("assets/plots/extensions_fetched.png",   "Fetched artifact extensions"),
+        ("assets/plots/extensions_errors.png",    "Extension fetch errors"),
+        ("assets/poster_crosswalk_status_pie.png",              "Crosswalk status pie (poster)"),
+        ("assets/poster_datacite_dublincore_benchmark_bar.png", "DataCite/DC benchmark bar (poster)"),
+        ("assets/poster_fetched_artifact_formats_bar.png",      "Fetched artifact formats bar (poster)"),
+        ("assets/poster_artifact_host_outcomes_bar.png",        "Artifact host outcomes bar (poster)"),
+        ("assets/live_oai_pmh_concentric_rings.png",            "Live OAI-PMH benchmark rings"),
+    ]
+    plot_grid_items = "".join(
+        f'<figure style="margin:0;">'
+        f'<a href="{src}" target="_blank">'
+        f'<img src="{src}" alt="{esc(caption)}" loading="lazy" style="width:100%;border-radius:12px;border:1px solid var(--line);background:#fff;">'
+        f'</a>'
+        f'<figcaption style="font-size:0.82rem;color:var(--muted);margin-top:6px;text-align:center;">{esc(caption)}</figcaption>'
+        f'</figure>'
+        for src, caption in plot_items
+        if (PUBLIC / src).exists()
+    )
     files_body = f"""
 <section class="panel"><div class="eyebrow">Data provenance</div><h2>Files used by this site</h2><p class="lead">The site is generated from repository-local files so it can be reproduced in CI and cited in presentations.</p></section>
 <section class="section card">{table(["Purpose", "Repository path"], [[esc(a), f"<code>{esc(b)}</code>"] for a, b in file_rows])}</section>
-<section class="section card"><h3>Artifact plots</h3><p><a href="assets/plots/status_counts.png">status_counts.png</a>, <a href="assets/plots/failure_reasons.png">failure_reasons.png</a>, <a href="assets/plots/hosts_errors.png">hosts_errors.png</a>, <a href="assets/plots/extensions_fetched.png">extensions_fetched.png</a>, <a href="assets/plots/extensions_errors.png">extensions_errors.png</a>, <a href="assets/poster_crosswalk_status_pie.png">poster_crosswalk_status_pie.png</a>, <a href="assets/poster_datacite_dublincore_benchmark_bar.png">poster_datacite_dublincore_benchmark_bar.png</a>, <a href="assets/poster_fetched_artifact_formats_bar.png">poster_fetched_artifact_formats_bar.png</a>, <a href="assets/poster_artifact_host_outcomes_bar.png">poster_artifact_host_outcomes_bar.png</a>, <a href="assets/live_oai_pmh_concentric_rings.png">live_oai_pmh_concentric_rings.png</a></p></section>
+<section class="section card">
+  <h3>Artifact plots</h3>
+  <div class="asset-grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:14px;">
+    {plot_grid_items}
+  </div>
+</section>
 """
     write(PUBLIC / "files.html", render_page("Files", "Files", files_body, "Source files and generated assets."))
 
