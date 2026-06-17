@@ -8,6 +8,17 @@ A metadata standards mapping tool that ingests PDF documents with mapping rules,
 
 Enable cross-walking between metadata standards (DataCite, Dublin Core, etc.) by providing machine-readable mapping rules that can be applied automatically while tracking where information is lost in translation.
 
+## Current Milestone: v2.0 Deployment Surfaces
+
+**Goal:** Integrate the reference deployment and curation scaffolds into the existing codebase without creating parallel implementations.
+
+**Target features:**
+- Export committed SSSOM TSV files and the standards list into the static crosswalk explorer JSON shape.
+- Integrate the Vite GitLab Pages explorer into the canonical Pages source with exactly one `pages` CI job.
+- Wire the FastAPI suggestion API to the existing Blablador client used by the extraction pipeline.
+- Add browser-memory curation for candidate mappings, including `accepted_candidates.tsv` export.
+- Package the existing Streamlit app into the Hugging Face Space scaffold with environment-based configuration.
+
 ## Requirements
 
 ### Validated
@@ -18,14 +29,15 @@ Enable cross-walking between metadata standards (DataCite, Dublin Core, etc.) by
 - ✓ Graph-based transitive mapping — existing
 - ✓ Semantic loss tracking — existing
 - ✓ Streamlit visualization UI — existing
+- ✓ Project rename from kaigraph to m2s3om_graph — Phase 01
 
 ### Active
 
-- [ ] Rename all `m2s3om_graph` references to `m2s3om_graph` — renaming refactor
-- [ ] Improve documentation clarity and completeness — user onboarding
-- [ ] Add more sample PDF mappings — expand coverage
-- [ ] Enhance semantic loss tracking mechanisms — accuracy improvement
-- [ ] Support additional output formats (JSON, XML) — interoperability
+- [ ] Export committed SSSOM TSV files and standards into static-site JSON — GitLab Pages data source
+- [ ] Integrate static crosswalk explorer into the canonical Pages site — deployment surface
+- [ ] Wire suggestion API scaffold to the existing Blablador client — candidate mapping generation
+- [ ] Add browser-only curation decisions and TSV export — manual merge workflow
+- [ ] Package Streamlit app for Hugging Face Spaces — environment-based deployment
 
 ### Out of Scope
 
@@ -48,9 +60,9 @@ Enable cross-walking between metadata standards (DataCite, Dublin Core, etc.) by
 - Academic/library metadata transformation workflows
 
 **Known Issues:**
-- Codebase still contains `m2s3om_graph` naming from initial development
 - Documentation may not reflect current feature set
 - Need more sample PDFs to demonstrate capability
+- Deployment scaffolds in `claude_suggestions/` are reference material and are not yet wired into the repo
 
 ## Constraints
 
@@ -66,10 +78,11 @@ Enable cross-walking between metadata standards (DataCite, Dublin Core, etc.) by
 | Field-level only mappings | Value transformation too complex; focus on structural alignment | ✓ Good |
 | Graph-based transitive mapping | Enables multi-hop relationships between standards | ✓ Good |
 | Semantic loss tracking | Critical for assessing mapping quality and reliability | ✓ Good |
-| Rename m2s3om_graph → m2s3om_graph | Consistent project naming across codebase | — Pending |
+| Rename kaigraph → m2s3om_graph | Consistent project naming across codebase | ✓ Good |
+| Integrate scaffolds instead of replacing existing code | Existing pipeline, Streamlit app, Blablador client, and Pages setup remain authoritative where they overlap | — Pending |
 
 ---
-*Last updated: 2026-05-08 after initialization*
+*Last updated: 2026-06-17 after starting milestone v2.0 Deployment Surfaces*
 
 ## Evolution
 
