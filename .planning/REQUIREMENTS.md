@@ -62,23 +62,23 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | TBD | Pending |
-| WEB-01 | TBD | Pending |
-| WEB-02 | TBD | Pending |
-| API-01 | TBD | Pending |
-| API-02 | TBD | Pending |
-| CUR-01 | TBD | Pending |
-| CUR-02 | TBD | Pending |
-| CUR-03 | TBD | Pending |
-| SPACE-01 | TBD | Pending |
-| SPACE-02 | TBD | Pending |
-| GOV-01 | TBD | Pending |
+| DATA-01 | Phase 02 | Pending |
+| WEB-01 | Phase 02 | Pending |
+| WEB-02 | Phase 02 | Pending |
+| API-01 | Phase 03 | Pending |
+| API-02 | Phase 03 | Pending |
+| CUR-01 | Phase 04 | Pending |
+| CUR-02 | Phase 04 | Pending |
+| CUR-03 | Phase 04 | Pending |
+| SPACE-01 | Phase 05 | Pending |
+| SPACE-02 | Phase 05 | Pending |
+| GOV-01 | Phase 02 | Pending |
 
 **Coverage:**
 - v2.0 requirements: 11 total
-- Mapped to phases: 0
-- Unmapped: 11
+- Mapped to phases: 11
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-06-17*
-*Last updated: 2026-06-17 after initial v2.0 definition*
+*Last updated: 2026-06-17 after roadmap creation*
