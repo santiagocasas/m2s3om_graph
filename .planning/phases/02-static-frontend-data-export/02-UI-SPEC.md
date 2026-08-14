@@ -1,7 +1,7 @@
 ---
 phase: 02
 slug: static-frontend-data-export
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-08-14
@@ -26,6 +26,8 @@ created: 2026-08-14
 **Authority:** CSS custom properties in `docs/pages/site.css` are the canonical design tokens.
 The explorer's `src/style.css` imports from the same token vocabulary to stay consistent with the Pages shell.
 New styles added to the explorer's `src/style.css` must reuse `--bg`, `--panel`, `--ink`, `--muted`, `--line`, `--brand`, `--brand-dark`, `--accent`, `--good`, `--warn`, `--bad` from that file.
+
+**Primary focal point:** The rules table is the primary visual anchor of the explorer screen — status bar and crosswalk selector are secondary controls that lead into it.
 
 ---
 
@@ -103,20 +105,32 @@ Exceptions: none — the scaffold's existing values (e.g., `0.5rem` table cell p
 
 ## UI Considerations
 
-> Shape-rooted UI state coverage for the crosswalk explorer.
+> Shape-rooted UI state coverage for the crosswalk explorer. Verified via `ui-consideration-probe` engine
+> across 6 named elements/surfaces (status bar, crosswalk selector, rules table, target field cell,
+> semantic-loss indicator, strategy badge); 27 applicable items auto-resolved against existing spec content
+> per user direction (2026-08-14).
 
-Applicable state considerations resolved: 7 covered, 1 backstop, 0 unresolved
+Applicable state considerations resolved: 11 covered, 1 backstop, 0 unresolved (5 dismissed rows, reasons below; not double-counted against unresolved)
 
 | Category | Element(s) | Status | Resolution / Reason |
 |----------|------------|--------|---------------------|
+| unclassified | Status bar (#status) | ✅ covered | Manually reviewed — fully covered by existing loading/success/error status bar copy rows (Copywriting Contract) |
 | loading | Status bar (#status) | ✅ covered | "Starting embedded SurrealDB (WASM)..." then "Loading crosswalk data..." messages; user sees progress before data |
-| error | JSON fetch failure | ✅ covered | Error state copy: path to `public/data/crosswalk_graph.json` + export script run guidance. Rendered in status bar. |
+| error | JSON fetch failure (global) | ✅ covered | Error state copy: path to `public/data/crosswalk_graph.json` + export script run guidance. Rendered in status bar. |
 | empty | Rules table (zero rules) | ✅ covered | Empty state heading "No mapping rules" + muted body copy. Table renders with headers but no rows. |
 | empty | Crosswalk selector (zero crosswalks) | ✅ covered | `populateSelect()` emits no options; status shows "Loaded 0 crosswalks" + empty state guidance |
+| empty | Semantic-loss indicator (flag=false) | ✅ covered | Renders as `""` — well-defined empty state, no icon shown |
 | populated | Rules table | ✅ covered | Each row renders source_path, target_path (or missing indicator), mapping_type, confidence, strategy badge |
+| populated | Target field cell | ✅ covered | Joined `target_paths` or `<em>missing</em>` indicator (Table Column Order) |
+| populated | Semantic-loss indicator (flag=true) | ✅ covered | Renders `⚠` with `aria-label="semantic loss detected"` (fix applied to Table Column Order in response to checker Visuals FLAG) |
 | partial | Missing target (rule.target_paths === [] or null) | ✅ covered | Rendered as `<em>missing</em>` in the target cell, styled with `--muted` color; parent row gets `.warn` class |
 | partial | Semantic-loss rules | ✅ covered | Row background tinted via `.bad` color; strategy badge shows "fallback" |
-| long-text | source_paths / target_paths arrays | 🧪 backstop | Arrays are flattened to comma-joined display string in rules table; overflow wraps naturally in table cell |
+| long-text / overflow | source_paths / target_paths arrays | 🧪 backstop | Arrays are flattened to comma-joined display string in rules table; overflow wraps naturally in table cell — recommend a visual check with a long-array fixture |
+| zero-one-many | Rules table / target field | ⏭ dismissed | Single rendering path handles 0 (empty state), 1, or many rows identically — no special-casing required |
+| loading | Crosswalk selector, rules table, target cell, semantic-loss icon | ⏭ dismissed | Inherit the single global loading state (#status bar); these elements populate together after the one WASM+fetch load completes, no independent loading state |
+| error | Crosswalk selector, rules table, target cell, semantic-loss icon | ⏭ dismissed | Inherit the single global error state (#status bar); if the fetch fails nothing downstream renders |
+| overflow | Semantic-loss indicator | ⏭ dismissed | Single-glyph icon, no text overflow possible |
+| unclassified | Strategy badge | ⏭ dismissed | No independent state axis — decoration tied to the Rules Table's populated state, always renders alongside its parent row |
 
 ---
 
@@ -165,17 +179,17 @@ Final rules table columns (updated from scaffold original):
 | Mapping type | `rule.mapping_type` | Third cell |
 | Confidence | `rule.confidence.toFixed(2)` | Fourth cell; green ≥ 0.9, default otherwise |
 | Strategy | `rule.strategy` badge | Fifth cell; color-coded per table above |
-| Semantic loss | `rule.semantic_loss ? "⚠" : ""` | Sixth cell; icon only, `.bad` color |
+| Semantic loss | `rule.semantic_loss ? "⚠" : ""` | Sixth cell; icon only, `.bad` color; must include `aria-label="semantic loss detected"` on the icon element (empty cells omit the attribute) |
 
 ---
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: PASS (initial FLAG — no focal point, icon lacked a11y text alt — resolved: primary focal point declared in Design System; `aria-label` added to semantic-loss icon in Table Column Order)
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** approved — 2026-08-14
