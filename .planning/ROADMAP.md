@@ -12,7 +12,7 @@ Integrate the reference deployment and curation scaffolds into the existing code
 
 | Phase | Name | Goal | Requirements | Success Criteria |
 |-------|------|------|--------------|------------------|
-| 02 | Static Frontend Data Export | Orient in the current repo, export real crosswalk data, and integrate the Vite GitLab Pages explorer into the canonical Pages source. | DATA-01, WEB-01, WEB-02, GOV-01 | 5 |
+| 02 | Static Frontend Data Export | Orient in the current repo, export real crosswalk data, and integrate the Vite GitLab Pages explorer into the canonical Pages source. | DATA-01, WEB-01, WEB-02, GOV-01 | 5 (3 plans) |
 | 03 | Suggestion API Integration | Wire the suggestion API scaffold to the existing Blablador client while preserving its public API behavior and mocked tests. | API-01, API-02 | 4 |
 | 04 | Browser Curation Workflow | Add suggestion-driven curation to the static explorer with browser-memory decisions and TSV export only. | CUR-01, CUR-02, CUR-03 | 4 |
 | 05 | Streamlit Space Packaging | Package the existing Streamlit app into the Hugging Face Space scaffold with environment-based runtime configuration. | SPACE-01, SPACE-02 | 4 |
@@ -35,6 +35,13 @@ Integrate the reference deployment and curation scaffolds into the existing code
 3. The Vite explorer lives in the canonical Pages source, loads the real exported JSON, and does not depend on `claude_suggestions/` sample data.
 4. `.gitlab-ci.yml` has exactly one `pages` job after merging the scaffold CI snippet.
 5. Local `npm install` and `npm run build` succeed and produce `dist/` before the phase is committed.
+
+**Plans:** 3 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Tracer: end-to-end SSSOM→JSON→Vite→CI slice with pinned deps and test scaffolds
+- [ ] 02-02-PLAN.md — Rich audit export: full D-02 fields, strategy inference, header-driven standards, collision validation
+- [ ] 02-03-PLAN.md — Frontend polish: six-column table, strategy badges, ID escaping, nav integration
 
 ### Phase 03: Suggestion API Integration
 
