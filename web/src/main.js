@@ -23,6 +23,7 @@ async function main() {
   statusEl.textContent =
     `Loaded ${data.crosswalks.length} crosswalks across ${data.standards.length} standards. ` +
     'Running entirely in your browser, no server involved.';
+  statusEl.classList.remove('bad');
 
   selectEl.addEventListener('change', () => showCrosswalk(db, selectEl.value));
 
@@ -34,6 +35,10 @@ async function main() {
 
 function populateSelect(crosswalks) {
   selectEl.innerHTML = '';
+  if (crosswalks.length === 0) {
+    renderRules([]);
+    return;
+  }
   for (const cw of crosswalks) {
     const opt = document.createElement('option');
     opt.value = cw.id;
@@ -43,6 +48,10 @@ function populateSelect(crosswalks) {
 }
 
 async function showCrosswalk(db, crosswalkId) {
+  if (!crosswalkId) {
+    renderRules([]);
+    return;
+  }
   const result = await db.select(`crosswalk:${crosswalkId}`);
   const record = Array.isArray(result) ? result[0] : result;
   renderRules(record?.rules ?? []);
@@ -50,15 +59,40 @@ async function showCrosswalk(db, crosswalkId) {
 
 function renderRules(rules) {
   tbody.innerHTML = '';
+  if (rules.length === 0) {
+    const tr = document.createElement('tr');
+    tr.className = 'empty-state';
+    tr.innerHTML = `
+      <td colspan="6"><strong>No mapping rules</strong><br><span class="muted">This crosswalk has no defined rules. Verify the export pipeline ran successfully.</span></td>
+    `;
+    tbody.appendChild(tr);
+    return;
+  }
+
   for (const rule of rules) {
     const tr = document.createElement('tr');
     const confidence = typeof rule.confidence === 'number' ? rule.confidence.toFixed(2) : '';
+    const sourceText = rule.source_display || (rule.source_paths ?? []).join(' | ');
+    const targetPaths = Array.isArray(rule.target_paths) ? rule.target_paths : [];
+    const targetText =
+      targetPaths.length === 0
+        ? '<em>missing</em>'
+        : escapeHtml(rule.target_display || targetPaths.join(' | '));
+    const classes = [];
+    if (rule.semantic_loss === true) {
+      classes.push('bad');
+    }
+    if (targetPaths.length === 0) {
+      classes.push('warn');
+    }
+    tr.className = classes.join(' ');
     tr.innerHTML = `
-      <td>${escapeHtml(rule.source_path)}</td>
-      <td>${rule.target_path ? escapeHtml(rule.target_path) : '<em>missing</em>'}</td>
+      <td>${escapeHtml(sourceText)}</td>
+      <td>${targetText}</td>
       <td>${escapeHtml(rule.mapping_type ?? '')}</td>
-      <td>${confidence}</td>
-      <td>${escapeHtml(rule.evidence ?? '')}</td>
+      <td class="${confidence && Number(confidence) >= 0.9 ? 'good' : ''}">${confidence}</td>
+      <td><span class="strategy-badge strategy-${escapeHtml(rule.strategy ?? '')}">${escapeHtml(rule.strategy ?? '')}</span></td>
+      <td>${rule.semantic_loss === true ? '<span class="loss-icon" aria-label="semantic loss detected">⚠</span>' : ''}</td>
     `;
     tbody.appendChild(tr);
   }
@@ -72,5 +106,6 @@ function escapeHtml(str) {
 
 main().catch((err) => {
   console.error(err);
-  statusEl.textContent = `Error: ${err.message}`;
+  statusEl.textContent = 'Data unavailable: failed to load crosswalk_graph.json — expected at public/data/crosswalk_graph.json. Run the export script before building.';
+  statusEl.classList.add('bad');
 });
