@@ -15,3 +15,5 @@ data/crosswalk_network.json
 exports/graph/graph_data.txt
 exports/graph_visualizer_web/
 public/
+web/node_modules/
+web/dist/
