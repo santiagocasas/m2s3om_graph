@@ -542,6 +542,7 @@ def legacy_to_graphology(legacy_graph: dict[str, Any]) -> dict[str, Any]:
 
 
 def ensure_public() -> None:
+    # Any script writing to public/ must run after build_pages.py to survive the wipe.
     if PUBLIC.exists():
         shutil.rmtree(PUBLIC)
     PUBLIC.mkdir(parents=True)
