@@ -324,6 +324,8 @@ def render_page(title: str, active: str, body: str, subtitle: str) -> str:
         ("documentation.html", "Documentation"),
         ("graph.html", "Graph"),
         ("files.html", "Files"),
+        # Vite explorer built into public/explorer/ by the CI pages job (D-01)
+        ("explorer/index.html", "Explorer"),
     ]
     links = "".join(
         f'<a href="{href}"{(" class=\"active\"" if label == active else "")}>{label}</a>'
