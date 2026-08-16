@@ -15,7 +15,7 @@ Integrate the reference deployment and curation scaffolds into the existing code
 | 02 | Static Frontend Data Export | Orient in the current repo, export real crosswalk data, and integrate the Vite GitLab Pages explorer into the canonical Pages source. | DATA-01, WEB-01, WEB-02, GOV-01 | 5 (3 plans) |
   | 03 | Suggestion API Integration | Wire the suggestion API scaffold to the existing Blablador client while preserving its public API behavior and mocked tests. | API-01, API-02 | 4 (2 plans) |
 | 04 | Browser Curation Workflow | Add suggestion-driven curation to the static explorer with browser-memory decisions and TSV export only. | CUR-01, CUR-02, CUR-03 | 4 (2 plans) |
-| 05 | Streamlit Space Packaging | Package the existing Streamlit app into the Hugging Face Space scaffold with environment-based runtime configuration. | SPACE-01, SPACE-02 | 4 |
+| 05 | Streamlit Space Packaging | Package the existing Streamlit app into the Hugging Face Space scaffold with environment-based runtime configuration. | SPACE-01, SPACE-02 | 4 (2 plans) |
 
 ## Phase Details
 
@@ -109,6 +109,13 @@ Plans:
 2. Hardcoded localhost addresses and local file paths, especially SurrealDB connection settings, are replaced with `os.environ.get(...)` configuration.
 3. The Space README lists required Hugging Face Secrets/environment variables.
 4. The package does not import from or point runtime behavior at `claude_suggestions/`.
+
+**Plans:** 2 plans
+
+Plans:
+
+- [ ] 05-01-PLAN.md — Tracer: create `spaces/m2s3om-streamlit-space/` scaffold end-to-end (Dockerfile, pinned requirements, copied app/ + src/, guard test)
+- [ ] 05-02-PLAN.md — Full HF Space README documenting Docker SDK + all D-05 Secrets, with reproducible build script and README coverage test
 
 ## Coverage
 
