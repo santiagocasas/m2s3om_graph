@@ -59,3 +59,52 @@ def test_no_persistence_calls_in_main_js() -> None:
     text = _strip_js_comments(Path('web/src/main.js').read_text(encoding='utf-8'))
     for needle in ['localStorage', 'sessionStorage']:
         assert needle not in text, f'unexpected persistence call: {needle}'
+
+
+def test_curation_module_exports_tsv_builders() -> None:
+    text = Path('web/src/curation.js').read_text(encoding='utf-8')
+    assert 'export function buildAcceptedTsv' in text
+    assert 'export function downloadAcceptedTsv' in text
+
+
+def test_tsv_header_matches_spec() -> None:
+    text = Path('web/src/curation.js').read_text(encoding='utf-8')
+    assert 'source_standard\\tsource_field\\ttarget_path\\tmapping_type\\tconfidence\\tevidence\\tnotes' in text
+
+
+def test_download_uses_correct_filename_and_mime() -> None:
+    text = Path('web/src/curation.js').read_text(encoding='utf-8')
+    assert "'accepted_candidates.tsv'" in text
+    assert 'text/tab-separated-values' in text
+
+
+def test_download_creates_and_revokes_object_url() -> None:
+    text = Path('web/src/curation.js').read_text(encoding='utf-8')
+    assert 'URL.createObjectURL' in text
+    assert 'URL.revokeObjectURL' in text
+
+
+def test_index_html_has_export_button() -> None:
+    html = Path('web/index.html').read_text(encoding='utf-8')
+    assert 'id="export-tsv-btn"' in html
+
+
+def test_index_html_has_no_writeback_notice() -> None:
+    html = Path('web/index.html').read_text(encoding='utf-8')
+    assert 'Curation decisions live in this browser session only.' in html
+    assert 'merge into authoritative SSSOM files manually' in html
+    assert 'the explorer never writes back.' in html
+
+
+def test_main_js_wires_export_button() -> None:
+    text = Path('web/src/main.js').read_text(encoding='utf-8')
+    assert "getElementById('export-tsv-btn')" in text
+    assert 'downloadAcceptedTsv' in text
+    assert 'updateExportButton' in text
+    assert text.count('updateExportButton();') >= 2
+
+
+def test_curation_module_still_has_no_persistence() -> None:
+    text = _strip_js_comments(Path('web/src/curation.js').read_text(encoding='utf-8'))
+    for needle in ['localStorage', 'sessionStorage', 'indexedDB', 'indxdb:', 'db.create', 'db.merge', 'db.update']:
+        assert needle not in text, f'unexpected persistence call: {needle}'
