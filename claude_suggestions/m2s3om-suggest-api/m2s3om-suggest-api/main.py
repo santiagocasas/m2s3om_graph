@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from typing import Optional
 
@@ -15,7 +16,11 @@ from m2s3om_graph.rdamsc.llm_runtime import (
 app = FastAPI(title="M2S3OM-graph Suggestion API")
 
 ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    origin.strip()
+    for origin in os.environ.get(
+        "SUGGEST_API_ALLOWED_ORIGINS", "http://localhost:5173"
+    ).split(",")
+    if origin.strip()
 ]
 
 app.add_middleware(
@@ -54,7 +59,7 @@ def suggest(req: SuggestRequest):
         raise HTTPException(500, "BLABLADOR_API_KEY not configured on this Space")
 
     prompt = build_prompt(req)
-    raw = call_blablador(prompt)
+    raw = _suggest_with_request_guard(prompt)
     return parse_candidates(raw)
 
 
@@ -90,13 +95,30 @@ def call_blablador(prompt: str) -> str:
         headers={"Authorization": f"Bearer {config.api_key}"},
         json={
             "model": config.model,
-            "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0.2,
+            "temperature": 0,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        "You suggest candidate metadata mapping rules as strict JSON. "
+                        "Return CandidateRule objects with source_path, target_path, "
+                        "mapping_type, confidence, evidence, and optional notes."
+                    ),
+                },
+                {"role": "user", "content": prompt},
+            ],
         },
         timeout=config.timeout_s,
     )
     response.raise_for_status()
     return response.json()["choices"][0]["message"]["content"]
+
+
+def _suggest_with_request_guard(prompt: str) -> str:
+    try:
+        return call_blablador(prompt)
+    except requests.RequestException as exc:
+        raise HTTPException(502, f"Blablador request failed: {exc}") from exc
 
 
 def parse_candidates(raw: str) -> list[dict]:
