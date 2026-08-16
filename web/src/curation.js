@@ -10,6 +10,13 @@ function parseCrosswalkId(crosswalkId) {
   return sourceStandard || value;
 }
 
+function sanitizeTsvField(value) {
+  if (value == null) {
+    return '';
+  }
+  return String(value).replace(/[\t\r\n]/g, ' ');
+}
+
 export function getSuggestApiUrl() {
   return import.meta.env.VITE_SUGGEST_API_URL || 'http://localhost:8000/suggest';
 }
@@ -96,4 +103,38 @@ export function getRejectedCandidates() {
       candidate: entry.candidate,
       decidedAt: entry.decidedAt,
     }));
+}
+
+export function buildAcceptedTsv() {
+  const header = 'source_standard\tsource_field\ttarget_path\tmapping_type\tconfidence\tevidence\tnotes\n';
+  const rows = getAcceptedCandidates().map((entry) => {
+    const candidate = entry.candidate ?? {};
+    return [
+      parseCrosswalkId(entry.crosswalkId),
+      entry.sourceField,
+      candidate.target_path,
+      candidate.mapping_type,
+      candidate.confidence,
+      candidate.evidence,
+      candidate.notes,
+    ]
+      .map(sanitizeTsvField)
+      .join('\t');
+  });
+
+  return `${header}${rows.map((row) => `${row}\n`).join('')}`;
+}
+
+export function downloadAcceptedTsv(filenameOverride) {
+  const filename = filenameOverride || 'accepted_candidates.tsv';
+  const blob = new Blob([buildAcceptedTsv()], { type: 'text/tab-separated-values;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  return filename;
 }

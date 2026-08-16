@@ -5,11 +5,20 @@ import { loadGraphData } from './graph-loader.js';
 
 const statusEl = document.getElementById('status');
 const selectEl = document.getElementById('crosswalk-select');
+const exportBtn = document.getElementById('export-tsv-btn');
 const tbody = document.querySelector('#rules-table tbody');
 
 let currentCrosswalkRecord = null;
 const candidateRows = new WeakMap();
 const candidateData = new WeakMap();
+
+function updateExportButton() {
+  const count = curation.getAcceptedCandidates().length;
+  if (exportBtn instanceof HTMLButtonElement) {
+    exportBtn.textContent = `Export accepted (${count}) as TSV`;
+    exportBtn.disabled = count === 0;
+  }
+}
 
 async function main() {
   statusEl.textContent = 'Starting embedded SurrealDB (WASM)...';
@@ -31,6 +40,13 @@ async function main() {
   statusEl.classList.remove('bad');
 
   selectEl.addEventListener('change', () => showCrosswalk(db, selectEl.value));
+  if (exportBtn instanceof HTMLButtonElement) {
+    exportBtn.addEventListener('click', () => {
+      if (!exportBtn.disabled) {
+        curation.downloadAcceptedTsv();
+      }
+    });
+  }
   if (!tbody.dataset.curationBound) {
     tbody.addEventListener('click', handleTbodyClick);
     tbody.dataset.curationBound = '1';
@@ -40,6 +56,8 @@ async function main() {
     selectEl.value = data.crosswalks[0].id;
     await showCrosswalk(db, data.crosswalks[0].id);
   }
+
+  updateExportButton();
 }
 
 function populateSelect(crosswalks) {
@@ -230,6 +248,8 @@ function handleDecisionClick(button) {
     curation.rejectCandidate(currentCrosswalkRecord.id, sourceField, candidate);
     markCandidateRow(candidateRow, 'rejected', 'Rejected ✗');
   }
+
+  updateExportButton();
 }
 
 function markCandidateRow(row, status, label) {

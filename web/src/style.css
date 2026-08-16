@@ -39,6 +39,37 @@ header p {
   margin: 1rem 0;
 }
 
+#export-tsv-btn {
+  background: var(--brand);
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+#export-tsv-btn:hover {
+  background: var(--brand-dark);
+}
+
+#export-tsv-btn:disabled {
+  background: var(--muted);
+  cursor: not-allowed;
+}
+
+#no-writeback-notice.notice {
+  background: #fff7e6;
+  border-left: 3px solid var(--accent);
+  padding: 0.6rem 0.9rem;
+  margin: 0.75rem 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+  border-radius: 6px;
+}
+
 #status {
   color: var(--muted);
   font-size: 0.95rem;
