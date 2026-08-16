@@ -30,6 +30,7 @@ Integrate the reference deployment and curation scaffolds into the existing code
 **UI hint:** yes
 
 **Success criteria:**
+
 1. The implementation has read the existing Pages setup, Streamlit/SurrealDB wiring, Blablador client, SSSOM TSV storage, standards list, and all three scaffold folders before code changes.
 2. A Python export script in the existing pipeline codebase writes JSON with `standards[]`, `crosswalks[]`, and nested `rules[]` from committed SSSOM TSVs and standards data.
 3. The Vite explorer lives in the canonical Pages source, loads the real exported JSON, and does not depend on `claude_suggestions/` sample data.
@@ -39,6 +40,7 @@ Integrate the reference deployment and curation scaffolds into the existing code
 **Plans:** 3 plans
 
 Plans:
+
 - [x] 02-01-PLAN.md — Tracer: end-to-end SSSOM→JSON→Vite→CI slice with pinned deps and test scaffolds
 - [x] 02-02-PLAN.md — Rich audit export: full D-02 fields, strategy inference, header-driven standards, collision validation
 - [x] 02-03-PLAN.md — Frontend polish: six-column table, strategy badges, ID escaping, nav integration
@@ -54,6 +56,7 @@ Plans:
 **UI hint:** no
 
 **Success criteria:**
+
 1. `call_blablador(prompt: str) -> str` keeps the same signature and delegates to the existing extraction-pipeline Blablador client.
 2. `BLABLADOR_BASE_URL` and `BLABLADOR_MODEL` defaults match the existing pipeline defaults or are corrected with evidence.
 3. `ALLOWED_ORIGINS` is not guessed; unresolved production Pages URL decisions are surfaced to the user.
@@ -62,6 +65,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
+
 - [x] 03-01-PLAN.md — Tracer: rewire `call_blablador` through `load_llm_runtime_config`; end-to-end mocked-LLM happy path + `/health` test
 - [x] 03-02-PLAN.md — Decide ALLOWED_ORIGINS (D-05) & prompt format (D-06); harden D-07 error semantics; complete mocked-LLM test coverage (500 + 502 branches)
 
@@ -76,16 +80,18 @@ Plans:
 **UI hint:** yes
 
 **Success criteria:**
+
 1. The static explorer shows "Suggest candidate mappings" only for source fields with no existing rule in the selected crosswalk.
 2. The button posts to the suggestion API `/suggest` endpoint and renders returned candidates.
 3. Curators can accept or reject candidates in browser memory for the current session.
 4. Accepted candidates can be exported as `accepted_candidates.tsv`, and the UI does not imply automatic write-back to authoritative SSSOM files.
 
-**Plans:** 2 plans
+**Plans:** 2/2 plans executed
 
 Plans:
-- [ ] 04-01-PLAN.md — Tracer: Suggest button gated by empty target_paths (D-01), env-driven `/suggest` fetch (D-03/D-04), inline candidate rendering with Accept/Reject to in-memory store (D-05/D-06)
-- [ ] 04-02-PLAN.md — TSV export of accepted candidates as `accepted_candidates.tsv` (D-07) plus explicit no-write-back UI notice; extend smoke tests
+
+- [x] 04-01-PLAN.md — Tracer: Suggest button gated by empty target_paths (D-01), env-driven `/suggest` fetch (D-03/D-04), inline candidate rendering with Accept/Reject to in-memory store (D-05/D-06)
+- [x] 04-02-PLAN.md — TSV export of accepted candidates as `accepted_candidates.tsv` (D-07) plus explicit no-write-back UI notice; extend smoke tests
 
 ### Phase 05: Streamlit Space Packaging
 
@@ -98,6 +104,7 @@ Plans:
 **UI hint:** no
 
 **Success criteria:**
+
 1. The Space scaffold contains the existing Streamlit entrypoint, supporting modules, requirements, Dockerfile, and README in the final location.
 2. Hardcoded localhost addresses and local file paths, especially SurrealDB connection settings, are replaced with `os.environ.get(...)` configuration.
 3. The Space README lists required Hugging Face Secrets/environment variables.
@@ -120,6 +127,7 @@ Plans:
 | GOV-01 | Phase 02 | Pending |
 
 **Coverage:**
+
 - v2.0 requirements: 11 total
 - Mapped to phases: 11
 - Unmapped: 0

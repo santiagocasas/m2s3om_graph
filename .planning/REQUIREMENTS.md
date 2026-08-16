@@ -23,9 +23,9 @@ Requirements for the Deployment Surfaces milestone. Each requirement maps to exa
 
 ### Curation UI
 
-- [ ] **CUR-01**: Curator sees a "Suggest candidate mappings" action only for source fields that have no existing rule in the currently selected crosswalk.
-- [ ] **CUR-02**: Curator can request suggestions from the suggestion API, review returned candidates, and mark each candidate as accepted or rejected in browser memory.
-- [ ] **CUR-03**: Curator can export accepted in-session candidates as `accepted_candidates.tsv`; the static site does not write back to authoritative SSSOM files or imply automatic write-back.
+- [x] **CUR-01**: Curator sees a "Suggest candidate mappings" action only for source fields that have no existing rule in the currently selected crosswalk.
+- [x] **CUR-02**: Curator can request suggestions from the suggestion API, review returned candidates, and mark each candidate as accepted or rejected in browser memory.
+- [x] **CUR-03**: Curator can export accepted in-session candidates as `accepted_candidates.tsv`; the static site does not write back to authoritative SSSOM files or imply automatic write-back.
 
 ### Streamlit Space
 
@@ -67,9 +67,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WEB-02 | Phase 02 | Pending |
 | API-01 | Phase 03 | Complete |
 | API-02 | Phase 03 | Complete |
-| CUR-01 | Phase 04 | Pending |
-| CUR-02 | Phase 04 | Pending |
-| CUR-03 | Phase 04 | Pending |
+| CUR-01 | Phase 04 | Complete |
+| CUR-02 | Phase 04 | Complete |
+| CUR-03 | Phase 04 | Complete |
 | SPACE-01 | Phase 05 | Pending |
 | SPACE-02 | Phase 05 | Pending |
 | GOV-01 | Phase 02 | Pending |
