@@ -14,7 +14,7 @@ Integrate the reference deployment and curation scaffolds into the existing code
 |-------|------|------|--------------|------------------|
 | 02 | Static Frontend Data Export | Orient in the current repo, export real crosswalk data, and integrate the Vite GitLab Pages explorer into the canonical Pages source. | DATA-01, WEB-01, WEB-02, GOV-01 | 5 (3 plans) |
   | 03 | Suggestion API Integration | Wire the suggestion API scaffold to the existing Blablador client while preserving its public API behavior and mocked tests. | API-01, API-02 | 4 (2 plans) |
-| 04 | Browser Curation Workflow | Add suggestion-driven curation to the static explorer with browser-memory decisions and TSV export only. | CUR-01, CUR-02, CUR-03 | 4 |
+| 04 | Browser Curation Workflow | Add suggestion-driven curation to the static explorer with browser-memory decisions and TSV export only. | CUR-01, CUR-02, CUR-03 | 4 (2 plans) |
 | 05 | Streamlit Space Packaging | Package the existing Streamlit app into the Hugging Face Space scaffold with environment-based runtime configuration. | SPACE-01, SPACE-02 | 4 |
 
 ## Phase Details
@@ -80,6 +80,12 @@ Plans:
 2. The button posts to the suggestion API `/suggest` endpoint and renders returned candidates.
 3. Curators can accept or reject candidates in browser memory for the current session.
 4. Accepted candidates can be exported as `accepted_candidates.tsv`, and the UI does not imply automatic write-back to authoritative SSSOM files.
+
+**Plans:** 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Tracer: Suggest button gated by empty target_paths (D-01), env-driven `/suggest` fetch (D-03/D-04), inline candidate rendering with Accept/Reject to in-memory store (D-05/D-06)
+- [ ] 04-02-PLAN.md — TSV export of accepted candidates as `accepted_candidates.tsv` (D-07) plus explicit no-write-back UI notice; extend smoke tests
 
 ### Phase 05: Streamlit Space Packaging
 
