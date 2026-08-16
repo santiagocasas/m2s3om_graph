@@ -128,6 +128,95 @@ td.good {
   color: var(--muted);
 }
 
+.actions-cell {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.suggest-btn {
+  background: var(--brand);
+  color: white;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.suggest-btn:hover {
+  background: var(--brand-dark);
+}
+
+.suggest-btn:disabled {
+  background: var(--muted);
+  cursor: wait;
+}
+
+.candidate-row {
+  background: #f2f4f7;
+  border-left: 3px solid var(--brand);
+}
+
+.candidate-row.accepted {
+  border-left-color: var(--good);
+  background: rgba(47, 125, 87, 0.08);
+}
+
+.candidate-row.rejected {
+  border-left-color: var(--bad);
+  background: rgba(163, 58, 58, 0.08);
+  opacity: 0.65;
+}
+
+.candidate-error {
+  background: #fbecec;
+  color: var(--bad);
+  font-size: 0.9rem;
+}
+
+.candidate-fields {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.65rem;
+  align-items: center;
+}
+
+.candidate-fields .field-value {
+  color: var(--ink);
+}
+
+.candidate-fields .field-label {
+  color: var(--muted);
+}
+
+.candidate-row .accept-btn,
+.candidate-row .reject-btn {
+  margin-left: 0.5rem;
+  border: 0;
+  border-radius: 8px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.accept-btn {
+  background: var(--good);
+  color: white;
+}
+
+.reject-btn {
+  background: var(--bad);
+  color: white;
+}
+
+.accept-btn:disabled,
+.reject-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
 em {
   color: var(--muted);
   font-style: italic;

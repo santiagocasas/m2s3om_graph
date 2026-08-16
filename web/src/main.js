@@ -1,10 +1,15 @@
 import { Surreal } from 'surrealdb';
 import { createWasmEngines } from '@surrealdb/wasm';
+import * as curation from './curation.js';
 import { loadGraphData } from './graph-loader.js';
 
 const statusEl = document.getElementById('status');
 const selectEl = document.getElementById('crosswalk-select');
 const tbody = document.querySelector('#rules-table tbody');
+
+let currentCrosswalkRecord = null;
+const candidateRows = new WeakMap();
+const candidateData = new WeakMap();
 
 async function main() {
   statusEl.textContent = 'Starting embedded SurrealDB (WASM)...';
@@ -26,6 +31,10 @@ async function main() {
   statusEl.classList.remove('bad');
 
   selectEl.addEventListener('change', () => showCrosswalk(db, selectEl.value));
+  if (!tbody.dataset.curationBound) {
+    tbody.addEventListener('click', handleTbodyClick);
+    tbody.dataset.curationBound = '1';
+  }
 
   if (data.crosswalks.length > 0) {
     selectEl.value = data.crosswalks[0].id;
@@ -49,11 +58,13 @@ function populateSelect(crosswalks) {
 
 async function showCrosswalk(db, crosswalkId) {
   if (!crosswalkId) {
+    currentCrosswalkRecord = null;
     renderRules([]);
     return;
   }
   const result = await db.select(`crosswalk:${crosswalkId}`);
   const record = Array.isArray(result) ? result[0] : result;
+  currentCrosswalkRecord = record ?? null;
   renderRules(record?.rules ?? []);
 }
 
@@ -63,7 +74,7 @@ function renderRules(rules) {
     const tr = document.createElement('tr');
     tr.className = 'empty-state';
     tr.innerHTML = `
-      <td colspan="6"><strong>No mapping rules</strong><br><span class="muted">This crosswalk has no defined rules. Verify the export pipeline ran successfully.</span></td>
+      <td colspan="7"><strong>No mapping rules</strong><br><span class="muted">This crosswalk has no defined rules. Verify the export pipeline ran successfully.</span></td>
     `;
     tbody.appendChild(tr);
     return;
@@ -78,6 +89,7 @@ function renderRules(rules) {
       targetPaths.length === 0
         ? '<em>missing</em>'
         : escapeHtml(rule.target_display || targetPaths.join(' | '));
+    const shouldSuggest = !Array.isArray(rule.target_paths) || rule.target_paths.length === 0;
     const classes = [];
     if (rule.semantic_loss === true) {
       classes.push('bad');
@@ -93,9 +105,158 @@ function renderRules(rules) {
       <td class="${confidence && Number(confidence) >= 0.9 ? 'good' : ''}">${confidence}</td>
       <td><span class="strategy-badge strategy-${escapeHtml(rule.strategy ?? '')}">${escapeHtml(rule.strategy ?? '')}</span></td>
       <td>${rule.semantic_loss === true ? '<span class="loss-icon" aria-label="semantic loss detected">⚠</span>' : ''}</td>
+      <td class="actions-cell">${shouldSuggest ? `<button type="button" class="suggest-btn" data-source-field="${escapeHtml(sourceText)}">Suggest candidate mappings</button>` : '<span class="muted"></span>'}</td>
     `;
     tbody.appendChild(tr);
   }
+}
+
+function handleTbodyClick(event) {
+  if (!(event.target instanceof Element)) {
+    return;
+  }
+  const button = event.target.closest('button');
+  if (!(button instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  if (button.classList.contains('suggest-btn')) {
+    handleSuggestClick(button);
+    return;
+  }
+
+  if (button.classList.contains('accept-btn') || button.classList.contains('reject-btn')) {
+    handleDecisionClick(button);
+  }
+}
+
+async function handleSuggestClick(button) {
+  if (!currentCrosswalkRecord) {
+    return;
+  }
+
+  const triggerRow = button.closest('tr');
+  if (!(triggerRow instanceof HTMLTableRowElement)) {
+    return;
+  }
+
+  removeCandidateRows(triggerRow);
+  button.disabled = true;
+  button.textContent = 'Loading…';
+
+  const sourceField = button.dataset.sourceField ?? '';
+  const sourceStandard = String(currentCrosswalkRecord.source ?? '').replace(/^standard:/, '');
+  const targetStandard = String(currentCrosswalkRecord.target ?? '').replace(/^standard:/, '');
+  const targetSchemaFields = [
+    ...new Set((currentCrosswalkRecord.rules || []).flatMap((rule) => rule.target_paths || [])),
+  ];
+
+  try {
+    const candidates = await curation.postSuggestRequest({
+      sourceStandard,
+      targetStandard,
+      sourceField,
+      targetSchemaFields,
+    });
+
+    renderCandidateRows(triggerRow, sourceField, candidates);
+    button.disabled = false;
+    button.textContent = 'Suggest candidate mappings';
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    const errorRow = document.createElement('tr');
+    errorRow.className = 'candidate-error';
+    errorRow.dataset.sourceField = sourceField;
+    errorRow.innerHTML = `<td colspan="7">${escapeHtml(message)}</td>`;
+    triggerRow.insertAdjacentElement('afterend', errorRow);
+    button.disabled = false;
+    button.textContent = 'Suggest candidate mappings';
+  }
+}
+
+function renderCandidateRows(triggerRow, sourceField, candidates) {
+  const list = Array.isArray(candidates) ? candidates : [];
+  removeCandidateRows(triggerRow);
+  candidateRows.set(triggerRow, []);
+
+  for (let index = list.length - 1; index >= 0; index -= 1) {
+    const candidate = list[index];
+    const row = document.createElement('tr');
+    row.className = 'candidate-row';
+    row.dataset.sourceField = sourceField;
+    candidateRows.set(triggerRow, [row, ...(candidateRows.get(triggerRow) || [])]);
+    candidateData.set(row, candidate);
+    row.innerHTML = `
+      <td colspan="7">
+        <div class="candidate-fields">
+          <span><span class="field-label">Source:</span> <span class="field-value">${escapeHtml(candidate?.source_path ?? '')}</span></span>
+          <span><span class="field-label">Target:</span> <span class="field-value">${escapeHtml(candidate?.target_path ?? '(none)')}</span></span>
+          <span><span class="field-label">Type:</span> <span class="field-value">${escapeHtml(candidate?.mapping_type ?? '')}</span></span>
+          <span><span class="field-label">Confidence:</span> <span class="field-value">${formatConfidence(candidate?.confidence)}</span></span>
+          <span><span class="field-label">Evidence:</span> <span class="field-value">${escapeHtml(candidate?.evidence ?? '')}</span></span>
+          <span><span class="field-label">Notes:</span> <span class="field-value">${escapeHtml(candidate?.notes ?? '')}</span></span>
+          <button type="button" class="accept-btn" data-candidate-idx="${index}">Accept</button>
+          <button type="button" class="reject-btn" data-candidate-idx="${index}">Reject</button>
+        </div>
+      </td>
+    `;
+    triggerRow.insertAdjacentElement('afterend', row);
+  }
+}
+
+function handleDecisionClick(button) {
+  const candidateRow = button.closest('.candidate-row');
+  if (!(candidateRow instanceof HTMLTableRowElement)) {
+    return;
+  }
+
+  const triggerRow = candidateRow.previousElementSibling;
+  if (!(triggerRow instanceof HTMLTableRowElement)) {
+    return;
+  }
+
+  const sourceField = candidateRow.dataset.sourceField ?? '';
+  const candidates = candidateRows.get(triggerRow) || [];
+  const index = Number(button.dataset.candidateIdx ?? '-1');
+  const candidate = candidates[index] ?? candidateData.get(candidateRow);
+  if (!candidate || !currentCrosswalkRecord) {
+    return;
+  }
+
+  if (button.classList.contains('accept-btn')) {
+    curation.acceptCandidate(currentCrosswalkRecord.id, sourceField, candidate);
+    markCandidateRow(candidateRow, 'accepted', 'Accepted ✓');
+  } else {
+    curation.rejectCandidate(currentCrosswalkRecord.id, sourceField, candidate);
+    markCandidateRow(candidateRow, 'rejected', 'Rejected ✗');
+  }
+}
+
+function markCandidateRow(row, status, label) {
+  row.classList.remove('accepted', 'rejected');
+  row.classList.add(status);
+  const buttons = row.querySelectorAll('button');
+  buttons.forEach((button) => {
+    button.disabled = true;
+  });
+  const selectedButton = row.querySelector(`.${status === 'accepted' ? 'accept-btn' : 'reject-btn'}`);
+  if (selectedButton instanceof HTMLButtonElement) {
+    selectedButton.textContent = label;
+  }
+}
+
+function removeCandidateRows(triggerRow) {
+  let next = triggerRow.nextElementSibling;
+  while (next && (next.classList.contains('candidate-row') || next.classList.contains('candidate-error'))) {
+    const current = next;
+    next = next.nextElementSibling;
+    current.remove();
+  }
+  candidateRows.delete(triggerRow);
+}
+
+function formatConfidence(value) {
+  return typeof value === 'number' ? value.toFixed(2) : escapeHtml(String(value ?? ''));
 }
 
 function escapeHtml(str) {
