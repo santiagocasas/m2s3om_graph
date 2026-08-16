@@ -18,8 +18,8 @@ Requirements for the Deployment Surfaces milestone. Each requirement maps to exa
 
 ### Suggestion API
 
-- [ ] **API-01**: The suggestion API keeps the existing `call_blablador(prompt: str) -> str` signature while delegating to the repository's existing Blablador client and matching its default base URL/model settings.
-- [ ] **API-02**: Maintainer can run mocked-LLM tests confirming `/health` and `/suggest` still work after the real Blablador client is wired in.
+- [x] **API-01**: The suggestion API keeps the existing `call_blablador(prompt: str) -> str` signature while delegating to the repository's existing Blablador client and matching its default base URL/model settings.
+- [x] **API-02**: Maintainer can run mocked-LLM tests confirming `/health` and `/suggest` still work after the real Blablador client is wired in.
 
 ### Curation UI
 
@@ -65,8 +65,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-01 | Phase 02 | Pending |
 | WEB-01 | Phase 02 | Pending |
 | WEB-02 | Phase 02 | Pending |
-| API-01 | Phase 03 | Pending |
-| API-02 | Phase 03 | Pending |
+| API-01 | Phase 03 | Complete |
+| API-02 | Phase 03 | Complete |
 | CUR-01 | Phase 04 | Pending |
 | CUR-02 | Phase 04 | Pending |
 | CUR-03 | Phase 04 | Pending |
@@ -75,6 +75,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | GOV-01 | Phase 02 | Pending |
 
 **Coverage:**
+
 - v2.0 requirements: 11 total
 - Mapped to phases: 11
 - Unmapped: 0

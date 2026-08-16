@@ -13,7 +13,7 @@ Integrate the reference deployment and curation scaffolds into the existing code
 | Phase | Name | Goal | Requirements | Success Criteria |
 |-------|------|------|--------------|------------------|
 | 02 | Static Frontend Data Export | Orient in the current repo, export real crosswalk data, and integrate the Vite GitLab Pages explorer into the canonical Pages source. | DATA-01, WEB-01, WEB-02, GOV-01 | 5 (3 plans) |
-| 03 | Suggestion API Integration | Wire the suggestion API scaffold to the existing Blablador client while preserving its public API behavior and mocked tests. | API-01, API-02 | 4 |
+  | 03 | Suggestion API Integration | Wire the suggestion API scaffold to the existing Blablador client while preserving its public API behavior and mocked tests. | API-01, API-02 | 4 (2 plans) |
 | 04 | Browser Curation Workflow | Add suggestion-driven curation to the static explorer with browser-memory decisions and TSV export only. | CUR-01, CUR-02, CUR-03 | 4 |
 | 05 | Streamlit Space Packaging | Package the existing Streamlit app into the Hugging Face Space scaffold with environment-based runtime configuration. | SPACE-01, SPACE-02 | 4 |
 
@@ -39,9 +39,9 @@ Integrate the reference deployment and curation scaffolds into the existing code
 **Plans:** 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Tracer: end-to-end SSSOM→JSON→Vite→CI slice with pinned deps and test scaffolds
-- [ ] 02-02-PLAN.md — Rich audit export: full D-02 fields, strategy inference, header-driven standards, collision validation
-- [ ] 02-03-PLAN.md — Frontend polish: six-column table, strategy badges, ID escaping, nav integration
+- [x] 02-01-PLAN.md — Tracer: end-to-end SSSOM→JSON→Vite→CI slice with pinned deps and test scaffolds
+- [x] 02-02-PLAN.md — Rich audit export: full D-02 fields, strategy inference, header-driven standards, collision validation
+- [x] 02-03-PLAN.md — Frontend polish: six-column table, strategy badges, ID escaping, nav integration
 
 ### Phase 03: Suggestion API Integration
 
@@ -58,6 +58,12 @@ Plans:
 2. `BLABLADOR_BASE_URL` and `BLABLADOR_MODEL` defaults match the existing pipeline defaults or are corrected with evidence.
 3. `ALLOWED_ORIGINS` is not guessed; unresolved production Pages URL decisions are surfaced to the user.
 4. Mocked-LLM tests confirm `/health` and `/suggest` still work after wiring in the real client.
+
+**Plans:** 2 plans
+
+Plans:
+- [x] 03-01-PLAN.md — Tracer: rewire `call_blablador` through `load_llm_runtime_config`; end-to-end mocked-LLM happy path + `/health` test
+- [x] 03-02-PLAN.md — Decide ALLOWED_ORIGINS (D-05) & prompt format (D-06); harden D-07 error semantics; complete mocked-LLM test coverage (500 + 502 branches)
 
 ### Phase 04: Browser Curation Workflow
 
