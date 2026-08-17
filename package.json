@@ -1,0 +1,21 @@
+{
+  "name": "m2s3om-graph",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "export": "python scripts/export_crosswalk_json.py",
+    "build-web": "npm --prefix web run build",
+    "dev-web": "npm --prefix web run dev",
+    "dev-server": "PYTHONPATH=src uv run uvicorn server.main:app --host 0.0.0.0 --port 7860",
+    "serve": "PYTHONPATH=src uv run uvicorn server.main:app --host 0.0.0.0 --port 7860",
+    "dev": "concurrently \"npm run export\" \"npm run dev-web\" \"npm run dev-server\"",
+    "hf:build": "npm run export && npm run build-web",
+    "docker:build": "docker build -t m2s3om-graph .",
+    "docker:run": "docker compose up --build",
+    "docker:dev": "echo 'Starting Docker backend in background...\\nThen run in a second terminal: npm run dev-web\\nOpen http://localhost:5173' && docker compose up -d",
+    "docker:stop": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
