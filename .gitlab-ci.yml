@@ -27,7 +27,7 @@ pages:
   - python3 scripts/export_crosswalk_json.py
   - cd web && npm ci && npm run build && cd ..
   - mkdir -p public/explorer && cp -r web/dist/. public/explorer/
-  - mkdir -p public/explorer/data && cp public/data/crosswalk_graph.json public/explorer/data/crosswalk_graph.json
+  - mkdir -p public/explorer/data && cp web/public/data/crosswalk_graph.json public/explorer/data/crosswalk_graph.json
   artifacts:
     paths:
     - public

@@ -17,3 +17,5 @@ exports/graph_visualizer_web/
 public/
 web/node_modules/
 web/dist/
+node_modules/
+build

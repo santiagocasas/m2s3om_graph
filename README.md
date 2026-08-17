@@ -145,6 +145,32 @@ Use it only when you intentionally want to regenerate outputs with current pipel
 - `src/m2s3om_graph/candidates`: AI-assisted candidate mapping suggestions (non-baseline)
 - `app/app.py`: Streamlit app with 3 working tabs (Crosswalks, Pipeline, Convert)
 
+## Hugging Face Spaces — Unified Vite + FastAPI App
+
+The repo now builds a single Docker image for Hugging Face Spaces that serves a Vite frontend and FastAPI backend on port 7860.
+
+- Frontend: `web/` Vite app with Explore crosswalks and Convert a record page.
+- Backend: `server/main.py` exposes `/health`, `/suggest`, `/convert` and serves static files.
+- Build: `Dockerfile` multi-stage builds Vite and copies the dist into FastAPI.
+- Data: `web/public/data/crosswalk_graph.json` is exported by `scripts/export_crosswalk_json.py` and copied to GitLab Pages.
+
+Run locally:
+
+```bash
+# Build frontend
+cd web && npm install && npm run build
+
+# Run backend
+uv run uvicorn server.main:app --host 0.0.0.0 --port 7860
+```
+
+Hugging Face Space secrets:
+
+- `BLABLADOR_API_KEY` for suggestion API
+- `SUGGEST_API_ALLOWED_ORIGINS` CORS allowlist
+
+GitLab Pages continues to serve the static mirror at `public/data/crosswalk_graph.json` for read-only browsing.
+
 ## Current status
 
 This repository currently provides:
