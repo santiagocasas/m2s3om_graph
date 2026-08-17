@@ -1,0 +1,8 @@
+services:
+  app:
+    build: .
+    ports:
+      - "7860:7860"
+    environment:
+      - PYTHONPATH=/app/src
+      - SUGGEST_API_ALLOWED_ORIGINS=*

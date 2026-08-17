@@ -9,10 +9,15 @@
 <body>
   <header>
     <h1>M²S³OM-graph</h1>
+    <nav id="nav">
+      <button data-page="explore" class="active">Explore</button>
+      <button data-page="convert">Convert</button>
+    </nav>
     <p>Browse extracted metadata crosswalks. Runs entirely in your browser via an embedded SurrealDB instance, no server, no API calls.</p>
   </header>
 
   <main>
+    <div id="app"></div>
     <section id="controls">
       <label for="crosswalk-select">Crosswalk</label>
       <select id="crosswalk-select"></select>

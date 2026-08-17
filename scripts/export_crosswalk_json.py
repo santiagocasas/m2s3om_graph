@@ -1,6 +1,6 @@
-"""Export committed SSSOM TSV crosswalks to public/data/crosswalk_graph.json.
+"""Export committed SSSOM TSV crosswalks to web/public/data/crosswalk_graph.json.
 
-Local build: python scripts/build_pages.py && python scripts/export_crosswalk_json.py && (cd web && npm ci && npm run build) && mkdir -p public/explorer/data && cp -r web/dist/. public/explorer/ && cp public/data/crosswalk_graph.json public/explorer/data/
+Local build: python scripts/build_pages.py && python scripts/export_crosswalk_json.py && (cd web && npm ci && npm run build) && mkdir -p public/explorer/data && cp -r web/dist/. public/explorer/ && cp web/public/data/crosswalk_graph.json public/explorer/data/
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 SSSOM_DIR = ROOT / "exports" / "sssom"
-OUTPUT_PATH = ROOT / "public" / "data" / "crosswalk_graph.json"
+OUTPUT_PATH = ROOT / "web" / "public" / "data" / "crosswalk_graph.json"
 
 
 def _payload_from_comment(comment: str) -> dict[str, object]:
