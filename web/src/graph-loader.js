@@ -1,3 +1,5 @@
+import { RecordId } from 'surrealdb';
+
 /**
  * Loads a crosswalk graph export (standards + crosswalks with rules) into
  * an already-connected SurrealDB instance (WASM-embedded, mem:// or indxdb://).
@@ -18,6 +20,10 @@ function escapeId(raw) {
   return /[^a-zA-Z0-9_]/.test(String(raw)) ? '`' + raw + '`' : String(raw);
 }
 
+function recordId(table, id) {
+  return new RecordId(table, id);
+}
+
 export async function loadGraphData(db, jsonUrl) {
   const res = await fetch(jsonUrl);
   if (!res.ok) {
@@ -26,15 +32,19 @@ export async function loadGraphData(db, jsonUrl) {
   const data = await res.json();
 
   for (const standard of data.standards) {
-    await db.create(`standard:${escapeId(standard.id)}`, { name: standard.name });
+    await db
+      .upsert(recordId('standard', escapeId(standard.id)))
+      .content({ name: standard.name });
   }
 
   for (const crosswalk of data.crosswalks) {
-    await db.create(`crosswalk:${escapeId(crosswalk.id)}`, {
-      source: `standard:${escapeId(crosswalk.source)}`,
-      target: `standard:${escapeId(crosswalk.target)}`,
-      rules: crosswalk.rules,
-    });
+    await db
+      .upsert(recordId('crosswalk', escapeId(crosswalk.id)))
+      .content({
+        source: recordId('standard', escapeId(crosswalk.source)),
+        target: recordId('standard', escapeId(crosswalk.target)),
+        rules: crosswalk.rules,
+      });
   }
 
   return data;

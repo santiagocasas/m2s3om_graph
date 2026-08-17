@@ -1,12 +1,38 @@
-import { Surreal } from 'surrealdb';
+import { RecordId, Surreal } from 'surrealdb';
 import { createWasmEngines } from '@surrealdb/wasm';
 import * as curation from './curation.js';
 import { loadGraphData } from './graph-loader.js';
+import { renderConvertPage } from './convert.js';
 
 const statusEl = document.getElementById('status');
 const selectEl = document.getElementById('crosswalk-select');
 const exportBtn = document.getElementById('export-tsv-btn');
 const tbody = document.querySelector('#rules-table tbody');
+
+const appContainer = document.getElementById('app');
+const nav = document.getElementById('nav');
+function navigate(page) {
+  if (nav) {
+    [...nav.children].forEach(btn => btn.classList.toggle('active', btn.dataset.page === page));
+  }
+  if (page === 'convert') {
+    document.getElementById('controls')?.remove();
+    document.getElementById('status')?.remove();
+    document.getElementById('rules-table-container')?.remove();
+    document.getElementById('no-writeback-notice')?.remove();
+    renderConvertPage();
+    return;
+  }
+  // Reset explorer view
+  location.reload();
+}
+if (nav) {
+  nav.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-page]');
+    if (!btn) return;
+    navigate(btn.dataset.page);
+  });
+}
 
 let currentCrosswalkRecord = null;
 const candidateRows = new WeakMap();
@@ -23,15 +49,22 @@ function updateExportButton() {
 async function main() {
   statusEl.textContent = 'Starting embedded SurrealDB (WASM)...';
 
-  const db = new Surreal({ engines: createWasmEngines() });
+  let db = new Surreal({ engines: createWasmEngines() });
 
-  // indxdb:// persists across reloads via IndexedDB. Swap to mem:// for a
-  // fresh, throwaway database on every page load instead.
-  await db.connect('indxdb://m2s3om');
-  await db.use({ namespace: 'm2s3om', database: 'crosswalks' });
+  // IndexedDB can be unavailable in restricted browser contexts. Keep the
+  // explorer usable with an in-memory database when that happens.
+  try {
+    await db.connect('indxdb://m2s3om');
+    await db.use({ namespace: 'm2s3om', database: 'crosswalks' });
+  } catch (error) {
+    console.warn('IndexedDB SurrealDB storage unavailable; using memory storage.', error);
+    db = new Surreal({ engines: createWasmEngines() });
+    await db.connect('mem://m2s3om');
+    await db.use({ namespace: 'm2s3om', database: 'crosswalks' });
+  }
 
   statusEl.textContent = 'Loading crosswalk data...';
-  const data = await loadGraphData(db, './data/crosswalk_graph.json');
+  const data = await loadGraphData(db, '/data/crosswalk_graph.json');
 
   populateSelect(data.crosswalks);
   statusEl.textContent =
@@ -80,7 +113,7 @@ async function showCrosswalk(db, crosswalkId) {
     renderRules([]);
     return;
   }
-  const result = await db.select(`crosswalk:${crosswalkId}`);
+  const result = await db.select(new RecordId('crosswalk', crosswalkId));
   const record = Array.isArray(result) ? result[0] : result;
   currentCrosswalkRecord = record ?? null;
   renderRules(record?.rules ?? []);
@@ -287,6 +320,6 @@ function escapeHtml(str) {
 
 main().catch((err) => {
   console.error(err);
-  statusEl.textContent = 'Data unavailable: failed to load crosswalk_graph.json — expected at public/data/crosswalk_graph.json. Run the export script before building.';
+  statusEl.textContent = `Explorer failed to start: ${err instanceof Error ? err.message : String(err)}`;
   statusEl.classList.add('bad');
 });
