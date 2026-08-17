@@ -15,7 +15,7 @@ Integrate the reference deployment and curation scaffolds into the existing code
 | 02 | Static Frontend Data Export | Orient in the current repo, export real crosswalk data, and integrate the Vite GitLab Pages explorer into the canonical Pages source. | DATA-01, WEB-01, WEB-02, GOV-01 | 5 (3 plans) |
   | 03 | Suggestion API Integration | Wire the suggestion API scaffold to the existing Blablador client while preserving its public API behavior and mocked tests. | API-01, API-02 | 4 (2 plans) |
 | 04 | Browser Curation Workflow | Add suggestion-driven curation to the static explorer with browser-memory decisions and TSV export only. | CUR-01, CUR-02, CUR-03 | 4 (2 plans) |
-| 05 | Streamlit Space Packaging | Package the existing Streamlit app into the Hugging Face Space scaffold with environment-based runtime configuration. | SPACE-01, SPACE-02 | 4 (2 plans) |
+| 05 | Unified Vite+FastAPI App Packaging | Unify the Vite explorer and FastAPI suggestion backend into a single Hugging Face Space Docker image, add a Convert-a-record page, keep GitLab Pages as static mirror, and keep Streamlit internal only. | SPACE-01, SPACE-02 | 4 (2+ plans) |
 
 ## Phase Details
 
@@ -93,29 +93,29 @@ Plans:
 - [x] 04-01-PLAN.md — Tracer: Suggest button gated by empty target_paths (D-01), env-driven `/suggest` fetch (D-03/D-04), inline candidate rendering with Accept/Reject to in-memory store (D-05/D-06)
 - [x] 04-02-PLAN.md — TSV export of accepted candidates as `accepted_candidates.tsv` (D-07) plus explicit no-write-back UI notice; extend smoke tests
 
-### Phase 05: Streamlit Space Packaging
+### Phase 05: Unified Vite+FastAPI App Packaging
 
-**Goal:** Turn the Streamlit Space scaffold into a deployable wrapper around the existing Streamlit app with environment-driven configuration.
+**Goal:** Replace the Streamlit Space scaffold with a unified Vite+FastAPI Hugging Face Space. Extend the existing FastAPI suggestion backend to a top-level `server/` directory, add a new Convert-a-record endpoint and Vite page, and package both frontend and backend in a multi-stage Docker image. GitLab Pages remains a static, browse-only mirror. Streamlit (`app/`) remains internal only.
 
-**Depends on:** Phase 02
+**Depends on:** Phase 04
 
 **Requirements:** SPACE-01, SPACE-02
 
-**UI hint:** no
+**UI hint:** yes
 
 **Success criteria:**
 
-1. The Space scaffold contains the existing Streamlit entrypoint, supporting modules, requirements, Dockerfile, and README in the final location.
-2. Hardcoded localhost addresses and local file paths, especially SurrealDB connection settings, are replaced with `os.environ.get(...)` configuration.
-3. The Space README lists required Hugging Face Secrets/environment variables.
-4. The package does not import from or point runtime behavior at `claude_suggestions/`.
+1. A top-level `server/` FastAPI app provides `/health`, `/suggest`, and a new `/convert` endpoint wrapping `src/m2s3om_graph/transform` logic.
+2. The Vite explorer is extended with a Convert-a-record page, sharing the existing env-driven API client pattern.
+3. A multi-stage Dockerfile builds Vite `dist/` and serves it via FastAPI `StaticFiles` on port 7860, deployable to Hugging Face Spaces.
+4. GitLab Pages continues to serve the static read-only explorer; Streamlit remains untouched and not packaged.
 
-**Plans:** 2 plans
+**Plans:** 2+ plans
 
 Plans:
 
-- [ ] 05-01-PLAN.md — Tracer: create `spaces/m2s3om-streamlit-space/` scaffold end-to-end (Dockerfile, pinned requirements, copied app/ + src/, guard test)
-- [ ] 05-02-PLAN.md — Full HF Space README documenting Docker SDK + all D-05 Secrets, with reproducible build script and README coverage test
+- [ ] 05-01-PLAN.md — Tracer: promote FastAPI to `server/`, add convert endpoint, extend Vite with convert page, multi-stage Dockerfile
+- [ ] 05-02-PLAN.md — Integration, verification, README, and cleanup of superseded Streamlit scaffold
 
 ## Coverage
 

@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Deployment Surfaces
-current_phase: 04
-status: complete
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-08-16T11:36:55.592Z"
-last_activity: 2026-08-16
-last_activity_desc: Phase 03 Suggestion API Integration executed and verified
+current_phase: 05
+status: planning
+stopped_at: Phase 05 Streamlit Space Packaging re-scoped to Unified Vite+FastAPI App
+last_updated: "2026-08-17T00:00:00.000Z"
+last_activity: 2026-08-17
+last_activity_desc: Phase 05 re-scoped to unified Vite+FastAPI app; Streamlit scaffold reverted; Vite export path fixed
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 11
+  total_plans: 7
   completed_plans: 7
   percent: 75
 ---
@@ -20,17 +20,17 @@ progress:
 
 ## Current Position
 
-Phase: 04 Browser Curation Workflow
-Plan: —
-Status: Complete
-Last activity: 2026-08-16 — Phase 04 Browser Curation Workflow executed and verified
+Phase: 05 Unified Vite+FastAPI App Packaging
+Plan: — re-discuss pending
+Status: Planning after re-scope
+Last activity: 2026-08-17 — Phase 05 re-scoped to unified Vite+FastAPI app; Streamlit scaffold reverted; Vite export path fixed
 
 ## Project Reference
 
 See: .planning/PROJECT.md (updated 2026-06-17)
 
 **Core value:** Enable cross-walking between metadata standards with machine-readable mapping rules and semantic-loss tracking.
-**Current focus:** Phase 04 Browser Curation Workflow
+**Current focus:** Phase 05 Unified Vite+FastAPI App Packaging
 
 ## Session
 
