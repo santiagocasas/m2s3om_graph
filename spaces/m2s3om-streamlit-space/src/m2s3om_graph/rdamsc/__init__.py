@@ -1,1 +1,0 @@
-"""RDAMSC integration package."""
