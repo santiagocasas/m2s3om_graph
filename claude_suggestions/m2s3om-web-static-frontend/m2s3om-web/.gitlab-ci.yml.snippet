@@ -1,0 +1,19 @@
+# This job assumes the static frontend lives in a `web/` folder at the repo
+# root. If your existing Pages setup already builds a `public/` folder some
+# other way (plain HTML, MkDocs, etc.), merge this into that pipeline rather
+# than running both, GitLab Pages only takes one `public/` artifact per job
+# named `pages`.
+
+pages:
+  image: node:20
+  stage: deploy
+  script:
+    - cd web
+    - npm install
+    - npm run build
+    - cp -r dist ../public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'

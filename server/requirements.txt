@@ -1,0 +1,5 @@
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.7
+requests>=2.31
+m2s3om-graph @ file:///home/casas/AI/m2s3om_graph
