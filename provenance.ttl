@@ -1,0 +1,733 @@
+@prefix agent: <https://example.org/prov/agent/> .
+@prefix aiprov: <https://w3id.org/aiprov/ns#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix verif: <https://example.org/prov/verification/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/prov/activity/promote-c01-docker-fastapi-packaging-human-confirmed> a aiprov:AuditPass ;
+    rdfs:label "Promotion of c01-docker-fastapi-packaging: ai-confirmed -> human-confirmed (User explicitly approved marking this commit as AI-generated with human approval.)"@en ;
+    prov:endedAtTime "2026-08-17T19:53:13.636011+02:00"^^xsd:dateTime ;
+    prov:used <https://example.org/prov/claim/c01-docker-fastapi-packaging> ;
+    prov:wasAssociatedWith agent:santiago-casas ;
+    aiprov:grantedRung verif:human-confirmed .
+
+<https://example.org/prov/activity/promote-c02-surreal-crosswalk-fix-human-confirmed> a aiprov:AuditPass ;
+    rdfs:label "Promotion of c02-surreal-crosswalk-fix: ai-confirmed -> human-confirmed (User explicitly approved marking this commit as AI-generated with human approval.)"@en ;
+    prov:endedAtTime "2026-08-17T19:53:20.558431+02:00"^^xsd:dateTime ;
+    prov:used <https://example.org/prov/claim/c02-surreal-crosswalk-fix> ;
+    prov:wasAssociatedWith agent:santiago-casas ;
+    aiprov:grantedRung verif:human-confirmed .
+
+<https://example.org/prov/activity/promote-c03-npm-docker-workflow-human-confirmed> a aiprov:AuditPass ;
+    rdfs:label "Promotion of c03-npm-docker-workflow: ai-confirmed -> human-confirmed (User explicitly approved marking this commit as AI-generated with human approval.)"@en ;
+    prov:endedAtTime "2026-08-17T19:53:26.622170+02:00"^^xsd:dateTime ;
+    prov:used <https://example.org/prov/claim/c03-npm-docker-workflow> ;
+    prov:wasAssociatedWith agent:santiago-casas ;
+    aiprov:grantedRung verif:human-confirmed .
+
+<https://example.org/prov/activity/promote-c04-deployment-fixtures-human-confirmed> a aiprov:AuditPass ;
+    rdfs:label "Promotion of c04-deployment-fixtures: ai-confirmed -> human-confirmed (User explicitly approved marking this commit as AI-generated with human approval.)"@en ;
+    prov:endedAtTime "2026-08-17T19:53:32.388448+02:00"^^xsd:dateTime ;
+    prov:used <https://example.org/prov/claim/c04-deployment-fixtures> ;
+    prov:wasAssociatedWith agent:santiago-casas ;
+    aiprov:grantedRung verif:human-confirmed .
+
+<https://example.org/prov/activity/promote-c05-planning-artifacts-human-confirmed> a aiprov:AuditPass ;
+    rdfs:label "Promotion of c05-planning-artifacts: ai-confirmed -> human-confirmed (User explicitly approved marking this commit as AI-generated with human approval.)"@en ;
+    prov:endedAtTime "2026-08-17T19:53:38.863250+02:00"^^xsd:dateTime ;
+    prov:used <https://example.org/prov/claim/c05-planning-artifacts> ;
+    prov:wasAssociatedWith agent:santiago-casas ;
+    aiprov:grantedRung verif:human-confirmed .
+
+<https://example.org/prov/activity/promote-c06-deployment-ci-guidance-human-confirmed> a aiprov:AuditPass ;
+    rdfs:label "Promotion of c06-deployment-ci-guidance: ai-confirmed -> human-confirmed (User explicitly approved marking this commit as AI-generated with human approval.)"@en ;
+    prov:endedAtTime "2026-08-17T19:53:44.913483+02:00"^^xsd:dateTime ;
+    prov:used <https://example.org/prov/claim/c06-deployment-ci-guidance> ;
+    prov:wasAssociatedWith agent:santiago-casas ;
+    aiprov:grantedRung verif:human-confirmed .
+
+<https://example.org/prov/entity/-gitignore> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a06-deployment-ci-guidance> ;
+    aiprov:contentHash "sha256:d1f71cd350e8c867b60457543a3b1771ab3ce3d663e681d1432572de4dab987c" ;
+    aiprov:filePath ".gitignore" ;
+    aiprov:gitCommit "5251477" .
+
+<https://example.org/prov/entity/-gitlab-ci-yml> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a06-deployment-ci-guidance> ;
+    aiprov:contentHash "sha256:e66381d04046a727bb560ec7990afe9c8eaa8a052f599fbc72650d8e5bd755bd" ;
+    aiprov:filePath ".gitlab-ci.yml" ;
+    aiprov:gitCommit "5251477" .
+
+<https://example.org/prov/entity/-gitlab-ci-yml-snippet> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:contentHash "sha256:027bcbfa5124873e3805f7170ba6eb97ad8bbf53a51501a3b5f729bd50b7f0b2" ;
+    aiprov:filePath "claude_suggestions/m2s3om-web-static-frontend/m2s3om-web/.gitlab-ci.yml.snippet" ;
+    aiprov:gitCommit "a592f22" .
+
+<https://example.org/prov/entity/01-introduction-tex> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
+    aiprov:contentHash "sha256:44d39b22fc21da114ef47cd8a78b44673e59a29cb3dcdae9bbb8dcfb339ce550" ;
+    aiprov:filePath "paper/sections/01-introduction.tex" .
+
+<https://example.org/prov/entity/02-CONTEXT-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
+    aiprov:contentHash "sha256:525e2616d8fa6302cdfff31055134f93a53cef96b2b92092b1f326068e1dafd0" ;
+    aiprov:filePath ".planning/phases/02-static-frontend-data-export/02-CONTEXT.md" ;
+    aiprov:gitCommit "b757b16" .
+
+<https://example.org/prov/entity/02-PATTERNS-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
+    aiprov:contentHash "sha256:d83e15caeafd6424d11df11334683543dc46a88426b60d9752b47177597b762f" ;
+    aiprov:filePath ".planning/phases/02-static-frontend-data-export/02-PATTERNS.md" ;
+    aiprov:gitCommit "b757b16" .
+
+<https://example.org/prov/entity/02-background-tex> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
+    aiprov:contentHash "sha256:88ec2b6ca484f902ae5470a2df3dba54043a096967ed24cc6ac863f4690f0e30" ;
+    aiprov:filePath "paper/sections/02-background.tex" .
+
+<https://example.org/prov/entity/03-01-PLAN-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
+    aiprov:contentHash "sha256:c97bd3041a33713808f65e47ddb3bfd3c404680b8ed6658d2b8b8054df941fcf" ;
+    aiprov:filePath ".planning/phases/03-suggestion-api-integration/03-01-PLAN.md" ;
+    aiprov:gitCommit "b757b16" .
+
+<https://example.org/prov/entity/03-02-PLAN-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
+    aiprov:contentHash "sha256:d24011029f8825c2f73bf8cddd4acf1a6d65a316db5ba7b3006957e3a34652eb" ;
+    aiprov:filePath ".planning/phases/03-suggestion-api-integration/03-02-PLAN.md" ;
+    aiprov:gitCommit "b757b16" .
+
+<https://example.org/prov/entity/03-CONTEXT-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
+    aiprov:contentHash "sha256:546f7de9bd88cd53db281fe4d6c6bf319216eede166fb6bd7ba5c6537792776b" ;
+    aiprov:filePath ".planning/phases/03-suggestion-api-integration/03-CONTEXT.md" ;
+    aiprov:gitCommit "b757b16" .
+
+<https://example.org/prov/entity/03-method-tex> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
+    aiprov:contentHash "sha256:810dcde2adeeb46dd6b2e3489cc9a4896ed1acc78d16e358de74faa16c352b6d" ;
+    aiprov:filePath "paper/sections/03-method.tex" .
+
+<https://example.org/prov/entity/04-results-tex> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
+    aiprov:contentHash "sha256:74e7916aec0acca30132e76a47933aed8b2f382bfa9f5db4647aeca8d3daff99" ;
+    aiprov:filePath "paper/sections/04-results.tex" .
+
+<https://example.org/prov/entity/05-01-PLAN-NEW-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
+    aiprov:contentHash "sha256:5a99a1f99380ee9af2073c260adaf76eb5b0d95dbb1247bf4e56e54703879837" ;
+    aiprov:filePath ".planning/phases/05-streamlit-space-packaging/05-01-PLAN-NEW.md" ;
+    aiprov:gitCommit "b757b16" .
+
+<https://example.org/prov/entity/05-CONTEXT-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
+    aiprov:contentHash "sha256:0fa7a795d21635aca667caef716a777baba2d3e3d598266513c976d125b5980f" ;
+    aiprov:filePath ".planning/phases/05-streamlit-space-packaging/05-CONTEXT.md" ;
+    aiprov:gitCommit "b757b16" .
+
+<https://example.org/prov/entity/05-DISCUSSION-LOG-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
+    aiprov:contentHash "sha256:16141b577492729e34a13ea300f9ebeb058f9855e93643340b2d2f0ecb8b9205" ;
+    aiprov:filePath ".planning/phases/05-streamlit-space-packaging/05-DISCUSSION-LOG.md" ;
+    aiprov:gitCommit "b757b16" .
+
+<https://example.org/prov/entity/05-discussion-tex> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
+    aiprov:contentHash "sha256:334b060c3551dc3da7ba681f656d98baed8593060d56eb23e80ef6b23087bb47" ;
+    aiprov:filePath "paper/sections/05-discussion.tex" .
+
+<https://example.org/prov/entity/06-conclusion-tex> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
+    aiprov:contentHash "sha256:c007ba06cd8528fedd2adeb1d931f1819cbcb392e9e50937f38786f910f5dd2b" ;
+    aiprov:filePath "paper/sections/06-conclusion.tex" .
+
+<https://example.org/prov/entity/DISCUSSION-LOG-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
+    aiprov:contentHash "sha256:d9b640e2fe68bd8cce363fd7d3a7f63bf4e359b92bf94005d1f100c4984c945c" ;
+    aiprov:filePath ".planning/phases/02-static-frontend-data-export/DISCUSSION-LOG.md" ;
+    aiprov:gitCommit "b757b16" .
+
+<https://example.org/prov/entity/Docker-improvements-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a03-npm-docker-workflow> ;
+    aiprov:contentHash "sha256:5b2642c6a6d289ca3a71390c358c0b46ec1c45e2fa1935fe95c593809a5f9393" ;
+    aiprov:filePath "Docker-improvements.md" ;
+    aiprov:gitCommit "7753de3" .
+
+<https://example.org/prov/entity/Dockerfile> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a01-docker-fastapi-packaging>,
+        <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:contentHash "sha256:0782b338e14f265bfe90fa7a304a5d597def773e4b7b094439ee122d5d72aaf2",
+        "sha256:4758d442e822c2d83cdb0cd24b5031c2613139e8f6ddc53de1170a7722034e67",
+        "sha256:b7c281f472ddbaa78d86ed20600de4c6d67d38d5b4f2749e9949b339b6f6c6cf" ;
+    aiprov:filePath "Dockerfile",
+        "claude_suggestions/m2s3om-streamlit-space-template/m2s3om-streamlit-space/Dockerfile",
+        "claude_suggestions/m2s3om-suggest-api/m2s3om-suggest-api/Dockerfile" ;
+    aiprov:gitCommit "7fc32da",
+        "a592f22" .
+
+<https://example.org/prov/entity/README-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a04-deployment-fixtures>,
+        <https://example.org/prov/activity/a06-deployment-ci-guidance> ;
+    aiprov:contentHash "sha256:3f01d50f80ed157a2a6f0bb087ed3a2fe456410a11da8b2632079c2163c3c7c3",
+        "sha256:d937588d5081c91d1abd11cabfbee180361dd031bb032ddd80c0d9f1f46ffbc4",
+        "sha256:daff18f1d016c1f877cedc6e1e92e3acc996b3bee23f59f5d7006f6a50ad2b9d" ;
+    aiprov:filePath "README.md",
+        "claude_suggestions/m2s3om-streamlit-space-template/m2s3om-streamlit-space/README.md",
+        "claude_suggestions/m2s3om-web-static-frontend/m2s3om-web/README.md" ;
+    aiprov:gitCommit "5251477",
+        "a592f22" .
+
+<https://example.org/prov/entity/ROADMAP-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
+    aiprov:contentHash "sha256:368335bd7067e043f617a12cc1092279c6ddb635f6abde490f323c62a5c646a6" ;
+    aiprov:filePath ".planning/ROADMAP.md" ;
+    aiprov:gitCommit "b757b16" .
+
+<https://example.org/prov/entity/STATE-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
+    aiprov:contentHash "sha256:b9a895439f8df5d9b0e918af28d03874dfba5577105806377c1afb515fe39c4b" ;
+    aiprov:filePath ".planning/STATE.md" ;
+    aiprov:gitCommit "b757b16" .
+
+<https://example.org/prov/entity/aiprov-build-yml> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
+    aiprov:contentHash "sha256:c9aa2e7510348bb05b8e68a87fad113305706603f6f259463547ccc83b870484" ;
+    aiprov:filePath ".github/workflows/aiprov-build.yml" .
+
+<https://example.org/prov/entity/aiprov-promote-yml> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
+    aiprov:contentHash "sha256:b2bd66b566cb311626c4e2b0e129e4d8dd4e4e66a08da94a2835288ab43e962c" ;
+    aiprov:filePath ".github/workflows/aiprov-promote.yml" .
+
+<https://example.org/prov/entity/aiprov-release-yml> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
+    aiprov:contentHash "sha256:1f93e6591b4cab66885b04c86dab45e6aec8607cadb12e7f477ee04f64ea6f95" ;
+    aiprov:filePath ".github/workflows/aiprov-release.yml" .
+
+<https://example.org/prov/entity/convert-js> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a01-docker-fastapi-packaging> ;
+    aiprov:contentHash "sha256:c3f501d2fc0d22b13d5ac3448f0945c48727b38978e63a2f7091f6c5fcb34c96" ;
+    aiprov:filePath "web/src/convert.js" ;
+    aiprov:gitCommit "7fc32da" .
+
+<https://example.org/prov/entity/disclosure-tex> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding>,
+        <https://example.org/prov/activity/a08-transparency-disclosure> ;
+    aiprov:contentHash "sha256:1ba1826f33607608386ff339cd65f745880d031310a1e094b2e4fc5595950ad8",
+        "sha256:5692d830eda43a6e14f9a44643580b57c7f6f991b70afdde16fb13ce9bd3855a" ;
+    aiprov:filePath "paper/disclosure.tex" .
+
+<https://example.org/prov/entity/docker-compose-yml> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a01-docker-fastapi-packaging> ;
+    aiprov:contentHash "sha256:3bf188182dfd762879dfd36e318113f8b9456ddabf01634c13d2dd5aaf3bafab" ;
+    aiprov:filePath "docker-compose.yml" ;
+    aiprov:gitCommit "7fc32da" .
+
+<https://example.org/prov/entity/export_crosswalk_json-py> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a01-docker-fastapi-packaging> ;
+    aiprov:contentHash "sha256:8a19ee00889ec047a6c2ea95569c3064948da22222b52962003e6a6bae446e62" ;
+    aiprov:filePath "scripts/export_crosswalk_json.py" ;
+    aiprov:gitCommit "7fc32da" .
+
+<https://example.org/prov/entity/graph-loader-js> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a02-surreal-crosswalk-fix>,
+        <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:contentHash "sha256:032374bc10d21b1fcc674cd754af5afa3ef30a5a0e842bfc5d52a0ec117a2b26",
+        "sha256:8f5a8cc58a25c29e3a4ca557f1ee7ec0cafe82ce58343b143561fa0233516bf1" ;
+    aiprov:filePath "claude_suggestions/m2s3om-web-static-frontend/m2s3om-web/src/graph-loader.js",
+        "web/src/graph-loader.js" ;
+    aiprov:gitCommit "2d89c6c",
+        "a592f22" .
+
+<https://example.org/prov/entity/index-html> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a01-docker-fastapi-packaging>,
+        <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:contentHash "sha256:506c0bcd8360ea44e42252ed583f68f3fa3527748ce7de76b3580754c6e1f325",
+        "sha256:e66cf08cdb539be3cbd677c2332e4b07c438f4b983eed333628f4c7c5da5b466" ;
+    aiprov:filePath "claude_suggestions/m2s3om-web-static-frontend/m2s3om-web/index.html",
+        "web/index.html" ;
+    aiprov:gitCommit "7fc32da",
+        "a592f22" .
+
+<https://example.org/prov/entity/main-js> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a02-surreal-crosswalk-fix>,
+        <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:contentHash "sha256:26134d237ce966683cedf07ec938d3a8a27759b3cacaeb11d798bffab0a5dde3",
+        "sha256:e59b9e1375ad83613922c18102b4fb804d79a5e1cb3f27fd962a6c1ed6352313" ;
+    aiprov:filePath "claude_suggestions/m2s3om-web-static-frontend/m2s3om-web/src/main.js",
+        "web/src/main.js" ;
+    aiprov:gitCommit "2d89c6c",
+        "a592f22" .
+
+<https://example.org/prov/entity/main-py> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a01-docker-fastapi-packaging> ;
+    aiprov:contentHash "sha256:ffd73117b496d652d1e589b9ba0eb6d577d5ea88be4d00bbadaa3c6838ec5779" ;
+    aiprov:filePath "server/main.py" ;
+    aiprov:gitCommit "7fc32da" .
+
+<https://example.org/prov/entity/main-tex> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
+    aiprov:contentHash "sha256:f67f456673f80e9d6af225d47031617ead07a341dd7fce7882e5a53ff71d200a" ;
+    aiprov:filePath "paper/main.tex" .
+
+<https://example.org/prov/entity/package-json> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a03-npm-docker-workflow>,
+        <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:contentHash "sha256:c11875054096a638bd649de3587c8ca7d83dc3d0e95d40fbe501bc66b0d29f40",
+        "sha256:e56e28050692475dc10b84ef1ccbd3e11c3b689aa54a76c3bb25866fdf486639" ;
+    aiprov:filePath "claude_suggestions/m2s3om-web-static-frontend/m2s3om-web/package.json",
+        "package.json" ;
+    aiprov:gitCommit "7753de3",
+        "a592f22" .
+
+<https://example.org/prov/entity/package-lock-json> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a03-npm-docker-workflow> ;
+    aiprov:contentHash "sha256:846057238665913c5b0716c0fccfd6ee1175520f19d8f6184f40741ff2fa0354" ;
+    aiprov:filePath "package-lock.json" ;
+    aiprov:gitCommit "7753de3" .
+
+<https://example.org/prov/entity/rdamsc_c19-sssom-tsv> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:contentHash "sha256:57e2a8c66b3509600cccb488c6fe84cc9b5ad2707db83a1d341d39bdafefa0f1" ;
+    aiprov:filePath "exports/sssom/rdamsc_c19.sssom.tsv" ;
+    aiprov:gitCommit "a592f22" .
+
+<https://example.org/prov/entity/rdamsc_c29-sssom-tsv> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:contentHash "sha256:3ea208a338a1ac7a7b7ecd6659e9ead7317f078601bf8809c1e3f20e5111614d" ;
+    aiprov:filePath "exports/sssom/rdamsc_c29.sssom.tsv" ;
+    aiprov:gitCommit "a592f22" .
+
+<https://example.org/prov/entity/references-bib> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
+    aiprov:contentHash "sha256:b86caf87c59c24a84941662f3ff6f8e61ae8eedc4d194f07054e257aa5f63497" ;
+    aiprov:filePath "paper/references.bib" .
+
+<https://example.org/prov/entity/requirements-txt> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:contentHash "sha256:5a5d01660df73238d2b6aa46cb5001835014979aabb27b8c16fc8f7bdb4c8a92",
+        "sha256:98bee509295940db69863392b89c3ba6c854f9ef3e5001580de604cf357e1764" ;
+    aiprov:filePath "claude_suggestions/m2s3om-suggest-api/m2s3om-suggest-api/requirements.txt",
+        "server/requirements.txt" ;
+    aiprov:gitCommit "a592f22" .
+
+<https://example.org/prov/entity/run_local-sh> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:contentHash "sha256:f8c19f55b0d629cf3baff71e3e771641145d358e14839ce81a7a12271609b660" ;
+    aiprov:filePath "run_local.sh" ;
+    aiprov:gitCommit "a592f22" .
+
+<https://example.org/prov/entity/style-css> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:contentHash "sha256:39193b23e24914f2a5f4072d77692466bb82e079b90eddca01af818552fa5ba1" ;
+    aiprov:filePath "claude_suggestions/m2s3om-web-static-frontend/m2s3om-web/src/style.css" ;
+    aiprov:gitCommit "a592f22" .
+
+<https://example.org/prov/entity/vite-config-js> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a03-npm-docker-workflow>,
+        <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:contentHash "sha256:1b5fdc3f03055b16ac40d33a42de9ab7690d8f46e8e9711f0a08035252014ea7",
+        "sha256:83de29b8dc61ed18dab8b69a59d824415fb6abd65e800fe19f327ea0b8fe3675" ;
+    aiprov:filePath "claude_suggestions/m2s3om-web-static-frontend/m2s3om-web/vite.config.js",
+        "web/vite.config.js" ;
+    aiprov:gitCommit "7753de3",
+        "a592f22" .
+
+verif:ai-confirmed a aiprov:VerificationState ;
+    rdfs:label "AI-confirmed"@en ;
+    rdfs:comment "An AI agent checked that the source CONTENT supports the associated claim (abstract/full-text cross-check). This is the highest rung an AI may grant; it is a machine judgement, not a human one."@en ;
+    aiprov:ladderPosition 3 .
+
+verif:human-read a aiprov:VerificationState ;
+    rdfs:label "human-read"@en ;
+    rdfs:comment "A HUMAN has read the source in full AND, with that full context, confirms the associated claim is supported. Subsumes the confirmation of human-confirmed with deeper familiarity; reading without confirming is not a rung and must not be recorded as one. Top of the ladder; consolidates the former lit-read rung. Human-only: an AI agent must never grant this rung."@en ;
+    skos:altLabel "lit-read"@en ;
+    aiprov:ladderPosition 6 .
+
+verif:needs-research a aiprov:VerificationState ;
+    rdfs:label "needs research"@en ;
+    rdfs:comment "A check was attempted or demanded and did not succeed (e.g. DOI did not resolve). Must not be cited or relied upon until re-verified."@en ;
+    aiprov:ladderPosition 1 .
+
+verif:reference-resolved a aiprov:VerificationState ;
+    rdfs:label "reference resolved"@en ;
+    rdfs:comment "The reference EXISTS: its DOI/URL resolved in a bibliographic registry (Crossref, OpenAlex, DataCite) and metadata was captured. Says nothing about whether the content supports anything."@en ;
+    skos:altLabel "lit-retrieved"@en,
+        "retrieved"@en ;
+    aiprov:ladderPosition 2 .
+
+verif:source-vendored a aiprov:VerificationState ;
+    rdfs:label "source vendored"@en ;
+    rdfs:comment "A copy of the source is preserved inside the repository, immune to link rot; the vendored bytes are what any later audit reads. Of no evidential value by itself: this rung is the ACCESS GATE to human verification — before granting the human-only rungs, the agent must hand the human either a vendored copy or a clear access link (DOI/URL), and tooling refuses the promotion otherwise."@en ;
+    aiprov:ladderPosition 4 .
+
+verif:unverified a aiprov:VerificationState ;
+    rdfs:label "unverified"@en ;
+    rdfs:comment "Recorded, nothing checked yet by anyone. Default state at creation."@en ;
+    aiprov:ladderPosition 0 .
+
+aiprov:AIContribution a owl:Class ;
+    rdfs:subClassOf aiprov:Contribution .
+
+aiprov:HumanContribution a owl:Class ;
+    rdfs:subClassOf aiprov:Contribution .
+
+aiprov:MetaContribution a owl:Class ;
+    rdfs:subClassOf aiprov:Contribution .
+
+aiprov:Prompt a owl:Class ;
+    rdfs:comment "A versioned prompt file. Bind to activities via prov:qualifiedAssociation/prov:hadPlan or dcterms:source."@en ;
+    rdfs:subClassOf prov:Plan .
+
+aiprov:ToolAgent a owl:Class ;
+    rdfs:label "Deterministic tool"@en ;
+    rdfs:comment "Non-AI software (compiler, linter, CI job) acting in the pipeline."@en ;
+    rdfs:subClassOf prov:SoftwareAgent .
+
+aiprov:Transcript a owl:Class ;
+    rdfs:comment "Preserved conversation record; bound to activities via aiprov:transcript."@en ;
+    rdfs:subClassOf prov:Entity .
+
+aiprov:affiliation a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+aiprov:cacheReadTokens a owl:DatatypeProperty ;
+    rdfs:range xsd:integer .
+
+aiprov:cacheWriteTokens a owl:DatatypeProperty ;
+    rdfs:range xsd:integer .
+
+aiprov:contentHash a owl:DatatypeProperty ;
+    rdfs:comment "sha256 of the artefact bytes at generation time."@en ;
+    rdfs:range xsd:string .
+
+aiprov:contextWindow a owl:DatatypeProperty ;
+    rdfs:range xsd:integer .
+
+aiprov:contradicts a owl:ObjectProperty ;
+    rdfs:domain aiprov:Claim ;
+    rdfs:range aiprov:Claim .
+
+aiprov:cost a owl:DatatypeProperty ;
+    rdfs:range xsd:decimal .
+
+aiprov:costCurrency a owl:DatatypeProperty ;
+    rdfs:comment "ISO 4217, e.g. EUR, USD."@en ;
+    rdfs:range xsd:string .
+
+aiprov:doi a owl:DatatypeProperty ;
+    rdfs:range xsd:anyURI .
+
+aiprov:endpoint a owl:DatatypeProperty ;
+    rdfs:comment "API endpoint or gateway URL through which the model was reached."@en ;
+    rdfs:range xsd:anyURI .
+
+aiprov:energyWh a owl:DatatypeProperty ;
+    rdfs:comment "Optional energy estimate for the inference, in watt-hours."@en ;
+    rdfs:range xsd:decimal .
+
+aiprov:filePath a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+aiprov:gitCommit a owl:DatatypeProperty ;
+    rdfs:comment "Commit hash binding the entity to repository state."@en ;
+    rdfs:range xsd:string .
+
+aiprov:grantedRung a owl:ObjectProperty ;
+    rdfs:comment "The rung granted by this promotion activity. Structured mirror of the promotion label, so conformance checks need not parse prose."@en ;
+    rdfs:domain aiprov:AuditPass ;
+    rdfs:range aiprov:VerificationState .
+
+aiprov:inputTokens a owl:DatatypeProperty ;
+    rdfs:range xsd:integer .
+
+aiprov:knowledgeCutoff a owl:DatatypeProperty ;
+    rdfs:range xsd:date .
+
+aiprov:ladderPosition a owl:DatatypeProperty ;
+    rdfs:comment "Total order of the ladder; promotions must strictly increase this value."@en ;
+    rdfs:domain aiprov:VerificationState ;
+    rdfs:range xsd:integer .
+
+aiprov:maxTokens a owl:DatatypeProperty ;
+    rdfs:range xsd:integer .
+
+aiprov:model a owl:DatatypeProperty ;
+    rdfs:comment "Model identifier, e.g. claude-opus-5."@en ;
+    rdfs:domain aiprov:AIAgent ;
+    rdfs:range xsd:string .
+
+aiprov:modelVersion a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+aiprov:orcid a owl:DatatypeProperty ;
+    rdfs:domain aiprov:HumanAgent ;
+    rdfs:range xsd:anyURI .
+
+aiprov:outputTokens a owl:DatatypeProperty ;
+    rdfs:range xsd:integer .
+
+aiprov:promptHash a owl:DatatypeProperty ;
+    rdfs:comment "Content hash (e.g. sha256) of the exact prompt text used."@en ;
+    rdfs:range xsd:string .
+
+aiprov:provider a owl:DatatypeProperty ;
+    rdfs:comment "e.g. Anthropic, local/llama.cpp, gateway name."@en ;
+    rdfs:range xsd:string .
+
+aiprov:reasoningTokens a owl:DatatypeProperty ;
+    rdfs:range xsd:integer .
+
+aiprov:refusedRung a owl:ObjectProperty ;
+    rdfs:comment "The rung an agent examined and declined to grant. Disagreement is first-class: a refusal changes no verification state, but it is a logged audit activity, so 'checked and not convinced' is distinguishable from 'never checked'."@en ;
+    rdfs:domain aiprov:AuditPass .
+
+aiprov:repairs a owl:ObjectProperty ;
+    rdfs:comment "A Repair activity amends generation metadata of a claim without invalidating its content."@en .
+
+aiprov:requestId a owl:DatatypeProperty ;
+    rdfs:comment "Provider request ID for a single inference call."@en ;
+    rdfs:range xsd:string .
+
+aiprov:seed a owl:DatatypeProperty ;
+    rdfs:range xsd:integer .
+
+aiprov:selfCitation a owl:DatatypeProperty ;
+    rdfs:comment "Marks a source authored (wholly or partly) by a contributor of the present work. Provenance-driven self-citation — declaring intellectual ancestry — is legitimate and MUST be visible: this flag makes the self-citation ratio machine-queryable instead of hidden."@en ;
+    rdfs:domain aiprov:Source ;
+    rdfs:range xsd:boolean .
+
+aiprov:sessionId a owl:DatatypeProperty ;
+    rdfs:comment "Client session identifier (e.g. Claude Code session UUID)."@en ;
+    rdfs:range xsd:string .
+
+aiprov:stopReason a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+aiprov:systemPromptRef a owl:ObjectProperty ;
+    rdfs:comment "Links an activity to the system-prompt entity in force."@en .
+
+aiprov:temperature a owl:DatatypeProperty ;
+    rdfs:range xsd:decimal .
+
+aiprov:toolCalls a owl:DatatypeProperty ;
+    rdfs:range xsd:integer .
+
+aiprov:topP a owl:DatatypeProperty ;
+    rdfs:range xsd:decimal .
+
+aiprov:totalTokens a owl:DatatypeProperty ;
+    rdfs:range xsd:integer .
+
+aiprov:transcript a owl:ObjectProperty ;
+    rdfs:comment "Links the activity to a preserved conversation transcript entity."@en .
+
+aiprov:turnCount a owl:DatatypeProperty ;
+    rdfs:range xsd:integer .
+
+aiprov:usedTool a owl:DatatypeProperty ;
+    rdfs:comment "Repeatable: one value per distinct tool invoked (web_search, bash, ...)."@en ;
+    rdfs:range xsd:string .
+
+aiprov:verificationState a owl:ObjectProperty ;
+    rdfs:comment "Current rung of a claim or source on the verification ladder. Exactly one value; transitions are recorded as AuditPass activities so the history stays in the graph."@en ;
+    rdfs:domain prov:Entity ;
+    rdfs:range aiprov:VerificationState .
+
+<https://example.org/prov/activity/a08-transparency-disclosure> a aiprov:Build ;
+    rdfs:label "AI-generated transparency disclosure derived from the provenance graph"@en ;
+    prov:endedAtTime "2026-08-17T19:55:38.332464+02:00"^^xsd:dateTime ;
+    prov:wasAssociatedWith agent:openai-gpt-5-6-luna ;
+    aiprov:usedTool "bash" .
+
+<https://example.org/prov/claim/c01-docker-fastapi-packaging> a aiprov:Claim ;
+    rdfs:label "Commit 7fc32da records AI-generated Docker, FastAPI, and browser conversion packaging changes."@en ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a01-docker-fastapi-packaging> ;
+    aiprov:verificationState verif:human-confirmed .
+
+<https://example.org/prov/claim/c02-surreal-crosswalk-fix> a aiprov:Claim ;
+    rdfs:label "Commit 2d89c6c records AI-generated typed SurrealDB record loading and selection repairs."@en ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a02-surreal-crosswalk-fix> ;
+    aiprov:verificationState verif:human-confirmed .
+
+<https://example.org/prov/claim/c03-npm-docker-workflow> a aiprov:Claim ;
+    rdfs:label "Commit 7753de3 records AI-generated npm scripts, Vite proxy, and Docker development guidance."@en ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a03-npm-docker-workflow> ;
+    aiprov:verificationState verif:human-confirmed .
+
+<https://example.org/prov/claim/c04-deployment-fixtures> a aiprov:Claim ;
+    rdfs:label "Commit a592f22 records AI-generated deployment templates, crosswalk fixtures, and local runner changes."@en ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a04-deployment-fixtures> ;
+    aiprov:verificationState verif:human-confirmed .
+
+<https://example.org/prov/claim/c05-planning-artifacts> a aiprov:Claim ;
+    rdfs:label "Commit b757b16 records AI-generated frontend and Space planning artifacts."@en ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
+    aiprov:verificationState verif:human-confirmed .
+
+<https://example.org/prov/claim/c06-deployment-ci-guidance> a aiprov:Claim ;
+    rdfs:label "Commit 5251477 records AI-generated deployment and CI guidance updates."@en ;
+    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a06-deployment-ci-guidance> ;
+    aiprov:verificationState verif:human-confirmed .
+
+aiprov:Build a owl:Class ;
+    rdfs:comment "Deterministic build/compile/CI activity."@en ;
+    rdfs:subClassOf prov:Activity .
+
+aiprov:Repair a owl:Class ;
+    rdfs:comment "Fixes a structural defect in the graph itself (e.g. backfilled parent)."@en ;
+    rdfs:subClassOf prov:Activity .
+
+aiprov:Source a owl:Class ;
+    rdfs:subClassOf prov:Entity .
+
+aiprov:AIAgent a owl:Class ;
+    rdfs:label "AI agent"@en ;
+    rdfs:comment "An LLM- or ML-driven agent participating in artefact production."@en ;
+    rdfs:subClassOf prov:SoftwareAgent .
+
+aiprov:HumanAgent a owl:Class ;
+    rdfs:label "Human agent"@en ;
+    rdfs:subClassOf prov:Person .
+
+<https://example.org/prov/activity/a02-surreal-crosswalk-fix> a aiprov:Repair ;
+    rdfs:label "AI-authored typed SurrealDB record loading and selection repair"@en ;
+    prov:endedAtTime "2026-08-17T19:51:17.404194+02:00"^^xsd:dateTime ;
+    prov:wasAssociatedWith agent:openai-gpt-5-6-luna ;
+    aiprov:usedTool "apply_patch",
+        "bash" .
+
+aiprov:Contribution a owl:Class ;
+    rdfs:subClassOf prov:Entity .
+
+<https://example.org/prov/activity/a06-deployment-ci-guidance> a aiprov:AuthoringPass ;
+    rdfs:label "AI-authored deployment and CI guidance updates"@en ;
+    prov:endedAtTime "2026-08-17T19:52:25.361061+02:00"^^xsd:dateTime ;
+    prov:wasAssociatedWith agent:openai-gpt-5-6-luna ;
+    aiprov:usedTool "apply_patch",
+        "bash" .
+
+<https://example.org/prov/activity/a03-npm-docker-workflow> a aiprov:AuthoringPass ;
+    rdfs:label "AI-authored npm scripts, Vite proxy, and Docker development guidance"@en ;
+    prov:endedAtTime "2026-08-17T19:51:24.164117+02:00"^^xsd:dateTime ;
+    prov:wasAssociatedWith agent:openai-gpt-5-6-luna ;
+    aiprov:usedTool "apply_patch",
+        "bash" .
+
+agent:santiago-casas a aiprov:HumanAgent ;
+    foaf:name "Santiago Casas" ;
+    aiprov:affiliation "Deutsches Zentrum für Luft- und Raumfahrt e. V. (DLR)"^^xsd:string ;
+    aiprov:orcid "https://orcid.org/0000-0002-4751-5138"^^xsd:anyURI .
+
+aiprov:AuthoringPass a owl:Class ;
+    rdfs:comment "AI or human produces/edits an artefact."@en ;
+    rdfs:subClassOf prov:Activity .
+
+<https://example.org/prov/activity/a01-docker-fastapi-packaging> a aiprov:AuthoringPass ;
+    rdfs:label "AI-authored Docker, FastAPI, and browser conversion packaging"@en ;
+    prov:endedAtTime "2026-08-17T19:51:10.872365+02:00"^^xsd:dateTime ;
+    prov:wasAssociatedWith agent:openai-gpt-5-6-luna ;
+    aiprov:usedTool "apply_patch",
+        "bash" .
+
+aiprov:AuditPass a owl:Class ;
+    rdfs:comment "AI or human reviews, verifies, or contests an artefact."@en ;
+    rdfs:subClassOf prov:Activity .
+
+aiprov:Claim a owl:Class ;
+    rdfs:comment "An assertion in any artefact that warrants attribution and verification."@en ;
+    rdfs:subClassOf prov:Entity .
+
+aiprov:VerificationState a owl:Class ;
+    rdfs:comment "A rung on the verification ladder. Higher position = stronger check. Rungs at position 5+ are human-only: an AI agent must never grant them."@en .
+
+<https://example.org/prov/activity/a05-planning-artifacts> a aiprov:AuthoringPass ;
+    rdfs:label "AI-authored frontend and Space planning artifacts"@en ;
+    prov:endedAtTime "2026-08-17T19:52:19.211029+02:00"^^xsd:dateTime ;
+    prov:wasAssociatedWith agent:openai-gpt-5-6-luna ;
+    aiprov:usedTool "apply_patch",
+        "bash" .
+
+<https://example.org/prov/activity/a07-provenance-scaffolding> a aiprov:AuthoringPass ;
+    rdfs:label "AI-authored provenance scaffolding and human-approval record for prior repository changes"@en ;
+    prov:endedAtTime "2026-08-17T19:55:13.488109+02:00"^^xsd:dateTime ;
+    prov:wasAssociatedWith agent:openai-gpt-5-6-luna ;
+    aiprov:usedTool "apply_patch",
+        "bash" .
+
+verif:human-confirmed a aiprov:VerificationState ;
+    rdfs:label "human-confirmed"@en ;
+    rdfs:comment "A HUMAN checked that the source supports the claim (targeted spot-check, not necessarily a full read). Human-only: an AI agent must never grant this rung."@en ;
+    aiprov:ladderPosition 5 .
+
+<https://example.org/prov/activity/a04-deployment-fixtures> a aiprov:AuthoringPass ;
+    rdfs:label "AI-authored deployment templates, fixtures, and local runner"@en ;
+    prov:endedAtTime "2026-08-17T19:52:02.395155+02:00"^^xsd:dateTime ;
+    prov:wasAssociatedWith agent:openai-gpt-5-6-luna ;
+    aiprov:usedTool "apply_patch",
+        "bash" .
+
+aiprov:Artefact a owl:Class ;
+    rdfs:comment "Generalizes Manuscript/Section/Figure: any produced file or object."@en ;
+    rdfs:subClassOf prov:Entity .
+
+agent:openai-gpt-5-6-luna a aiprov:AIAgent ;
+    aiprov:model "openai/gpt-5.6-luna"^^xsd:string ;
+    aiprov:modelVersion "gpt-5.6-luna"^^xsd:string ;
+    aiprov:provider "OpenAI"^^xsd:string .
+
