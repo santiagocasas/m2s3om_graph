@@ -20,8 +20,8 @@ export async function renderConvertPage() {
           <select id="tgt-format">
             <option value="datacite_xml">DataCite XML</option>
             <option value="oai_dc_xml">OAI Dublin Core XML</option>
-            <option value="marcxml">MARCXML</option>
           </select>
+          <p class="muted">MARCXML can be parsed as a source but not produced as a target yet (no serializer implemented).</p>
         </div>
       </div>
       <label>Source XML</label>

@@ -112,6 +112,14 @@ def convert(req: ConvertRequest):
     if parser is None:
         raise HTTPException(400, f"Unsupported source format: {req.source_format}")
 
+    serializer = serializer_map.get(req.target_format)
+    if serializer is None:
+        raise HTTPException(
+            400,
+            f"Target format '{req.target_format}' cannot be produced: no serializer "
+            f"is implemented for it yet. Supported targets: {sorted(serializer_map)}.",
+        )
+
     try:
         source_ir = parser(req.source_xml)
     except Exception as exc:
@@ -146,26 +154,11 @@ def convert(req: ConvertRequest):
                 crosswalk = cw
                 break
     if crosswalk is None:
-        # No mapping, return identity
-        target_ir = source_ir
-        serializer = serializer_map.get(req.target_format)
-        if serializer:
-            target_xml = serializer(target_ir)
-        else:
-            target_xml = req.source_xml
-        def ir_to_dict(ir):
-            out = {}
-            for k, values in ir.items():
-                out[k] = [v.model_dump() if hasattr(v, "model_dump") else v for v in values]
-            return out
-        return ConvertResponse(
-            target_xml=target_xml,
-            source_ir=ir_to_dict(source_ir),
-            target_ir=ir_to_dict(target_ir),
-            applied_rule_ids=[],
-            unmapped_fields=[],
-            semantic_loss_rules=[],
-            ambiguous_rules=[],
+        raise HTTPException(
+            404,
+            f"No crosswalk found between '{source_std}' and '{target_std}'. "
+            f"Conversion between {req.source_format} and {req.target_format} is not "
+            "supported yet.",
         )
 
     # Build MappingRuleRecord list from JSON
@@ -193,14 +186,10 @@ def convert(req: ConvertRequest):
     # If reverse direction, swap source/target? For simplicity assume forward.
     target_ir, report = apply_mapping_rules(source_ir, rules)
 
-    serializer = serializer_map.get(req.target_format)
-    if serializer:
-        try:
-            target_xml = serializer(target_ir)
-        except Exception:
-            target_xml = "<!-- serialization failed -->"
-    else:
-        target_xml = req.source_xml
+    try:
+        target_xml = serializer(target_ir)
+    except Exception as exc:
+        raise HTTPException(500, f"Failed to serialize target XML: {exc}")
 
     def ir_to_dict(ir):
         out = {}
