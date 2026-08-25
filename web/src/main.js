@@ -320,6 +320,8 @@ function escapeHtml(str) {
 
 main().catch((err) => {
   console.error(err);
-  statusEl.textContent = `Explorer failed to start: ${err instanceof Error ? err.message : String(err)}`;
+  statusEl.textContent =
+    'Data unavailable: failed to load crosswalk_graph.json — expected at ' +
+    'public/data/crosswalk_graph.json. Run the export script before building.';
   statusEl.classList.add('bad');
 });
