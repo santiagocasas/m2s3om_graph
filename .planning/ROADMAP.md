@@ -1,146 +1,21 @@
 # Roadmap: m2s3om_graph v2.0 Deployment Surfaces
 
-**Milestone:** v2.0 Deployment Surfaces
-**Created:** 2026-06-17
-**Phase numbering:** Continues from previous completed Phase 01
+## Milestones
 
-## Milestone Goal
+- ✅ **v2.0 Deployment Surfaces** — Phases 02-05 (shipped 2026-08-25)
 
-Integrate the reference deployment and curation scaffolds into the existing codebase without creating parallel implementations.
+## Phases
 
-## Phase Overview
+<details>
+<summary>✅ v2.0 Deployment Surfaces (Phases 02-05) — SHIPPED 2026-08-25</summary>
 
-| Phase | Name | Goal | Requirements | Success Criteria |
-|-------|------|------|--------------|------------------|
-| 02 | Static Frontend Data Export | Orient in the current repo, export real crosswalk data, and integrate the Vite GitLab Pages explorer into the canonical Pages source. | DATA-01, WEB-01, WEB-02, GOV-01 | 5 (3 plans) |
-  | 03 | Suggestion API Integration | Wire the suggestion API scaffold to the existing Blablador client while preserving its public API behavior and mocked tests. | API-01, API-02 | 4 (2 plans) |
-| 04 | Browser Curation Workflow | Add suggestion-driven curation to the static explorer with browser-memory decisions and TSV export only. | CUR-01, CUR-02, CUR-03 | 4 (2 plans) |
-| 05 | Unified Vite+FastAPI App Packaging | Unify the Vite explorer and FastAPI suggestion backend into a single Hugging Face Space Docker image, add a Convert-a-record page, keep GitLab Pages as static mirror, and keep Streamlit internal only. | SPACE-01, SPACE-02 | 4/4 verified passed |
+- [x] Phase 02: Static Frontend Data Export (3/3 plans) — completed 2026-06-17
+- [x] Phase 03: Suggestion API Integration (2/2 plans) — completed 2026-06-17
+- [x] Phase 04: Browser Curation Workflow (2/2 plans) — completed 2026-06-17
+- [x] Phase 05: Unified Vite+FastAPI App Packaging (1/1 plans, ad-hoc) — completed 2026-08-17
 
-## Phase Details
+</details>
 
-### Phase 02: Static Frontend Data Export
+## Backlog
 
-**Goal:** Orient in the repository, integrate the static frontend scaffold into the canonical GitLab Pages source, and feed it real exported data.
-
-**Depends on:** Phase 01
-
-**Requirements:** DATA-01, WEB-01, WEB-02, GOV-01
-
-**UI hint:** yes
-
-**Success criteria:**
-
-1. The implementation has read the existing Pages setup, Streamlit/SurrealDB wiring, Blablador client, SSSOM TSV storage, standards list, and all three scaffold folders before code changes.
-2. A Python export script in the existing pipeline codebase writes JSON with `standards[]`, `crosswalks[]`, and nested `rules[]` from committed SSSOM TSVs and standards data.
-3. The Vite explorer lives in the canonical Pages source, loads the real exported JSON, and does not depend on `claude_suggestions/` sample data.
-4. `.gitlab-ci.yml` has exactly one `pages` job after merging the scaffold CI snippet.
-5. Local `npm install` and `npm run build` succeed and produce `dist/` before the phase is committed.
-
-**Plans:** 3 plans
-
-Plans:
-
-- [x] 02-01-PLAN.md — Tracer: end-to-end SSSOM→JSON→Vite→CI slice with pinned deps and test scaffolds
-- [x] 02-02-PLAN.md — Rich audit export: full D-02 fields, strategy inference, header-driven standards, collision validation
-- [x] 02-03-PLAN.md — Frontend polish: six-column table, strategy badges, ID escaping, nav integration
-
-### Phase 03: Suggestion API Integration
-
-**Goal:** Replace the scaffold's mocked Blablador call with the repository's existing Blablador client while keeping the API surface stable.
-
-**Depends on:** Phase 02
-
-**Requirements:** API-01, API-02
-
-**UI hint:** no
-
-**Success criteria:**
-
-1. `call_blablador(prompt: str) -> str` keeps the same signature and delegates to the existing extraction-pipeline Blablador client.
-2. `BLABLADOR_BASE_URL` and `BLABLADOR_MODEL` defaults match the existing pipeline defaults or are corrected with evidence.
-3. `ALLOWED_ORIGINS` is not guessed; unresolved production Pages URL decisions are surfaced to the user.
-4. Mocked-LLM tests confirm `/health` and `/suggest` still work after wiring in the real client.
-
-**Plans:** 2 plans
-
-Plans:
-
-- [x] 03-01-PLAN.md — Tracer: rewire `call_blablador` through `load_llm_runtime_config`; end-to-end mocked-LLM happy path + `/health` test
-- [x] 03-02-PLAN.md — Decide ALLOWED_ORIGINS (D-05) & prompt format (D-06); harden D-07 error semantics; complete mocked-LLM test coverage (500 + 502 branches)
-
-### Phase 04: Browser Curation Workflow
-
-**Goal:** Let curators request and review candidate mappings in the static explorer without writing back to authoritative files.
-
-**Depends on:** Phase 03
-
-**Requirements:** CUR-01, CUR-02, CUR-03
-
-**UI hint:** yes
-
-**Success criteria:**
-
-1. The static explorer shows "Suggest candidate mappings" only for source fields with no existing rule in the selected crosswalk.
-2. The button posts to the suggestion API `/suggest` endpoint and renders returned candidates.
-3. Curators can accept or reject candidates in browser memory for the current session.
-4. Accepted candidates can be exported as `accepted_candidates.tsv`, and the UI does not imply automatic write-back to authoritative SSSOM files.
-
-**Plans:** 2/2 plans executed
-
-Plans:
-
-- [x] 04-01-PLAN.md — Tracer: Suggest button gated by empty target_paths (D-01), env-driven `/suggest` fetch (D-03/D-04), inline candidate rendering with Accept/Reject to in-memory store (D-05/D-06)
-- [x] 04-02-PLAN.md — TSV export of accepted candidates as `accepted_candidates.tsv` (D-07) plus explicit no-write-back UI notice; extend smoke tests
-
-### Phase 05: Unified Vite+FastAPI App Packaging
-
-**Goal:** Replace the Streamlit Space scaffold with a unified Vite+FastAPI Hugging Face Space. Extend the existing FastAPI suggestion backend to a top-level `server/` directory, add a new Convert-a-record endpoint and Vite page, and package both frontend and backend in a multi-stage Docker image. GitLab Pages remains a static, browse-only mirror. Streamlit (`app/`) remains internal only.
-
-**Depends on:** Phase 04
-
-**Requirements:** SPACE-01, SPACE-02
-
-**UI hint:** yes
-
-**Success criteria:**
-
-1. A top-level `server/` FastAPI app provides `/health`, `/suggest`, and a new `/convert` endpoint wrapping `src/m2s3om_graph/transform` logic.
-2. The Vite explorer is extended with a Convert-a-record page, sharing the existing env-driven API client pattern.
-3. A multi-stage Dockerfile builds Vite `dist/` and serves it via FastAPI `StaticFiles` on port 7860, deployable to Hugging Face Spaces.
-4. GitLab Pages continues to serve the static read-only explorer; Streamlit remains untouched and not packaged.
-
-**Plans:** implemented ad-hoc, not through formal PLAN execution (see note below)
-
-Plans:
-
-- [x] Implemented directly (commits `7fc32da`, `2d89c6c`, `7753de3`, `a592f22`, 2026-08-17): `server/main.py` (`/health`, `/suggest`, `/convert`), `web/src/convert.js` + wiring, root multi-stage `Dockerfile`, `docker-compose.yml`. Goal-backward verified 2026-08-25 against these Success Criteria — see `05-VERIFICATION.md` (status: passed, 4/4 truths).
-- ~~`05-01-PLAN.md`~~, ~~`05-02-PLAN.md`~~ — superseded; described the original (pre-rescope) Streamlit Space scaffold, which was reverted (`bac7937`, `5288efa`). Kept in the phase directory for history only.
-- ~~`05-01-PLAN-NEW.md`~~ — abandoned stub (objective only, no task breakdown); superseded by the ad-hoc implementation above.
-
-## Coverage
-
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| DATA-01 | Phase 02 | Done |
-| WEB-01 | Phase 02 | Done |
-| WEB-02 | Phase 02 | Done |
-| API-01 | Phase 03 | Done |
-| API-02 | Phase 03 | Done |
-| CUR-01 | Phase 04 | Done |
-| CUR-02 | Phase 04 | Done |
-| CUR-03 | Phase 04 | Done |
-| SPACE-01 | Phase 05 | Done |
-| SPACE-02 | Phase 05 | Done |
-| GOV-01 | Phase 02 | Done |
-
-**Coverage:**
-
-- v2.0 requirements: 11 total
-- Mapped to phases: 11
-- Unmapped: 0
-- Milestone v2.0 Deployment Surfaces: **complete** (4/4 phases: 02, 03, 04, 05).
-
----
-*Roadmap created: 2026-06-17 for milestone v2.0 Deployment Surfaces*
-*Reconciled: 2026-08-25 — Phase 05 goal-backward verified against actual implementation (see `05-VERIFICATION.md`); Phase 02/05 requirement statuses corrected to match completed work.*
+- [999-01] Future enhancement: Unified Explorer — Graph + Stats Pages

@@ -2,28 +2,28 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Deployment Surfaces
-current_phase: 05
-status: verified
-stopped_at: Phase 05 retroactively verified (passed) and tracking reconciled with implementation
-last_updated: "2026-08-25T00:00:00.000Z"
+status: Awaiting next milestone
+stopped_at: Phase 05 verified passed and tracking reconciled
+last_updated: "2026-08-25T12:32:21.916Z"
 last_activity: 2026-08-25
 last_activity_desc: Phase 05 code was implemented ad-hoc on 2026-08-17 but tracking docs were never updated; goal-backward verified against ROADMAP success criteria (passed, 4/4), fixed a broken test suite (missing fastapi/uvicorn/httpx2 deps) and a regressed Phase 02 fail-closed UI copy, reconciled STATE/ROADMAP/REQUIREMENTS
 progress:
   total_phases: 4
-  completed_phases: 4
-  total_plans: 7
-  completed_plans: 7
-  percent: 100
+  completed_phases: 1
+  total_plans: 10
+  completed_plans: 3
+  percent: 25
+current_phase: 05
 ---
 
 # Project State
 
 ## Current Position
 
-Phase: 05 Unified Vite+FastAPI App Packaging — verified passed
-Plan: — implemented ad-hoc (not through formal PLAN execution); see 05-VERIFICATION.md
-Status: Milestone v2.0 Deployment Surfaces complete (4/4 phases)
-Last activity: 2026-08-25 — Phase 05 retroactively verified and tracking reconciled; two bugs fixed (missing fastapi/uvicorn/httpx2 deps broke test suite; Phase 02 fail-closed UI copy had regressed)
+Phase: Milestone v2.0 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-08-25 — Milestone v2.0 completed and archived
 
 ## Project Reference
 
@@ -61,3 +61,7 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 - [Phase 04]: The UI explicitly states the manual merge boundary and no write-back
 - [Phase 05]: Re-scoped from Streamlit Space packaging to a unified Vite+FastAPI app after user feedback; Streamlit scaffold reverted (see 05-CONTEXT.md D-01..D-13)
 - [2026-08-25 reconciliation]: Phase 05 was implemented ad-hoc (outside gsd-executor) on 2026-08-17; tracking docs were never updated afterward. Retroactively verified goal-backward against ROADMAP success criteria — passed, 4/4. Added `fastapi`, `uvicorn[standard]`, `httpx2` to `pyproject.toml` dependencies to fix a repo-wide broken test suite. Restored the Phase 02 locked fail-closed UI copy in `web/src/main.js`, which had regressed during Phase 05 work (commit `2d89c6c`) to leak raw `err.message` instead of the exact UI-SPEC copy. Marked DATA-01/WEB-01/WEB-02/GOV-01/SPACE-01/SPACE-02 complete in REQUIREMENTS.md and ROADMAP.md (they were done but never checked off); updated SPACE-01/SPACE-02 wording to match the re-scoped implementation.
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone
