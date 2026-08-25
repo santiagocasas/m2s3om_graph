@@ -33,6 +33,8 @@ must_haves:
     - "server/main.py imports from m2s3om_graph.transform"
     - "web/src/main.js integrates Convert page"
 ---
+> **SUPERSEDED (2026-08-25):** This plan was abandoned as an incomplete stub (objective only, no task breakdown) and never executed via `gsd-executor`. The work it describes was implemented ad-hoc instead (commits `7fc32da`, `2d89c6c`, `7753de3`, `a592f22`, 2026-08-17) and goal-backward verified against `ROADMAP.md` Phase 05 Success Criteria — see `../05-streamlit-space-packaging/05-VERIFICATION.md` (status: passed). Kept for history only; do not execute.
+
 <objective>
 Promote suggestion API to server/, add /convert endpoint, extend Vite with Convert page, create unified multi-stage Dockerfile for Hugging Face Spaces.
 </objective>

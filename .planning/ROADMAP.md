@@ -15,7 +15,7 @@ Integrate the reference deployment and curation scaffolds into the existing code
 | 02 | Static Frontend Data Export | Orient in the current repo, export real crosswalk data, and integrate the Vite GitLab Pages explorer into the canonical Pages source. | DATA-01, WEB-01, WEB-02, GOV-01 | 5 (3 plans) |
   | 03 | Suggestion API Integration | Wire the suggestion API scaffold to the existing Blablador client while preserving its public API behavior and mocked tests. | API-01, API-02 | 4 (2 plans) |
 | 04 | Browser Curation Workflow | Add suggestion-driven curation to the static explorer with browser-memory decisions and TSV export only. | CUR-01, CUR-02, CUR-03 | 4 (2 plans) |
-| 05 | Unified Vite+FastAPI App Packaging | Unify the Vite explorer and FastAPI suggestion backend into a single Hugging Face Space Docker image, add a Convert-a-record page, keep GitLab Pages as static mirror, and keep Streamlit internal only. | SPACE-01, SPACE-02 | 4 (2+ plans) |
+| 05 | Unified Vite+FastAPI App Packaging | Unify the Vite explorer and FastAPI suggestion backend into a single Hugging Face Space Docker image, add a Convert-a-record page, keep GitLab Pages as static mirror, and keep Streamlit internal only. | SPACE-01, SPACE-02 | 4/4 verified passed |
 
 ## Phase Details
 
@@ -110,34 +110,37 @@ Plans:
 3. A multi-stage Dockerfile builds Vite `dist/` and serves it via FastAPI `StaticFiles` on port 7860, deployable to Hugging Face Spaces.
 4. GitLab Pages continues to serve the static read-only explorer; Streamlit remains untouched and not packaged.
 
-**Plans:** 2+ plans
+**Plans:** implemented ad-hoc, not through formal PLAN execution (see note below)
 
 Plans:
 
-- [ ] 05-01-PLAN.md — Tracer: promote FastAPI to `server/`, add convert endpoint, extend Vite with convert page, multi-stage Dockerfile
-- [ ] 05-02-PLAN.md — Integration, verification, README, and cleanup of superseded Streamlit scaffold
+- [x] Implemented directly (commits `7fc32da`, `2d89c6c`, `7753de3`, `a592f22`, 2026-08-17): `server/main.py` (`/health`, `/suggest`, `/convert`), `web/src/convert.js` + wiring, root multi-stage `Dockerfile`, `docker-compose.yml`. Goal-backward verified 2026-08-25 against these Success Criteria — see `05-VERIFICATION.md` (status: passed, 4/4 truths).
+- ~~`05-01-PLAN.md`~~, ~~`05-02-PLAN.md`~~ — superseded; described the original (pre-rescope) Streamlit Space scaffold, which was reverted (`bac7937`, `5288efa`). Kept in the phase directory for history only.
+- ~~`05-01-PLAN-NEW.md`~~ — abandoned stub (objective only, no task breakdown); superseded by the ad-hoc implementation above.
 
 ## Coverage
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 02 | Pending |
-| WEB-01 | Phase 02 | Pending |
-| WEB-02 | Phase 02 | Pending |
-| API-01 | Phase 03 | Pending |
-| API-02 | Phase 03 | Pending |
-| CUR-01 | Phase 04 | Pending |
-| CUR-02 | Phase 04 | Pending |
-| CUR-03 | Phase 04 | Pending |
-| SPACE-01 | Phase 05 | Pending |
-| SPACE-02 | Phase 05 | Pending |
-| GOV-01 | Phase 02 | Pending |
+| DATA-01 | Phase 02 | Done |
+| WEB-01 | Phase 02 | Done |
+| WEB-02 | Phase 02 | Done |
+| API-01 | Phase 03 | Done |
+| API-02 | Phase 03 | Done |
+| CUR-01 | Phase 04 | Done |
+| CUR-02 | Phase 04 | Done |
+| CUR-03 | Phase 04 | Done |
+| SPACE-01 | Phase 05 | Done |
+| SPACE-02 | Phase 05 | Done |
+| GOV-01 | Phase 02 | Done |
 
 **Coverage:**
 
 - v2.0 requirements: 11 total
 - Mapped to phases: 11
 - Unmapped: 0
+- Milestone v2.0 Deployment Surfaces: **complete** (4/4 phases: 02, 03, 04, 05).
 
 ---
 *Roadmap created: 2026-06-17 for milestone v2.0 Deployment Surfaces*
+*Reconciled: 2026-08-25 — Phase 05 goal-backward verified against actual implementation (see `05-VERIFICATION.md`); Phase 02/05 requirement statuses corrected to match completed work.*

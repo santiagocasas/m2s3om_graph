@@ -9,12 +9,12 @@ Requirements for the Deployment Surfaces milestone. Each requirement maps to exa
 
 ### Data Export
 
-- [ ] **DATA-01**: Maintainer can run a Python export script in the existing pipeline codebase that reads committed SSSOM TSV files plus the standards list and writes static-site JSON matching the scaffold README shape: `standards[]`, `crosswalks[]`, and nested `rules[]`.
+- [x] **DATA-01**: Maintainer can run a Python export script in the existing pipeline codebase that reads committed SSSOM TSV files plus the standards list and writes static-site JSON matching the scaffold README shape: `standards[]`, `crosswalks[]`, and nested `rules[]`.
 
 ### Static Frontend
 
-- [ ] **WEB-01**: User can open the GitLab Pages crosswalk explorer built from the integrated Vite scaffold in the repository's canonical Pages source, using the real exported JSON instead of the scaffold sample data.
-- [ ] **WEB-02**: Maintainer can run the local static frontend build successfully with `npm install` and `npm run build`, and GitLab CI contains exactly one `pages` job for publishing the site.
+- [x] **WEB-01**: User can open the GitLab Pages crosswalk explorer built from the integrated Vite scaffold in the repository's canonical Pages source, using the real exported JSON instead of the scaffold sample data.
+- [x] **WEB-02**: Maintainer can run the local static frontend build successfully with `npm install` and `npm run build`, and GitLab CI contains exactly one `pages` job for publishing the site.
 
 ### Suggestion API
 
@@ -27,14 +27,14 @@ Requirements for the Deployment Surfaces milestone. Each requirement maps to exa
 - [x] **CUR-02**: Curator can request suggestions from the suggestion API, review returned candidates, and mark each candidate as accepted or rejected in browser memory.
 - [x] **CUR-03**: Curator can export accepted in-session candidates as `accepted_candidates.tsv`; the static site does not write back to authoritative SSSOM files or imply automatic write-back.
 
-### Streamlit Space
+### Unified Space Packaging
 
-- [ ] **SPACE-01**: Maintainer can build a Hugging Face Space scaffold containing the existing Streamlit app entrypoint, supporting modules, requirements, Dockerfile, and README without importing from `claude_suggestions/`.
-- [ ] **SPACE-02**: Maintainer can configure the Streamlit Space using documented environment variables/secrets instead of hardcoded localhost addresses or local file paths, including SurrealDB connection settings.
+- [x] **SPACE-01**: Maintainer can build a unified Vite+FastAPI Hugging Face Space image: a top-level `server/` FastAPI app (`/health`, `/suggest`, `/convert`) serving the built Vite explorer via `StaticFiles`, packaged by a multi-stage Dockerfile, without importing from `claude_suggestions/` at runtime. (Re-scoped 2026-08-17 from the original Streamlit-scaffold wording after the Streamlit Space packaging approach was reverted in favor of a unified Vite+FastAPI app — see `.planning/phases/05-streamlit-space-packaging/05-CONTEXT.md` D-01.)
+- [x] **SPACE-02**: Maintainer can configure the unified Space using documented environment variables/secrets (Blablador, SurrealDB, `SUGGEST_API_ALLOWED_ORIGINS`) instead of hardcoded localhost addresses or local file paths.
 
 ### Integration Governance
 
-- [ ] **GOV-01**: Integration reuses existing code where scaffolds overlap with repository functionality, avoids duplicate parallel implementations, asks before ambiguous/destructive decisions, and leaves no final imports or runtime references to `claude_suggestions/`.
+- [x] **GOV-01**: Integration reuses existing code where scaffolds overlap with repository functionality, avoids duplicate parallel implementations, asks before ambiguous/destructive decisions, and leaves no final imports or runtime references to `claude_suggestions/`.
 
 ## Future Requirements
 
@@ -62,24 +62,25 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 02 | Pending |
-| WEB-01 | Phase 02 | Pending |
-| WEB-02 | Phase 02 | Pending |
+| DATA-01 | Phase 02 | Complete |
+| WEB-01 | Phase 02 | Complete |
+| WEB-02 | Phase 02 | Complete |
 | API-01 | Phase 03 | Complete |
 | API-02 | Phase 03 | Complete |
 | CUR-01 | Phase 04 | Complete |
 | CUR-02 | Phase 04 | Complete |
 | CUR-03 | Phase 04 | Complete |
-| SPACE-01 | Phase 05 | Pending |
-| SPACE-02 | Phase 05 | Pending |
-| GOV-01 | Phase 02 | Pending |
+| SPACE-01 | Phase 05 | Complete |
+| SPACE-02 | Phase 05 | Complete |
+| GOV-01 | Phase 02 | Complete |
 
 **Coverage:**
 
 - v2.0 requirements: 11 total
 - Mapped to phases: 11
 - Unmapped: 0
+- All requirements complete — milestone v2.0 fully covered.
 
 ---
 *Requirements defined: 2026-06-17*
-*Last updated: 2026-06-17 after roadmap creation*
+*Last updated: 2026-08-25 — reconciled against actual implementation state (Phase 02/05 requirements were done but never marked complete; SPACE-01/SPACE-02 wording updated to match the re-scoped Vite+FastAPI implementation; see `.planning/phases/05-streamlit-space-packaging/05-VERIFICATION.md`).*
