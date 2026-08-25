@@ -748,10 +748,9 @@ function initGraphPage() {
     return;
   }
   
-  // Clear app container first
-  const container = document.getElementById('app');
-  if (container) {
-    container.innerHTML = '';
+  const clearingContainer = document.getElementById('app');
+  if (clearingContainer) {
+    clearingContainer.innerHTML = '';
   }
   
   // Remove any existing controls/status elements
