@@ -8,7 +8,6 @@ export default defineConfig({
       '/convert': 'http://localhost:7860',
       '/suggest': 'http://localhost:7860',
       '/health': 'http://localhost:7860',
-      '/data': 'http://localhost:7860',
     }
   },
   optimizeDeps: {

@@ -1,6 +1,6 @@
 // ── Constants ──────────────────────────────────────────────────────────────
 
-const GRAPH_DATA_URL = '/data/crosswalk_graph.json';
+const GRAPH_DATA_URL = '/data/graph/crosswalk_graph.json';
 
 // ── Styles ─────────────────────────────────────────────────────────────────
 
