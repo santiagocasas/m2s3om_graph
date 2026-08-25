@@ -42,8 +42,8 @@ Requirements for the Unified Explorer milestone. Each requirement maps to exactl
 
 ### Graph Page
 
-- [ ] **GRAPH-01**: User can open the unified explorer graph page at `/graph` showing the standards/crosswalks graph built with Cytoscape.js, reusing the same data and behavior (including fullscreen mode) as the existing GitLab Pages explorer.
-- [ ] **GRAPH-02**: The /graph route loads Cytoscape graph data from the same static JSON file that GitLab Pages uses (`crosswalk_graph.json`), ensuring consistency across deployments.
+- [x] **GRAPH-01**: User can open the unified explorer graph page at `/graph` showing the standards/crosswalks graph built with Cytoscape.js, reusing the same data and behavior (including fullscreen mode) as the existing GitLab Pages explorer.
+- [x] **GRAPH-02**: The /graph route loads Cytoscape graph data from the same static JSON file that GitLab Pages uses (`crosswalk_graph.json`), ensuring consistency across deployments.
 
 ### Stats Page
 
@@ -52,11 +52,11 @@ Requirements for the Unified Explorer milestone. Each requirement maps to exactl
 
 ### Navigation
 
-- [ ] **NAV-01**: The unified explorer has a persistent navigation bar on every page (Mappings, Graph, Stats, Convert) allowing users to switch between routes without losing context.
+- [x] **NAV-01**: The unified explorer has a persistent navigation bar on every page (Mappings, Graph, Stats, Convert) allowing users to switch between routes without losing context.
 
 ### Data Consistency
 
-- [ ] **DATA-02**: Both /graph and /stats routes consume the same pre-exported static JSON/assets that GitLab Pages uses, avoiding duplicate export steps and ensuring consistency.
+- [x] **DATA-02**: Both /graph and /stats routes consume the same pre-exported static JSON/assets that GitLab Pages uses, avoiding duplicate export steps and ensuring consistency.
 
 ### Integration Governance
 
@@ -99,12 +99,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SPACE-01 | Phase 05 | Complete |
 | SPACE-02 | Phase 05 | Complete |
 | GOV-01 | Phase 02 | Complete |
-| GRAPH-01 | Phase 06 | Pending |
-| GRAPH-02 | Phase 06 | Pending |
+| GRAPH-01 | Phase 06 | Planned |
+| GRAPH-02 | Phase 06 | Planned |
 | STATS-01 | Phase 07 | Pending |
 | STATS-02 | Phase 07 | Pending |
-| NAV-01 | Phase 06 | Pending |
-| DATA-02 | Phase 06 | Pending |
+| NAV-01 | Phase 06 | Complete |
+| DATA-02 | Phase 06 | Complete |
 | GOV-02 | Phase 06 | Pending |
 
 **Coverage:**
@@ -116,8 +116,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 - v2.1 requirements: 8 total
 - Mapped to phases: 8
-- Unmapped: 0
-- Milestone v2.1 in progress — phases 06-07 pending.
+- Completed: 2 (NAV-01, DATA-02)
+- Pending: 6 (GRAPH-01/02, STATS-01/02, GOV-02)
 
 ---
 *Requirements defined: 2026-08-25*
