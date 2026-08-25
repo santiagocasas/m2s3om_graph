@@ -99,13 +99,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SPACE-01 | Phase 05 | Complete |
 | SPACE-02 | Phase 05 | Complete |
 | GOV-01 | Phase 02 | Complete |
-| GRAPH-01 | Phase 06 | Planned |
-| GRAPH-02 | Phase 06 | Planned |
+| GRAPH-01 | Phase 06 | Complete |
+| GRAPH-02 | Phase 06 | Complete |
 | STATS-01 | Phase 07 | Pending |
 | STATS-02 | Phase 07 | Pending |
 | NAV-01 | Phase 06 | Complete |
 | DATA-02 | Phase 06 | Complete |
-| GOV-02 | Phase 06 | Pending |
+| GOV-02 | Phase 06 | Complete |
 
 **Coverage:**
 
@@ -117,8 +117,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 - v2.1 requirements: 8 total
 - Mapped to phases: 8
 - Completed: 2 (NAV-01, DATA-02)
-- Pending: 6 (GRAPH-01/02, STATS-01/02, GOV-02)
+- Pending: 2 (STATS-01/02)
 
 ---
 *Requirements defined: 2026-08-25*
-*Last updated: 2026-08-25 — v2.1 requirements added (GRAPH-01/02, STATS-01/02, NAV-01, DATA-02, GOV-02); ROADMAP.md updated to include v2.1 milestone with phases 06-07.*
+*Last updated: 2026-08-25 — v2.1 requirements added (GRAPH-01/02, STATS-01/02, NAV-01, DATA-02, GOV-02); ROADMAP.md updated to include v2.1 milestone with phases 06-07; Phase 06 completed, marking GRAPH-01/02 and GOV-02 as complete.*
