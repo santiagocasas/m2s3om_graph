@@ -8,25 +8,15 @@ A metadata standards mapping tool that ingests PDF documents with mapping rules,
 
 Enable cross-walking between metadata standards (DataCite, Dublin Core, etc.) by providing machine-readable mapping rules that can be applied automatically while tracking where information is lost in translation.
 
-## Current Milestone: v2.0 Deployment Surfaces
+## Current Milestone: v2.1 Unified Explorer — Graph + Stats Pages
 
-**Goal:** Integrate the reference deployment and curation scaffolds into the existing codebase without creating parallel implementations.
+**Goal:** Bring existing GitLab Pages content (Cytoscape graph + pipeline statistics/plots) into the Vite+FastAPI app as new routes (/graph, /stats) with unified navigation.
 
 **Target features:**
-- Export committed SSSOM TSV files and the standards list into the static crosswalk explorer JSON shape.
-- Integrate the Vite GitLab Pages explorer into the canonical Pages source with exactly one `pages` CI job.
-- Wire the FastAPI suggestion API to the existing Blablador client used by the extraction pipeline.
-- Add browser-memory curation for candidate mappings, including `accepted_candidates.tsv` export.
-- Package the existing Streamlit app into the Hugging Face Space scaffold with environment-based configuration.
-
-**Shipped:** 2026-08-25 (v2.0 Deployment Surfaces)
-
-### What Was Built
-
-- Phase 02: Exported real SSSOM TSV data to JSON for GitLab Pages static explorer
-- Phase 03: Wired suggestion API to existing Blablador client for candidate mapping generation
-- Phase 04: Added browser-memory curation with TSV export workflow
-- Phase 05: Unified Vite+FastAPI app with Convert-a-record page, multi-stage Docker packaging
+- /graph route shows standards/crosswalks graph as on GitLab Pages (reuses existing Cytoscape.js setup)
+- /stats route shows pipeline stats/plots from exports/pipeline/latest/ (static images for v1)
+- Unified navigation (Mappings, Graph, Stats, Convert) on every page
+- Both routes consume same pre-exported static JSON/assets GitLab Pages uses
 
 ## Requirements
 
@@ -49,7 +39,7 @@ Enable cross-walking between metadata standards (DataCite, Dublin Core, etc.) by
 
 ### Active
 
-- [ ] Unified Explorer — Graph + Stats Pages — New milestone: Bring existing GitLab Pages content (Cytoscape graph + pipeline stats/plots) into the Vite+FastAPI app as new routes (/graph, /stats)
+- [ ] Unified Explorer — Graph + Stats Pages — New milestone: Bring existing GitLab Pages content (Cytoscape graph + pipeline stats/plots) into the Vite+FastAPI app as new routes (/graph, /stats) with unified navigation
 
 ### Out of Scope
 
@@ -97,7 +87,7 @@ Enable cross-walking between metadata standards (DataCite, Dublin Core, etc.) by
 
 ---
 
-*Last updated: 2026-08-25 after completing milestone v2.0 Deployment Surfaces*
+*Last updated: 2026-08-25 after completing milestone v2.0 and starting milestone v2.1*
 
 ## Evolution
 

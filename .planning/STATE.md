@@ -1,67 +1,49 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.0
-milestone_name: Deployment Surfaces
-status: Awaiting next milestone
-stopped_at: Phase 05 verified passed and tracking reconciled
-last_updated: "2026-08-25T12:32:21.916Z"
+milestone: v2.1
+milestone_name: Unified Explorer — Graph + Stats Pages
+status: planning
+stopped_at: Milestone started
+last_updated: "2026-08-25T14:35:00.000Z"
 last_activity: 2026-08-25
-last_activity_desc: Phase 05 code was implemented ad-hoc on 2026-08-17 but tracking docs were never updated; goal-backward verified against ROADMAP success criteria (passed, 4/4), fixed a broken test suite (missing fastapi/uvicorn/httpx2 deps) and a regressed Phase 02 fail-closed UI copy, reconciled STATE/ROADMAP/REQUIREMENTS
+last_activity_desc: Milestone v2.1 started — Unified Explorer — Graph + Stats Pages
 progress:
-  total_phases: 4
-  completed_phases: 1
-  total_plans: 10
-  completed_plans: 3
-  percent: 25
-current_phase: 05
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
+current_phase: None
 ---
 
 # Project State
 
 ## Current Position
 
-Phase: Milestone v2.0 complete
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-08-25 — Milestone v2.0 completed and archived
+Status: Defining requirements
+Last activity: 2026-08-25 — Milestone v2.1 started
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-06-17)
+See: .planning/PROJECT.md (updated 2026-08-25)
 
 **Core value:** Enable cross-walking between metadata standards with machine-readable mapping rules and semantic-loss tracking.
-**Current focus:** Milestone v2.0 complete — next: decide on `/gsd:complete-milestone` and follow-up items below
+**Current focus:** Milestone v2.1 started — defining requirements for Unified Explorer
 
 ## Session
 
 **Last session:** 2026-08-25
-**Stopped at:** Phase 05 verified passed and tracking reconciled
+**Stopped at:** Milestone v2.1 started
 **Resume file:** None
-
-## Follow-up items (non-blocking, deferred)
-
-- No dedicated tests for `server/main.py` (`/health`, `/suggest`, `/convert`) or `web/src/convert.js`; new `/convert` flow is wired but behaviorally unproven (see `05-VERIFICATION.md`).
-- `claude_suggestions/` still contains the original suggestion-API scaffold copy on disk even though its logic was promoted into `server/`; `tests/test_suggest_api.py` still tests the old copy under `claude_suggestions/m2s3om-suggest-api/m2s3om-suggest-api/`, not the shipped `server/main.py`. Whether `claude_suggestions/` should be removed/deprecated was not resolved during this reconciliation.
-- Commit `a592f22` re-added `spaces/m2s3om-streamlit-space/{Dockerfile,README.md}` as "deployment templates" after the original scaffold at that path was reverted for Phase 05's re-scope — not yet disambiguated whether these are intentional reference templates or leftover scope creep.
-- The `.github/workflows/aiprov-build.yml`, `aiprov-promote.yml`, and `aiprov-release.yml` CI workflows (added in `6d5ab7f`) reference `scripts/provlog.py`, `scripts/build_dashboard.py`, and `scripts/requirements.txt`, but none of these were ever vendored into this repo's `scripts/` directory. Those workflows will fail on push. Fix requires vendoring the relevant files from the `ai-provenance` skill (`/home/casas/.agents/skills/ai-provenance/scripts/`, `assets/ci/`) into the repo.
-
-## Performance Metrics
-
-| Plan | Duration | Tasks | Files |
-|------|----------|-------|-------|
-| Phase 04 P01 | ~1h | 2 tasks | 5 files |
-| Phase 04 P02 | ~1h | 2 tasks | 5 files |
 
 ## Decisions
 
-- [Phase 04]: Suggest only appears when target_paths is empty or missing
-- [Phase 04]: Suggestion endpoint URL is env-driven with localhost fallback
-- [Phase 04]: Accept/Reject decisions stay in module-memory only
-- [Phase 04]: Accepted candidates export as accepted_candidates.tsv by default
-- [Phase 04]: The UI explicitly states the manual merge boundary and no write-back
-- [Phase 05]: Re-scoped from Streamlit Space packaging to a unified Vite+FastAPI app after user feedback; Streamlit scaffold reverted (see 05-CONTEXT.md D-01..D-13)
-- [2026-08-25 reconciliation]: Phase 05 was implemented ad-hoc (outside gsd-executor) on 2026-08-17; tracking docs were never updated afterward. Retroactively verified goal-backward against ROADMAP success criteria — passed, 4/4. Added `fastapi`, `uvicorn[standard]`, `httpx2` to `pyproject.toml` dependencies to fix a repo-wide broken test suite. Restored the Phase 02 locked fail-closed UI copy in `web/src/main.js`, which had regressed during Phase 05 work (commit `2d89c6c`) to leak raw `err.message` instead of the exact UI-SPEC copy. Marked DATA-01/WEB-01/WEB-02/GOV-01/SPACE-01/SPACE-02 complete in REQUIREMENTS.md and ROADMAP.md (they were done but never checked off); updated SPACE-01/SPACE-02 wording to match the re-scoped implementation.
+(Empty — decisions will be added during milestone planning)
 
 ## Operator Next Steps
 
-- Start the next milestone with /gsd-new-milestone
+- /gsd:progress --do "Define requirements for v2.1 Unified Explorer milestone"
+- /gsd:discuss-phase 01 — gather context and clarify approach for Phase 1
+- /gsd:plan-phase 01 — skip discussion, plan directly
