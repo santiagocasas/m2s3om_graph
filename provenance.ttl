@@ -151,6 +151,13 @@
     aiprov:filePath ".planning/phases/05-streamlit-space-packaging/05-DISCUSSION-LOG.md" ;
     aiprov:gitCommit "b757b16" .
 
+<https://example.org/prov/entity/05-VERIFICATION-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:claude-sonnet-5 ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a08-phase05-verification> ;
+    aiprov:contentHash "sha256:61539896fbd1baceb6719851ef98fd0734ef5fb31f803348d1cc84615ad3fdb1" ;
+    aiprov:filePath ".planning/phases/05-streamlit-space-packaging/05-VERIFICATION.md" ;
+    aiprov:gitCommit "f883d42" .
+
 <https://example.org/prov/entity/05-discussion-tex> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
     prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
@@ -203,19 +210,34 @@
     aiprov:gitCommit "5251477",
         "a592f22" .
 
+<https://example.org/prov/entity/REQUIREMENTS-md> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:claude-sonnet-5 ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a10-phase05-tracking-reconciliation> ;
+    aiprov:contentHash "sha256:e80753f6205753e11a99b3a773980f90bf9217701c013d576003f7af3b5848d9" ;
+    aiprov:filePath ".planning/REQUIREMENTS.md" ;
+    aiprov:gitCommit "f883d42" .
+
 <https://example.org/prov/entity/ROADMAP-md> a aiprov:Artefact ;
-    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
-    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
-    aiprov:contentHash "sha256:368335bd7067e043f617a12cc1092279c6ddb635f6abde490f323c62a5c646a6" ;
+    prov:wasAttributedTo agent:claude-sonnet-5,
+        agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts>,
+        <https://example.org/prov/activity/a10-phase05-tracking-reconciliation> ;
+    aiprov:contentHash "sha256:368335bd7067e043f617a12cc1092279c6ddb635f6abde490f323c62a5c646a6",
+        "sha256:8eb2ffa7447fc3957b6f9994ef5e4ded2505986ee696f62e539a9dc0dfb98819" ;
     aiprov:filePath ".planning/ROADMAP.md" ;
-    aiprov:gitCommit "b757b16" .
+    aiprov:gitCommit "b757b16",
+        "f883d42" .
 
 <https://example.org/prov/entity/STATE-md> a aiprov:Artefact ;
-    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
-    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts> ;
-    aiprov:contentHash "sha256:b9a895439f8df5d9b0e918af28d03874dfba5577105806377c1afb515fe39c4b" ;
+    prov:wasAttributedTo agent:claude-sonnet-5,
+        agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a05-planning-artifacts>,
+        <https://example.org/prov/activity/a10-phase05-tracking-reconciliation> ;
+    aiprov:contentHash "sha256:0df6de5ace36860a6d66b60c3ef2af7a740c15138c71f2d392711ded5bf293e5",
+        "sha256:b9a895439f8df5d9b0e918af28d03874dfba5577105806377c1afb515fe39c4b" ;
     aiprov:filePath ".planning/STATE.md" ;
-    aiprov:gitCommit "b757b16" .
+    aiprov:gitCommit "b757b16",
+        "f883d42" .
 
 <https://example.org/prov/entity/aiprov-build-yml> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
@@ -287,15 +309,19 @@
         "a592f22" .
 
 <https://example.org/prov/entity/main-js> a aiprov:Artefact ;
-    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
+    prov:wasAttributedTo agent:claude-sonnet-5,
+        agent:openai-gpt-5-6-luna ;
     prov:wasGeneratedBy <https://example.org/prov/activity/a02-surreal-crosswalk-fix>,
-        <https://example.org/prov/activity/a04-deployment-fixtures> ;
+        <https://example.org/prov/activity/a04-deployment-fixtures>,
+        <https://example.org/prov/activity/a09-phase05-dependency-and-fail-closed-fix> ;
     aiprov:contentHash "sha256:26134d237ce966683cedf07ec938d3a8a27759b3cacaeb11d798bffab0a5dde3",
+        "sha256:7889fbc660233623785aa3289e176a06588e251f0771511e4835faa80580a518",
         "sha256:e59b9e1375ad83613922c18102b4fb804d79a5e1cb3f27fd962a6c1ed6352313" ;
     aiprov:filePath "claude_suggestions/m2s3om-web-static-frontend/m2s3om-web/src/main.js",
         "web/src/main.js" ;
     aiprov:gitCommit "2d89c6c",
-        "a592f22" .
+        "a592f22",
+        "ace6dab" .
 
 <https://example.org/prov/entity/main-py> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
@@ -327,6 +353,13 @@
     aiprov:contentHash "sha256:846057238665913c5b0716c0fccfd6ee1175520f19d8f6184f40741ff2fa0354" ;
     aiprov:filePath "package-lock.json" ;
     aiprov:gitCommit "7753de3" .
+
+<https://example.org/prov/entity/pyproject-toml> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:claude-sonnet-5 ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a09-phase05-dependency-and-fail-closed-fix> ;
+    aiprov:contentHash "sha256:d24a9fb44d66a0de90e2f4e1eaf7ed982833e461da92ac6beefa2abeb3897b03" ;
+    aiprov:filePath "pyproject.toml" ;
+    aiprov:gitCommit "ace6dab" .
 
 <https://example.org/prov/entity/rdamsc_c19-sssom-tsv> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
@@ -370,6 +403,13 @@
     aiprov:contentHash "sha256:39193b23e24914f2a5f4072d77692466bb82e079b90eddca01af818552fa5ba1" ;
     aiprov:filePath "claude_suggestions/m2s3om-web-static-frontend/m2s3om-web/src/style.css" ;
     aiprov:gitCommit "a592f22" .
+
+<https://example.org/prov/entity/uv-lock> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:claude-sonnet-5 ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a09-phase05-dependency-and-fail-closed-fix> ;
+    aiprov:contentHash "sha256:8f9fa828715d73cbb247f272c6887edc2f4bb61b3b0bd01134d3a34c0b92aabe" ;
+    aiprov:filePath "uv.lock" ;
+    aiprov:gitCommit "ace6dab" .
 
 <https://example.org/prov/entity/vite-config-js> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
@@ -583,6 +623,17 @@ aiprov:verificationState a owl:ObjectProperty ;
     rdfs:domain prov:Entity ;
     rdfs:range aiprov:VerificationState .
 
+<https://example.org/prov/activity/a08-phase05-verification> a aiprov:AuditPass ;
+    rdfs:label "AI-led investigation and goal-backward verification of Phase 05 (Unified Vite+FastAPI Space packaging): discovered code was implemented ad-hoc without going through gsd-executor and that .planning/ tracking was never updated; ran retroactive verification against ROADMAP.md success criteria (status: passed, 4/4 truths)"@en ;
+    prov:endedAtTime "2026-08-25T10:41:21.637426+02:00"^^xsd:dateTime ;
+    prov:used <https://example.org/prov/source/-gitlab-ci-yml>,
+        <https://example.org/prov/source/Dockerfile>,
+        <https://example.org/prov/source/convert-js>,
+        <https://example.org/prov/source/main-py> ;
+    prov:wasAssociatedWith agent:claude-sonnet-5 ;
+    aiprov:usedTool "bash",
+        "task" .
+
 <https://example.org/prov/activity/a08-transparency-disclosure> a aiprov:Build ;
     rdfs:label "AI-generated transparency disclosure derived from the provenance graph"@en ;
     prov:endedAtTime "2026-08-17T19:55:38.332464+02:00"^^xsd:dateTime ;
@@ -625,25 +676,35 @@ aiprov:verificationState a owl:ObjectProperty ;
     prov:wasGeneratedBy <https://example.org/prov/activity/a06-deployment-ci-guidance> ;
     aiprov:verificationState verif:human-confirmed .
 
+<https://example.org/prov/source/-gitlab-ci-yml> a aiprov:Source ;
+    aiprov:filePath ".gitlab-ci.yml" .
+
+<https://example.org/prov/source/Dockerfile> a aiprov:Source ;
+    aiprov:filePath "Dockerfile" .
+
+<https://example.org/prov/source/convert-js> a aiprov:Source ;
+    aiprov:filePath "web/src/convert.js" .
+
+<https://example.org/prov/source/main-js> a aiprov:Source ;
+    aiprov:filePath "web/src/main.js" .
+
+<https://example.org/prov/source/main-py> a aiprov:Source ;
+    aiprov:filePath "server/main.py" .
+
+<https://example.org/prov/source/pyproject-toml> a aiprov:Source ;
+    aiprov:filePath "pyproject.toml" .
+
 aiprov:Build a owl:Class ;
     rdfs:comment "Deterministic build/compile/CI activity."@en ;
     rdfs:subClassOf prov:Activity .
 
-aiprov:Repair a owl:Class ;
-    rdfs:comment "Fixes a structural defect in the graph itself (e.g. backfilled parent)."@en ;
-    rdfs:subClassOf prov:Activity .
-
-aiprov:Source a owl:Class ;
-    rdfs:subClassOf prov:Entity .
-
-aiprov:AIAgent a owl:Class ;
-    rdfs:label "AI agent"@en ;
-    rdfs:comment "An LLM- or ML-driven agent participating in artefact production."@en ;
-    rdfs:subClassOf prov:SoftwareAgent .
-
 aiprov:HumanAgent a owl:Class ;
     rdfs:label "Human agent"@en ;
     rdfs:subClassOf prov:Person .
+
+aiprov:Repair a owl:Class ;
+    rdfs:comment "Fixes a structural defect in the graph itself (e.g. backfilled parent)."@en ;
+    rdfs:subClassOf prov:Activity .
 
 <https://example.org/prov/activity/a02-surreal-crosswalk-fix> a aiprov:Repair ;
     rdfs:label "AI-authored typed SurrealDB record loading and selection repair"@en ;
@@ -651,6 +712,27 @@ aiprov:HumanAgent a owl:Class ;
     prov:wasAssociatedWith agent:openai-gpt-5-6-luna ;
     aiprov:usedTool "apply_patch",
         "bash" .
+
+<https://example.org/prov/activity/a09-phase05-dependency-and-fail-closed-fix> a aiprov:Repair ;
+    rdfs:label "AI-authored fix for two regressions found during Phase 05 verification: (1) fastapi/uvicorn/httpx2 missing from pyproject.toml dependencies, breaking pytest collection repo-wide; (2) Phase 02 locked fail-closed UI error copy in web/src/main.js was overwritten by commit 2d89c6c, leaking raw err.message to users in violation of the Phase 02 UI-SPEC contract"@en ;
+    prov:endedAtTime "2026-08-25T10:41:21.789947+02:00"^^xsd:dateTime ;
+    prov:used <https://example.org/prov/source/main-js>,
+        <https://example.org/prov/source/pyproject-toml> ;
+    prov:wasAssociatedWith agent:claude-sonnet-5 ;
+    aiprov:usedTool "bash",
+        "edit" .
+
+<https://example.org/prov/activity/a10-phase05-tracking-reconciliation> a aiprov:AuthoringPass ;
+    rdfs:label "AI-authored reconciliation of .planning/ tracking (STATE.md, ROADMAP.md, REQUIREMENTS.md) with the actual ad-hoc Phase 05 implementation state, plus Phase 02 requirement checkboxes that were also never marked done; added SUPERSEDED banners to orphaned/obsolete plan files"@en ;
+    prov:endedAtTime "2026-08-25T10:41:21.948098+02:00"^^xsd:dateTime ;
+    prov:wasAssociatedWith agent:claude-sonnet-5 ;
+    aiprov:usedTool "bash",
+        "edit" .
+
+aiprov:AIAgent a owl:Class ;
+    rdfs:label "AI agent"@en ;
+    rdfs:comment "An LLM- or ML-driven agent participating in artefact production."@en ;
+    rdfs:subClassOf prov:SoftwareAgent .
 
 aiprov:Contribution a owl:Class ;
     rdfs:subClassOf prov:Entity .
@@ -674,10 +756,6 @@ agent:santiago-casas a aiprov:HumanAgent ;
     aiprov:affiliation "Deutsches Zentrum für Luft- und Raumfahrt e. V. (DLR)"^^xsd:string ;
     aiprov:orcid "https://orcid.org/0000-0002-4751-5138"^^xsd:anyURI .
 
-aiprov:AuthoringPass a owl:Class ;
-    rdfs:comment "AI or human produces/edits an artefact."@en ;
-    rdfs:subClassOf prov:Activity .
-
 <https://example.org/prov/activity/a01-docker-fastapi-packaging> a aiprov:AuthoringPass ;
     rdfs:label "AI-authored Docker, FastAPI, and browser conversion packaging"@en ;
     prov:endedAtTime "2026-08-17T19:51:10.872365+02:00"^^xsd:dateTime ;
@@ -685,13 +763,24 @@ aiprov:AuthoringPass a owl:Class ;
     aiprov:usedTool "apply_patch",
         "bash" .
 
-aiprov:AuditPass a owl:Class ;
-    rdfs:comment "AI or human reviews, verifies, or contests an artefact."@en ;
+aiprov:AuthoringPass a owl:Class ;
+    rdfs:comment "AI or human produces/edits an artefact."@en ;
     rdfs:subClassOf prov:Activity .
+
+aiprov:Source a owl:Class ;
+    rdfs:subClassOf prov:Entity .
 
 aiprov:Claim a owl:Class ;
     rdfs:comment "An assertion in any artefact that warrants attribution and verification."@en ;
     rdfs:subClassOf prov:Entity .
+
+aiprov:AuditPass a owl:Class ;
+    rdfs:comment "AI or human reviews, verifies, or contests an artefact."@en ;
+    rdfs:subClassOf prov:Activity .
+
+agent:claude-sonnet-5 a aiprov:AIAgent ;
+    aiprov:model "anthropic/claude-sonnet-5"^^xsd:string ;
+    aiprov:provider "Anthropic"^^xsd:string .
 
 aiprov:VerificationState a owl:Class ;
     rdfs:comment "A rung on the verification ladder. Higher position = stronger check. Rungs at position 5+ are human-only: an AI agent must never grant them."@en .

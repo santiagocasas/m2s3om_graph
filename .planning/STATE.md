@@ -43,6 +43,7 @@ See: .planning/PROJECT.md (updated 2026-06-17)
 - No dedicated tests for `server/main.py` (`/health`, `/suggest`, `/convert`) or `web/src/convert.js`; new `/convert` flow is wired but behaviorally unproven (see `05-VERIFICATION.md`).
 - `claude_suggestions/` still contains the original suggestion-API scaffold copy on disk even though its logic was promoted into `server/`; `tests/test_suggest_api.py` still tests the old copy under `claude_suggestions/m2s3om-suggest-api/m2s3om-suggest-api/`, not the shipped `server/main.py`. Whether `claude_suggestions/` should be removed/deprecated was not resolved during this reconciliation.
 - Commit `a592f22` re-added `spaces/m2s3om-streamlit-space/{Dockerfile,README.md}` as "deployment templates" after the original scaffold at that path was reverted for Phase 05's re-scope — not yet disambiguated whether these are intentional reference templates or leftover scope creep.
+- The `.github/workflows/aiprov-build.yml`, `aiprov-promote.yml`, and `aiprov-release.yml` CI workflows (added in `6d5ab7f`) reference `scripts/provlog.py`, `scripts/build_dashboard.py`, and `scripts/requirements.txt`, but none of these were ever vendored into this repo's `scripts/` directory. Those workflows will fail on push. Fix requires vendoring the relevant files from the `ai-provenance` skill (`/home/casas/.agents/skills/ai-provenance/scripts/`, `assets/ci/`) into the repo.
 
 ## Performance Metrics
 
