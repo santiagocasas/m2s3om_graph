@@ -1,8 +1,9 @@
-# Roadmap: m2s3om_graph v2.0 Deployment Surfaces
+# Roadmap: m2s3om_graph v2.1 Unified Explorer — Graph + Stats Pages
 
 ## Milestones
 
 - ✅ **v2.0 Deployment Surfaces** — Phases 02-05 (shipped 2026-08-25)
+- 🚧 **v2.1 Unified Explorer** — Phases 06-07 (in progress)
 
 ## Phases
 
@@ -16,6 +17,14 @@
 
 </details>
 
+<details>
+<summary>🚧 v2.1 Unified Explorer (Phases 06-07) — IN PROGRESS</summary>
+
+- [ ] Phase 06: Graph Page Integration — Port Cytoscape.js graph from GitLab Pages to /graph route
+- [ ] Phase 07: Stats Page Integration — Port pipeline stats/plots from exports/pipeline/latest/ to /stats route
+
+</details>
+
 ## Backlog
 
-- [999-01] Future enhancement: Unified Explorer — Graph + Stats Pages
+- [999-02] Future enhancement: Post v2.1 improvements

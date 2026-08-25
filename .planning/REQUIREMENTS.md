@@ -1,6 +1,6 @@
-# Requirements: m2s3om_graph v2.0 Deployment Surfaces
+# Requirements: m2s3om_graph v2.1 Unified Explorer — Graph + Stats Pages
 
-**Defined:** 2026-06-17
+**Defined:** 2026-08-25
 **Core Value:** Enable cross-walking between metadata standards by providing machine-readable mapping rules that can be applied automatically while tracking semantic loss.
 
 ## v2.0 Requirements
@@ -35,6 +35,32 @@ Requirements for the Deployment Surfaces milestone. Each requirement maps to exa
 ### Integration Governance
 
 - [x] **GOV-01**: Integration reuses existing code where scaffolds overlap with repository functionality, avoids duplicate parallel implementations, asks before ambiguous/destructive decisions, and leaves no final imports or runtime references to `claude_suggestions/`.
+
+## v2.1 Requirements
+
+Requirements for the Unified Explorer milestone. Each requirement maps to exactly one roadmap phase.
+
+### Graph Page
+
+- [ ] **GRAPH-01**: User can open the unified explorer graph page at `/graph` showing the standards/crosswalks graph built with Cytoscape.js, reusing the same data and behavior (including fullscreen mode) as the existing GitLab Pages explorer.
+- [ ] **GRAPH-02**: The /graph route loads Cytoscape graph data from the same static JSON file that GitLab Pages uses (`crosswalk_graph.json`), ensuring consistency across deployments.
+
+### Stats Page
+
+- [ ] **STATS-01**: User can open the unified explorer stats page at `/stats` showing pipeline statistics and plots from the latest exports (`exports/pipeline/latest/`), including run metadata and static images for v1.
+- [ ] **STATS-02**: The /stats route displays static images for plots (PNG/JPG) and static tables (CSV/TSV) from `exports/pipeline/latest/`; no live backend rendering required for v1.
+
+### Navigation
+
+- [ ] **NAV-01**: The unified explorer has a persistent navigation bar on every page (Mappings, Graph, Stats, Convert) allowing users to switch between routes without losing context.
+
+### Data Consistency
+
+- [ ] **DATA-02**: Both /graph and /stats routes consume the same pre-exported static JSON/assets that GitLab Pages uses, avoiding duplicate export steps and ensuring consistency.
+
+### Integration Governance
+
+- [ ] **GOV-02**: The .gitlab-ci.yml still contains exactly one `pages` job after the merge, with no additional CI jobs required for the new routes.
 
 ## Future Requirements
 
@@ -73,6 +99,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SPACE-01 | Phase 05 | Complete |
 | SPACE-02 | Phase 05 | Complete |
 | GOV-01 | Phase 02 | Complete |
+| GRAPH-01 | Phase 06 | Pending |
+| GRAPH-02 | Phase 06 | Pending |
+| STATS-01 | Phase 07 | Pending |
+| STATS-02 | Phase 07 | Pending |
+| NAV-01 | Phase 06 | Pending |
+| DATA-02 | Phase 06 | Pending |
+| GOV-02 | Phase 06 | Pending |
 
 **Coverage:**
 
@@ -81,6 +114,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 - Unmapped: 0
 - All requirements complete — milestone v2.0 fully covered.
 
+- v2.1 requirements: 8 total
+- Mapped to phases: 8
+- Unmapped: 0
+- Milestone v2.1 in progress — phases 06-07 pending.
+
 ---
-*Requirements defined: 2026-06-17*
-*Last updated: 2026-08-25 — reconciled against actual implementation state (Phase 02/05 requirements were done but never marked complete; SPACE-01/SPACE-02 wording updated to match the re-scoped Vite+FastAPI implementation; see `.planning/phases/05-streamlit-space-packaging/05-VERIFICATION.md`).*
+*Requirements defined: 2026-08-25*
+*Last updated: 2026-08-25 — v2.1 requirements added (GRAPH-01/02, STATS-01/02, NAV-01, DATA-02, GOV-02); ROADMAP.md updated to include v2.1 milestone with phases 06-07.*
