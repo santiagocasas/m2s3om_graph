@@ -3,6 +3,7 @@ import { createWasmEngines } from '@surrealdb/wasm';
 import * as curation from './curation.js';
 import { loadGraphData } from './graph-loader.js';
 import { renderConvertPage } from './convert.js';
+import { initGraphPage } from './graph.js';
 
 const statusEl = document.getElementById('status');
 const selectEl = document.getElementById('crosswalk-select');
@@ -21,6 +22,14 @@ function navigate(page) {
     document.getElementById('rules-table-container')?.remove();
     document.getElementById('no-writeback-notice')?.remove();
     renderConvertPage();
+    return;
+  }
+  if (page === 'graph') {
+    document.getElementById('controls')?.remove();
+    document.getElementById('status')?.remove();
+    document.getElementById('rules-table-container')?.remove();
+    document.getElementById('no-writeback-notice')?.remove();
+    initGraphPage();
     return;
   }
   // Reset explorer view

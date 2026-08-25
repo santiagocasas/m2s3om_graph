@@ -5,12 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>M²S³OM-graph · Crosswalk Explorer</title>
   <link rel="stylesheet" href="./src/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"
+    integrity="sha512-RcuA+PEnJcg1caTn53YLhZ3bYVFXphzcPL1BjBoAwFiA3bErav+AndZz1xrqpAtv/8Waep2X+9zn8KWpwacUSA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cytoscape-svg@0.4.0/cytoscape-svg.min.js"
+    integrity="sha512-Q8WrjrE8th2AOlj+WiCgIfS1TsJAM5GPEX+dGLwNLUG8zWqsAh7oHGr+DtFSRGB97jct5pAfSD3qza6mDED1Bg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
   <header>
     <h1>M²S³OM-graph</h1>
     <nav id="nav">
       <button data-page="explore" class="active">Explore</button>
+      <button data-page="graph">Graph</button>
       <button data-page="convert">Convert</button>
     </nav>
     <p>Browse extracted metadata crosswalks. Runs entirely in your browser via an embedded SurrealDB instance, no server, no API calls.</p>
