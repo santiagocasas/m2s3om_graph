@@ -20,7 +20,7 @@
 <details>
 <summary>🚧 v2.1 Unified Explorer (Phases 06-07) — IN PROGRESS</summary>
 
-- [ ] Phase 06: Graph Page Integration — Port Cytoscape.js graph from GitLab Pages to /graph route (planning)
+- [x] Phase 06: Graph Page Integration — Port Cytoscape.js graph from GitLab Pages to /graph route (completed 2026-08-25)
 - [ ] Phase 07: Stats Page Integration — Port pipeline stats/plots from exports/pipeline/latest/ to /stats route
 
 </details>
