@@ -412,31 +412,28 @@ function getManualFieldValue(manualRow, field) {
 function renderCandidateRows(triggerRow, sourceField, candidates) {
   const list = Array.isArray(candidates) ? candidates : [];
   removeCandidateRows(triggerRow);
-  candidateRows.set(triggerRow, []);
+  const survivingAcceptedRows = candidateRows.get(triggerRow) || [];
+  let insertAfter = survivingAcceptedRows.at(-1) ?? triggerRow;
+  const renderedRows = [...survivingAcceptedRows];
 
-  for (let index = list.length - 1; index >= 0; index -= 1) {
-    const candidate = list[index];
-    const row = document.createElement('tr');
-    row.className = 'candidate-row';
-    row.dataset.sourceField = sourceField;
-    candidateRows.set(triggerRow, [row, ...(candidateRows.get(triggerRow) || [])]);
+  for (const candidate of list) {
+    if (currentCrosswalkRecord && curation.getDecision(currentCrosswalkRecord.id, sourceField, candidate)?.status === 'accepted') {
+      continue;
+    }
+
+    const row = createCandidateRowElement(sourceField, candidate, renderedRows.length);
     candidateData.set(row, candidate);
-    row.innerHTML = `
-      <td colspan="7">
-        <div class="candidate-fields">
-          <span><span class="field-label">Source:</span> <span class="field-value">${escapeHtml(candidate?.source_path ?? '')}</span></span>
-          <span><span class="field-label">Target:</span> <span class="field-value">${escapeHtml(candidate?.target_path ?? '(none)')}</span></span>
-          <span><span class="field-label">Type:</span> <span class="field-value">${escapeHtml(candidate?.mapping_type ?? '')}</span></span>
-          <span><span class="field-label">Confidence:</span> <span class="field-value">${formatConfidence(candidate?.confidence)}</span></span>
-          <span><span class="field-label">Evidence:</span> <span class="field-value">${escapeHtml(candidate?.evidence ?? '')}</span></span>
-          <span><span class="field-label">Notes:</span> <span class="field-value">${escapeHtml(candidate?.notes ?? '')}</span></span>
-          <button type="button" class="accept-btn" data-candidate-idx="${index}">Accept</button>
-          <button type="button" class="reject-btn" data-candidate-idx="${index}">Reject</button>
-        </div>
-      </td>
-    `;
-    triggerRow.insertAdjacentElement('afterend', row);
+    insertAfter.insertAdjacentElement('afterend', row);
+    insertAfter = row;
+    renderedRows.push(row);
   }
+
+  if (renderedRows.length > 0) {
+    candidateRows.set(triggerRow, renderedRows);
+    return;
+  }
+
+  candidateRows.delete(triggerRow);
 }
 
 function handleDecisionClick(button) {
@@ -482,8 +479,30 @@ function markCandidateRow(row, status, label) {
   }
 }
 
+function createCandidateRowElement(sourceField, candidate, index) {
+  const row = document.createElement('tr');
+  row.className = 'candidate-row';
+  row.dataset.sourceField = sourceField;
+  row.innerHTML = `
+    <td colspan="7">
+      <div class="candidate-fields">
+        <span><span class="field-label">Source:</span> <span class="field-value">${escapeHtml(candidate?.source_path ?? '')}</span></span>
+        <span><span class="field-label">Target:</span> <span class="field-value">${escapeHtml(candidate?.target_path ?? '(none)')}</span></span>
+        <span><span class="field-label">Type:</span> <span class="field-value">${escapeHtml(candidate?.mapping_type ?? '')}</span></span>
+        <span><span class="field-label">Confidence:</span> <span class="field-value">${formatConfidence(candidate?.confidence)}</span></span>
+        <span><span class="field-label">Evidence:</span> <span class="field-value">${escapeHtml(candidate?.evidence ?? '')}</span></span>
+        <span><span class="field-label">Notes:</span> <span class="field-value">${escapeHtml(candidate?.notes ?? '')}</span></span>
+        <button type="button" class="accept-btn" data-candidate-idx="${index}">Accept</button>
+        <button type="button" class="reject-btn" data-candidate-idx="${index}">Reject</button>
+      </div>
+    </td>
+  `;
+  return row;
+}
+
 function removeCandidateRows(triggerRow) {
   let next = triggerRow.nextElementSibling;
+  const survivingRows = [];
   while (
     next &&
     (next.classList.contains('candidate-row') ||
@@ -493,7 +512,15 @@ function removeCandidateRows(triggerRow) {
   ) {
     const current = next;
     next = next.nextElementSibling;
+    if (current.classList.contains('accepted')) {
+      survivingRows.push(current);
+      continue;
+    }
     current.remove();
+  }
+  if (survivingRows.length > 0) {
+    candidateRows.set(triggerRow, survivingRows);
+    return;
   }
   candidateRows.delete(triggerRow);
 }
