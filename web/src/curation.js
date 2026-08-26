@@ -18,7 +18,7 @@ function sanitizeTsvField(value) {
 }
 
 export function getSuggestApiUrl() {
-  return import.meta.env.VITE_SUGGEST_API_URL || 'http://localhost:8000/suggest';
+  return import.meta.env.VITE_SUGGEST_API_URL || '/suggest';
 }
 
 export async function postSuggestRequest({
