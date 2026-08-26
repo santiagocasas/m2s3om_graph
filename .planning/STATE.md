@@ -4,9 +4,9 @@ milestone: v2.1
 milestone_name: Unified Explorer — Graph + Stats Pages
 status: planning
 stopped_at: Phase 06 planning in progress
-last_updated: "2026-08-25T15:00:00.000Z"
-last_activity: 2026-08-25
-last_activity_desc: Phase 06 planning started — Graph Page Integration
+last_updated: "2026-08-26T11:28:26.286Z"
+last_activity: 2026-08-26
+last_activity_desc: Completed quick task 260826-ipp — manual mapping suggestion mode
 progress:
   total_phases: 2
   completed_phases: 0
@@ -23,7 +23,7 @@ current_phase: 06
 Phase: 06 planning in progress
 Plan: Graph Page Integration
 Status: Planning
-Last activity: 2026-08-25 — Phase 06 planning started
+Last activity: 2026-08-26 - Completed quick task 260826-ipp: Add manual mapping suggestion mode to curation UI
 
 ## Project Reference
 
@@ -41,6 +41,12 @@ See: .planning/PROJECT.md (updated 2026-08-25)
 ## Decisions
 
 (Empty — decisions will be added during milestone planning)
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260826-ipp | Add manual mapping suggestion mode to curation UI: on Suggest button, choose LLM or manual entry; manual mappings accepted like LLM ones, shown with the same type/confidence labels | 2026-08-26 | 4f516fd | [260826-ipp-add-manual-mapping-suggestion-mode-to-cu](./quick/260826-ipp-add-manual-mapping-suggestion-mode-to-cu/) |
 
 ## Operator Next Steps
 
