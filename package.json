@@ -12,7 +12,9 @@
     "hf:build": "npm run export && npm run build-web",
     "docker:build": "docker build -t m2s3om-graph .",
     "docker:run": "docker compose up --build",
-    "docker:dev": "echo 'Starting Docker backend in background...\\nThen run in a second terminal: npm run dev-web\\nOpen http://localhost:5173' && docker compose up -d",
+    "docker:dev": "docker compose up -d && echo '' && echo '✓ Docker backend started at http://localhost:7860' && echo '' && echo 'To start frontend dev server, run in another terminal:' && echo '  npm run dev-web' && echo '' && echo 'Then open http://localhost:5173'",
+    "docker:dev:all": "echo 'Starting full development environment...' && docker compose up -d && echo '' && echo 'Backend: http://localhost:7860' && echo 'Starting frontend...' && npm run dev-web",
+    "docker:dev:backend-only": "docker compose up -d && echo '✓ Docker backend started at http://localhost:7860'",
     "docker:stop": "docker compose down"
   },
   "devDependencies": {
