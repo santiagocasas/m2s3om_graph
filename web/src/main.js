@@ -169,6 +169,8 @@ function renderRules(rules) {
     `;
     tbody.appendChild(tr);
   }
+
+  restoreAcceptedCandidateRows();
 }
 
 async function handleSuggestClick(button) {
@@ -498,6 +500,40 @@ function createCandidateRowElement(sourceField, candidate, index) {
     </td>
   `;
   return row;
+}
+
+function restoreAcceptedCandidateRows() {
+  if (!currentCrosswalkRecord) {
+    return;
+  }
+
+  const acceptedEntries = curation
+    .getAcceptedCandidates()
+    .filter((entry) => entry.crosswalkId === currentCrosswalkRecord.id);
+
+  for (const entry of acceptedEntries) {
+    const selector = `.suggest-btn[data-source-field="${CSS.escape(entry.sourceField)}"]`;
+    const suggestButton = tbody.querySelector(selector);
+    if (!(suggestButton instanceof HTMLButtonElement)) {
+      console.debug('Skipping accepted row restore; no suggest button found for source field', entry.sourceField);
+      continue;
+    }
+
+    const triggerRow = suggestButton.closest('tr');
+    if (!(triggerRow instanceof HTMLTableRowElement)) {
+      continue;
+    }
+
+    const candidate = entry.candidate ?? {};
+    const existingRows = candidateRows.get(triggerRow) || [];
+    const row = createCandidateRowElement(entry.sourceField, candidate, existingRows.length);
+    candidateData.set(row, candidate);
+    const insertAfter = existingRows.at(-1) ?? triggerRow;
+    insertAfter.insertAdjacentElement('afterend', row);
+    existingRows.push(row);
+    candidateRows.set(triggerRow, existingRows);
+    markCandidateRow(row, 'accepted', 'Accepted ✓');
+  }
 }
 
 function removeCandidateRows(triggerRow) {
