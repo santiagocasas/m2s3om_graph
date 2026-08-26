@@ -23,7 +23,7 @@ current_phase: 06
 Phase: 06 planning in progress
 Plan: Graph Page Integration
 Status: Planning
-Last activity: 2026-08-26 - Completed quick task 260826-ipp: Add manual mapping suggestion mode to curation UI
+Last activity: 2026-08-26 - Completed quick task 260826-kzw: Persist accepted candidate mappings and add SSSOM export
 
 ## Project Reference
 
@@ -47,6 +47,7 @@ See: .planning/PROJECT.md (updated 2026-08-25)
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260826-ipp | Add manual mapping suggestion mode to curation UI: on Suggest button, choose LLM or manual entry; manual mappings accepted like LLM ones, shown with the same type/confidence labels | 2026-08-26 | 4f516fd | [260826-ipp-add-manual-mapping-suggestion-mode-to-cu](./quick/260826-ipp-add-manual-mapping-suggestion-mode-to-cu/) |
+| 260826-kzw | Persist accepted candidate mappings across re-suggest and add client-side SSSOM TSV export per crosswalk; accepted rows stay visible, export button generates SSSOM TSV per crosswalk | 2026-08-26 | df3e3b2 | [260826-kzw-persist-accepted-candidate-mappings-acro](./quick/260826-kzw-persist-accepted-candidate-mappings-acro/) |
 
 ## Operator Next Steps
 
