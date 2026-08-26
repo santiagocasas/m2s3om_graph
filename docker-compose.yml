@@ -6,3 +6,6 @@ services:
     environment:
       - PYTHONPATH=/app/src
       - SUGGEST_API_ALLOWED_ORIGINS=*
+      - BLABLADOR_API_KEY=${BLABLADOR_API_KEY:-}
+      - BLABLADOR_BASE_URL=${BLABLADOR_BASE_URL:-}
+      - M2S3OM_LLM_MODEL=${M2S3OM_LLM_MODEL:-}

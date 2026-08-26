@@ -30,12 +30,12 @@ class LLMRuntimeConfig:
 
 
 def load_llm_runtime_config() -> LLMRuntimeConfig:
+    base_url = os.getenv("BLABLADOR_BASE_URL") or DEFAULT_BLABLADOR_BASE_URL
+    model = os.getenv("M2S3OM_LLM_MODEL") or DEFAULT_LLM_MODEL
     return LLMRuntimeConfig(
         api_key=os.getenv("BLABLADOR_API_KEY", ""),
-        base_url=os.getenv("BLABLADOR_BASE_URL", DEFAULT_BLABLADOR_BASE_URL).rstrip(
-            "/"
-        ),
-        model=os.getenv("M2S3OM_LLM_MODEL", DEFAULT_LLM_MODEL),
+        base_url=base_url.rstrip("/"),
+        model=model,
         timeout_s=_int_env("M2S3OM_LLM_TIMEOUT_S", 60, minimum=5, maximum=300),
         retries=_int_env("M2S3OM_LLM_RETRIES", 2, minimum=0, maximum=6),
         max_input_chars=_int_env(
