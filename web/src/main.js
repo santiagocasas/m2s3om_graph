@@ -171,25 +171,6 @@ function renderRules(rules) {
   }
 }
 
-function handleTbodyClick(event) {
-  if (!(event.target instanceof Element)) {
-    return;
-  }
-  const button = event.target.closest('button');
-  if (!(button instanceof HTMLButtonElement)) {
-    return;
-  }
-
-  if (button.classList.contains('suggest-btn')) {
-    handleSuggestClick(button);
-    return;
-  }
-
-  if (button.classList.contains('accept-btn') || button.classList.contains('reject-btn')) {
-    handleDecisionClick(button);
-  }
-}
-
 async function handleSuggestClick(button) {
   if (!currentCrosswalkRecord) {
     return;
@@ -201,10 +182,19 @@ async function handleSuggestClick(button) {
   }
 
   removeCandidateRows(triggerRow);
+  const sourceField = button.dataset.sourceField ?? '';
+  insertSuggestModeRow(triggerRow, sourceField);
+}
+
+async function runLlmSuggest(triggerRow, sourceField, button) {
+  if (!currentCrosswalkRecord) {
+    return;
+  }
+
+  removeCandidateRows(triggerRow);
   button.disabled = true;
   button.textContent = 'Loading…';
 
-  const sourceField = button.dataset.sourceField ?? '';
   const sourceStandard = String(currentCrosswalkRecord.source ?? '').replace(/^standard:/, '');
   const targetStandard = String(currentCrosswalkRecord.target ?? '').replace(/^standard:/, '');
   const targetSchemaFields = [
@@ -220,8 +210,6 @@ async function handleSuggestClick(button) {
     });
 
     renderCandidateRows(triggerRow, sourceField, candidates);
-    button.disabled = false;
-    button.textContent = 'Suggest candidate mappings';
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     const errorRow = document.createElement('tr');
@@ -229,9 +217,196 @@ async function handleSuggestClick(button) {
     errorRow.dataset.sourceField = sourceField;
     errorRow.innerHTML = `<td colspan="7">${escapeHtml(message)}</td>`;
     triggerRow.insertAdjacentElement('afterend', errorRow);
+  } finally {
     button.disabled = false;
     button.textContent = 'Suggest candidate mappings';
   }
+}
+
+function handleTbodyClick(event) {
+  if (!(event.target instanceof Element)) {
+    return;
+  }
+  const button = event.target.closest('button');
+  if (!(button instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  if (button.classList.contains('suggest-btn')) {
+    handleSuggestClick(button);
+    return;
+  }
+
+  if (button.classList.contains('suggest-mode-llm')) {
+    handleSuggestModeLlmClick(button);
+    return;
+  }
+
+  if (button.classList.contains('suggest-mode-manual')) {
+    handleSuggestModeManualClick(button);
+    return;
+  }
+
+  if (button.classList.contains('suggest-mode-cancel') || button.classList.contains('manual-form-cancel')) {
+    const controlRow = button.closest('tr');
+    if (controlRow instanceof HTMLTableRowElement) {
+      controlRow.remove();
+    }
+    return;
+  }
+
+  if (button.classList.contains('manual-form-submit')) {
+    handleManualFormSubmit(button);
+    return;
+  }
+
+  if (button.classList.contains('accept-btn') || button.classList.contains('reject-btn')) {
+    handleDecisionClick(button);
+  }
+}
+
+function handleSuggestModeLlmClick(button) {
+  const controlRow = button.closest('tr');
+  if (!(controlRow instanceof HTMLTableRowElement)) {
+    return;
+  }
+
+  const triggerRow = controlRow.previousElementSibling;
+  if (!(triggerRow instanceof HTMLTableRowElement)) {
+    return;
+  }
+
+  const sourceField = controlRow.dataset.sourceField ?? '';
+  const suggestButton = triggerRow.querySelector('.suggest-btn');
+  if (!(suggestButton instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  runLlmSuggest(triggerRow, sourceField, suggestButton);
+}
+
+function handleSuggestModeManualClick(button) {
+  const controlRow = button.closest('tr');
+  if (!(controlRow instanceof HTMLTableRowElement)) {
+    return;
+  }
+
+  const triggerRow = controlRow.previousElementSibling;
+  if (!(triggerRow instanceof HTMLTableRowElement)) {
+    return;
+  }
+
+  const sourceField = controlRow.dataset.sourceField ?? '';
+  insertManualFormRow(triggerRow, sourceField);
+}
+
+function insertSuggestModeRow(triggerRow, sourceField) {
+  const chooserRow = document.createElement('tr');
+  chooserRow.className = 'suggest-mode-row';
+  chooserRow.dataset.sourceField = sourceField;
+  chooserRow.innerHTML = `
+    <td colspan="7">
+      <button type="button" class="suggest-mode-llm">Ask LLM</button>
+      <button type="button" class="suggest-mode-manual">Enter manually</button>
+      <button type="button" class="suggest-mode-cancel">Cancel</button>
+    </td>
+  `;
+  triggerRow.insertAdjacentElement('afterend', chooserRow);
+}
+
+function insertManualFormRow(triggerRow, sourceField) {
+  removeCandidateRows(triggerRow);
+
+  const manualRow = document.createElement('tr');
+  manualRow.className = 'manual-form-row';
+  manualRow.dataset.sourceField = sourceField;
+  manualRow.innerHTML = `
+    <td colspan="7">
+      <form class="manual-form">
+        <label>
+          Source path
+          <input type="text" data-field="source_path" value="" />
+        </label>
+        <label>
+          Target path
+          <input type="text" data-field="target_path" />
+        </label>
+        <label>
+          Mapping type
+          <select data-field="mapping_type">
+            <option value="direct">direct</option>
+            <option value="conditional">conditional</option>
+            <option value="missing">missing</option>
+            <option value="aggregation">aggregation</option>
+          </select>
+        </label>
+        <label>
+          Confidence
+          <input type="number" data-field="confidence" min="0" max="1" step="0.05" value="1.0" />
+        </label>
+        <label>
+          Evidence
+          <input type="text" data-field="evidence" />
+        </label>
+        <label>
+          Notes
+          <input type="text" data-field="notes" />
+        </label>
+        <div class="manual-form-actions">
+          <button type="button" class="manual-form-submit">Add candidate</button>
+          <button type="button" class="manual-form-cancel">Cancel</button>
+        </div>
+      </form>
+    </td>
+  `;
+  triggerRow.insertAdjacentElement('afterend', manualRow);
+  const sourceInput = manualRow.querySelector('[data-field="source_path"]');
+  if (sourceInput instanceof HTMLInputElement) {
+    sourceInput.value = sourceField;
+  }
+}
+
+function handleManualFormSubmit(button) {
+  const manualRow = button.closest('tr');
+  if (!(manualRow instanceof HTMLTableRowElement)) {
+    return;
+  }
+
+  const triggerRow = manualRow.previousElementSibling;
+  if (!(triggerRow instanceof HTMLTableRowElement)) {
+    return;
+  }
+
+  const sourceField = manualRow.dataset.sourceField ?? '';
+  const manualCandidate = buildManualCandidate(manualRow);
+  manualRow.remove();
+  renderCandidateRows(triggerRow, sourceField, [manualCandidate]);
+}
+
+function buildManualCandidate(manualRow) {
+  const sourcePath = getManualFieldValue(manualRow, 'source_path');
+  const targetPath = getManualFieldValue(manualRow, 'target_path');
+  const mappingType = getManualFieldValue(manualRow, 'mapping_type');
+  const confidenceValue = Number(getManualFieldValue(manualRow, 'confidence'));
+  const evidence = getManualFieldValue(manualRow, 'evidence');
+  const notes = getManualFieldValue(manualRow, 'notes');
+
+  return {
+    source_path: sourcePath,
+    target_path: targetPath,
+    mapping_type: mappingType,
+    confidence: Number.isNaN(confidenceValue) ? 1.0 : confidenceValue,
+    evidence,
+    notes,
+  };
+}
+
+function getManualFieldValue(manualRow, field) {
+  const input = manualRow.querySelector(`[data-field="${field}"]`);
+  if (input instanceof HTMLInputElement || input instanceof HTMLSelectElement || input instanceof HTMLTextAreaElement) {
+    return input.value;
+  }
+  return '';
 }
 
 function renderCandidateRows(triggerRow, sourceField, candidates) {
@@ -309,7 +484,13 @@ function markCandidateRow(row, status, label) {
 
 function removeCandidateRows(triggerRow) {
   let next = triggerRow.nextElementSibling;
-  while (next && (next.classList.contains('candidate-row') || next.classList.contains('candidate-error'))) {
+  while (
+    next &&
+    (next.classList.contains('candidate-row') ||
+      next.classList.contains('candidate-error') ||
+      next.classList.contains('suggest-mode-row') ||
+      next.classList.contains('manual-form-row'))
+  ) {
     const current = next;
     next = next.nextElementSibling;
     current.remove();
