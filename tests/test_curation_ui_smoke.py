@@ -108,3 +108,45 @@ def test_curation_module_still_has_no_persistence() -> None:
     text = _strip_js_comments(Path('web/src/curation.js').read_text(encoding='utf-8'))
     for needle in ['localStorage', 'sessionStorage', 'indexedDB', 'indxdb:', 'db.create', 'db.merge', 'db.update']:
         assert needle not in text, f'unexpected persistence call: {needle}'
+
+
+def test_main_js_has_suggest_mode_chooser() -> None:
+    text = Path('web/src/main.js').read_text(encoding='utf-8')
+    for token in ['suggest-mode-row', 'suggest-mode-llm', 'suggest-mode-manual']:
+        assert token in text, f'missing: {token}'
+
+
+def test_main_js_has_manual_form_fields() -> None:
+    text = Path('web/src/main.js').read_text(encoding='utf-8')
+    for token in [
+        'manual-form-row',
+        'manual-form-submit',
+        'data-field="source_path"',
+        'data-field="target_path"',
+        'data-field="mapping_type"',
+        'data-field="confidence"',
+        'data-field="evidence"',
+        'data-field="notes"',
+    ]:
+        assert token in text, f'missing: {token}'
+
+
+def test_manual_submit_reuses_llm_render_path_without_network() -> None:
+    text = Path('web/src/main.js').read_text(encoding='utf-8')
+    start = text.index('manual-form-submit')
+    slice_text = text[start : start + 4000]
+    assert 'renderCandidateRows(' in slice_text, 'missing shared render path'
+    assert 'postSuggestRequest(' not in slice_text, 'manual path must not call postSuggestRequest'
+    assert 'fetch(' not in slice_text, 'manual path must not call fetch'
+
+
+def test_curation_js_unchanged_manual_mode_reuses_shared_accept_path() -> None:
+    text = Path('web/src/curation.js').read_text(encoding='utf-8')
+    for token in [
+        'export async function postSuggestRequest',
+        'export function acceptCandidate',
+        'export function buildAcceptedTsv',
+        'export function downloadAcceptedTsv',
+    ]:
+        assert token in text, f'missing export: {token}'
+    assert 'manual' not in text, 'curation.js must not add a manual branch'
