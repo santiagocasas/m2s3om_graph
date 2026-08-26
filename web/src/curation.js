@@ -10,6 +10,12 @@ function parseCrosswalkId(crosswalkId) {
   return sourceStandard || value;
 }
 
+function parseTargetStandard(crosswalkId) {
+  const value = String(crosswalkId ?? '');
+  const [, targetStandard] = value.split('_to_');
+  return targetStandard || value;
+}
+
 function sanitizeTsvField(value) {
   if (value == null) {
     return '';
@@ -128,6 +134,57 @@ export function buildAcceptedTsv() {
 export function downloadAcceptedTsv(filenameOverride) {
   const filename = filenameOverride || 'accepted_candidates.tsv';
   const blob = new Blob([buildAcceptedTsv()], { type: 'text/tab-separated-values;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  return filename;
+}
+
+export function buildSssomTsv(crosswalkId) {
+  const header = 'subject_id\tpredicate_id\tobject_id\tmapping_justification\tconfidence\tsubject_label\tobject_label\tcomment\n';
+  const sourceStandard = parseCrosswalkId(crosswalkId);
+  const targetStandard = parseTargetStandard(crosswalkId);
+  const rows = getAcceptedCandidates()
+    .filter((entry) => entry.crosswalkId === crosswalkId)
+    .map((entry) => {
+      const candidate = entry.candidate ?? {};
+      const mappingType = candidate.mapping_type;
+      const predicateId =
+        mappingType === 'direct'
+          ? 'skos:exactMatch'
+          : mappingType === 'conditional'
+            ? 'skos:closeMatch'
+            : mappingType === 'aggregation'
+              ? 'skos:relatedMatch'
+              : mappingType === 'missing'
+                ? 'sssom:noMapping'
+                : 'skos:relatedMatch';
+      const comment = `${candidate.evidence ?? ''}${candidate.notes ? ` — ${candidate.notes}` : ''}`;
+      return [
+        `${sourceStandard}:${entry.sourceField}`,
+        predicateId,
+        candidate.target_path ? `${targetStandard}:${candidate.target_path}` : '',
+        'semapv:ManualMappingCuration',
+        typeof candidate.confidence === 'number' ? candidate.confidence : '',
+        entry.sourceField,
+        candidate.target_path ?? '',
+        comment,
+      ]
+        .map(sanitizeTsvField)
+        .join('\t');
+    });
+
+  return `${header}${rows.map((row) => `${row}\n`).join('')}`;
+}
+
+export function downloadSssomTsv(crosswalkId, filenameOverride) {
+  const filename = filenameOverride || `sssom_${parseCrosswalkId(crosswalkId)}_to_${parseTargetStandard(crosswalkId)}.tsv`;
+  const blob = new Blob([buildSssomTsv(crosswalkId)], { type: 'text/tab-separated-values;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;

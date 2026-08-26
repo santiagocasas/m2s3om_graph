@@ -8,6 +8,7 @@ import { initGraphPage } from './graph.js';
 const statusEl = document.getElementById('status');
 const selectEl = document.getElementById('crosswalk-select');
 const exportBtn = document.getElementById('export-tsv-btn');
+const exportSssomBtn = document.getElementById('export-sssom-btn');
 const tbody = document.querySelector('#rules-table tbody');
 
 const appContainer = document.getElementById('app');
@@ -53,6 +54,13 @@ function updateExportButton() {
     exportBtn.textContent = `Export accepted (${count}) as TSV`;
     exportBtn.disabled = count === 0;
   }
+  const sssomCount = currentCrosswalkRecord
+    ? curation.getAcceptedCandidates().filter((entry) => entry.crosswalkId === currentCrosswalkRecord.id).length
+    : 0;
+  if (exportSssomBtn instanceof HTMLButtonElement) {
+    exportSssomBtn.textContent = `Export SSSOM (${sssomCount})`;
+    exportSssomBtn.disabled = sssomCount === 0 || !currentCrosswalkRecord;
+  }
 }
 
 async function main() {
@@ -89,6 +97,13 @@ async function main() {
       }
     });
   }
+  if (exportSssomBtn instanceof HTMLButtonElement) {
+    exportSssomBtn.addEventListener('click', () => {
+      if (!exportSssomBtn.disabled && currentCrosswalkRecord) {
+        curation.downloadSssomTsv(currentCrosswalkRecord.id);
+      }
+    });
+  }
   if (!tbody.dataset.curationBound) {
     tbody.addEventListener('click', handleTbodyClick);
     tbody.dataset.curationBound = '1';
@@ -120,12 +135,14 @@ async function showCrosswalk(db, crosswalkId) {
   if (!crosswalkId) {
     currentCrosswalkRecord = null;
     renderRules([]);
+    updateExportButton();
     return;
   }
   const result = await db.select(new RecordId('crosswalk', crosswalkId));
   const record = Array.isArray(result) ? result[0] : result;
   currentCrosswalkRecord = record ?? null;
   renderRules(record?.rules ?? []);
+  updateExportButton();
 }
 
 function renderRules(rules) {
@@ -171,6 +188,7 @@ function renderRules(rules) {
   }
 
   restoreAcceptedCandidateRows();
+  updateExportButton();
 }
 
 async function handleSuggestClick(button) {
