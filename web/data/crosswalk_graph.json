@@ -214,6 +214,7 @@
       "id": "datacite44_to_dcterms",
       "source": "datacite44",
       "target": "dcterms",
+      "display_name": "DataCite 4.4 to Dublin Core Terms",
       "rules": [
         {
           "record_id": "mapping_rule:02e4709cb0c77401",
@@ -3572,6 +3573,7 @@
       "id": "rdamsc_c1",
       "source": "rdamsc_c1",
       "target": "dst_rdamsc_c1",
+      "display_name": "abcd-access-biological_TO_darwin-core (ABCD (Access to Biological Collection Data) -> Darwin Core",
       "rules": [
         {
           "record_id": "mapping_rule:0bb4cbfb8417f701",
@@ -4011,9 +4013,677 @@
       ]
     },
     {
+      "id": "rdamsc_c3",
+      "source": "rdamsc_c3",
+      "target": "dst_rdamsc_c3",
+      "display_name": "darwin-core_TO_abcd-access-biological (Darwin Core -> ABCD (Access to Biological Collection Data",
+      "rules": [
+        {
+          "record_id": "mapping_rule:3d34a9409e5d78a8",
+          "subject_id": "src:darwin_core",
+          "object_id": "dst:abcd",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "Darwin Core"
+          ],
+          "target_paths": [
+            "ABCD"
+          ],
+          "source_display": "Darwin Core",
+          "target_display": "ABCD",
+          "mapping_type": "DIRECT",
+          "confidence": 0.45,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {
+            "op": "copy"
+          },
+          "notes": "Relaxed LLM extraction",
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:darwin_core",
+            "object_id": "dst:abcd",
+            "record_id": "mapping_rule:3d34a9409e5d78a8",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rdamsc_c5",
+      "source": "rdamsc_c5",
+      "target": "dst_rdamsc_c5",
+      "display_name": "DataCite to Dublin Core Mapping 4.4",
+      "rules": [
+        {
+          "record_id": "005fecf3474473e1",
+          "subject_id": "src:publisher",
+          "object_id": "dst:dcterms_publisher",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "Publisher"
+          ],
+          "target_paths": [
+            "dcterms:publisher"
+          ],
+          "source_display": "Publisher",
+          "target_display": "dcterms:publisher",
+          "mapping_type": "DIRECT",
+          "confidence": 0.95,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:publisher",
+            "object_id": "dst:dcterms_publisher",
+            "record_id": "005fecf3474473e1",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "173924a785b42333",
+          "subject_id": "src:pointlongitude",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "pointLongitude"
+          ],
+          "target_paths": [],
+          "source_display": "pointLongitude",
+          "target_display": "",
+          "mapping_type": "PASSTHROUGH",
+          "confidence": 0.8,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": "pointLongitude",
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:pointlongitude",
+            "object_id": "",
+            "record_id": "173924a785b42333",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "17e88ba01b3549e9",
+          "subject_id": "src:pointlatitude",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "pointLatitude"
+          ],
+          "target_paths": [],
+          "source_display": "pointLatitude",
+          "target_display": "",
+          "mapping_type": "PASSTHROUGH",
+          "confidence": 0.8,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": "pointLatitude 18.4.2 inPolygonPoint",
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:pointlatitude",
+            "object_id": "",
+            "record_id": "17e88ba01b3549e9",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "3bdf4c22bb21bb49",
+          "subject_id": "src:affiliationidentifier",
+          "object_id": "dst:dcterms_identifier",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "affiliationIdentifier"
+          ],
+          "target_paths": [
+            "dcterms:identifier"
+          ],
+          "source_display": "affiliationIdentifier",
+          "target_display": "dcterms:identifier",
+          "mapping_type": "DIRECT",
+          "confidence": 0.95,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:affiliationidentifier",
+            "object_id": "dst:dcterms_identifier",
+            "record_id": "3bdf4c22bb21bb49",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "3e1f5aae92298861",
+          "subject_id": "src:affiliationidentifierscheme",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "affiliationIdentifierScheme"
+          ],
+          "target_paths": [],
+          "source_display": "affiliationIdentifierScheme",
+          "target_display": "",
+          "mapping_type": "MISSING",
+          "confidence": 0.95,
+          "semantic_loss": true,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "fallback",
+          "evidence": {
+            "subject_id": "src:affiliationidentifierscheme",
+            "object_id": "",
+            "record_id": "3e1f5aae92298861",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "3f71cddd0be9fa3d",
+          "subject_id": "src:pointlongitude",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "pointLongitude"
+          ],
+          "target_paths": [],
+          "source_display": "pointLongitude",
+          "target_display": "",
+          "mapping_type": "PASSTHROUGH",
+          "confidence": 0.8,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": "pointLongitude",
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:pointlongitude",
+            "object_id": "",
+            "record_id": "3f71cddd0be9fa3d",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "446a351acb6e66e5",
+          "subject_id": "src:nameidentifierscheme",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "nameIdentifierScheme"
+          ],
+          "target_paths": [],
+          "source_display": "nameIdentifierScheme",
+          "target_display": "",
+          "mapping_type": "MISSING",
+          "confidence": 0.95,
+          "semantic_loss": true,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "fallback",
+          "evidence": {
+            "subject_id": "src:nameidentifierscheme",
+            "object_id": "",
+            "record_id": "446a351acb6e66e5",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "6baaa9379d4893ad",
+          "subject_id": "src:title",
+          "object_id": "dst:dcterms_title",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "Title"
+          ],
+          "target_paths": [
+            "dcterms:title"
+          ],
+          "source_display": "Title",
+          "target_display": "dcterms:title",
+          "mapping_type": "DIRECT",
+          "confidence": 0.95,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:title",
+            "object_id": "dst:dcterms_title",
+            "record_id": "6baaa9379d4893ad",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "6c089df9594b1f0f",
+          "subject_id": "src:nameidentifier",
+          "object_id": "dst:dcterms_identifier",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "nameIdentifier"
+          ],
+          "target_paths": [
+            "dcterms:identifier"
+          ],
+          "source_display": "nameIdentifier",
+          "target_display": "dcterms:identifier",
+          "mapping_type": "DIRECT",
+          "confidence": 0.95,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:nameidentifier",
+            "object_id": "dst:dcterms_identifier",
+            "record_id": "6c089df9594b1f0f",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "81247e2e1490cbf5",
+          "subject_id": "src:identifiertype",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "identifierType"
+          ],
+          "target_paths": [],
+          "source_display": "identifierType",
+          "target_display": "",
+          "mapping_type": "MISSING",
+          "confidence": 0.95,
+          "semantic_loss": true,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "fallback",
+          "evidence": {
+            "subject_id": "src:identifiertype",
+            "object_id": "",
+            "record_id": "81247e2e1490cbf5",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "82a55c8b1892460b",
+          "subject_id": "src:publicationyear",
+          "object_id": "dst:dcterms_issued",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "publicationYear"
+          ],
+          "target_paths": [
+            "dcterms:issued"
+          ],
+          "source_display": "publicationYear",
+          "target_display": "dcterms:issued",
+          "mapping_type": "DIRECT",
+          "confidence": 0.95,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:publicationyear",
+            "object_id": "dst:dcterms_issued",
+            "record_id": "82a55c8b1892460b",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "867bd2628f51b30e",
+          "subject_id": "src:schemeuri",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "schemeURI"
+          ],
+          "target_paths": [],
+          "source_display": "schemeURI",
+          "target_display": "",
+          "mapping_type": "MISSING",
+          "confidence": 0.95,
+          "semantic_loss": true,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "fallback",
+          "evidence": {
+            "subject_id": "src:schemeuri",
+            "object_id": "",
+            "record_id": "867bd2628f51b30e",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "8f3155c9b65307f6",
+          "subject_id": "src:titletype",
+          "object_id": "dst:dcterms_alternative",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "titleType"
+          ],
+          "target_paths": [
+            "dcterms:alternative"
+          ],
+          "source_display": "titleType",
+          "target_display": "dcterms:alternative",
+          "mapping_type": "DIRECT",
+          "confidence": 0.95,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:titletype",
+            "object_id": "dst:dcterms_alternative",
+            "record_id": "8f3155c9b65307f6",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "992cd839f8530df9",
+          "subject_id": "src:givenname",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "givenName"
+          ],
+          "target_paths": [],
+          "source_display": "givenName",
+          "target_display": "",
+          "mapping_type": "MISSING",
+          "confidence": 0.95,
+          "semantic_loss": true,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "fallback",
+          "evidence": {
+            "subject_id": "src:givenname",
+            "object_id": "",
+            "record_id": "992cd839f8530df9",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "ad9bf326d1c172e4",
+          "subject_id": "src:nametype",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "nameType"
+          ],
+          "target_paths": [],
+          "source_display": "nameType",
+          "target_display": "",
+          "mapping_type": "MISSING",
+          "confidence": 0.95,
+          "semantic_loss": true,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "fallback",
+          "evidence": {
+            "subject_id": "src:nametype",
+            "object_id": "",
+            "record_id": "ad9bf326d1c172e4",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "bd37ed32f340a21c",
+          "subject_id": "src:creator",
+          "object_id": "dst:dcterms_creator",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "Creator"
+          ],
+          "target_paths": [
+            "dcterms:creator"
+          ],
+          "source_display": "Creator",
+          "target_display": "dcterms:creator",
+          "mapping_type": "DIRECT",
+          "confidence": 0.95,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:creator",
+            "object_id": "dst:dcterms_creator",
+            "record_id": "bd37ed32f340a21c",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "c67d1dc445b31d7d",
+          "subject_id": "src:creatorname",
+          "object_id": "dst:dcterms_creator",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "creatorName"
+          ],
+          "target_paths": [
+            "dcterms:creator"
+          ],
+          "source_display": "creatorName",
+          "target_display": "dcterms:creator",
+          "mapping_type": "DIRECT",
+          "confidence": 0.95,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:creatorname",
+            "object_id": "dst:dcterms_creator",
+            "record_id": "c67d1dc445b31d7d",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "e41de3b14b21f58e",
+          "subject_id": "src:affiliation",
+          "object_id": "dst:dcterms_contributor",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "Affiliation"
+          ],
+          "target_paths": [
+            "dcterms:contributor"
+          ],
+          "source_display": "Affiliation",
+          "target_display": "dcterms:contributor",
+          "mapping_type": "DIRECT",
+          "confidence": 0.95,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:affiliation",
+            "object_id": "dst:dcterms_contributor",
+            "record_id": "e41de3b14b21f58e",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "e8d41435bf6dd496",
+          "subject_id": "src:subjectscheme",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "subjectScheme"
+          ],
+          "target_paths": [],
+          "source_display": "subjectScheme",
+          "target_display": "",
+          "mapping_type": "MISSING",
+          "confidence": 0.95,
+          "semantic_loss": true,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "fallback",
+          "evidence": {
+            "subject_id": "src:subjectscheme",
+            "object_id": "",
+            "record_id": "e8d41435bf6dd496",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "eb234d4c200b6c3d",
+          "subject_id": "src:subject",
+          "object_id": "dst:dcterms_subject",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "Subject"
+          ],
+          "target_paths": [
+            "dcterms:subject"
+          ],
+          "source_display": "Subject",
+          "target_display": "dcterms:subject",
+          "mapping_type": "DIRECT",
+          "confidence": 0.95,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:subject",
+            "object_id": "dst:dcterms_subject",
+            "record_id": "eb234d4c200b6c3d",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "f270e39af3014b67",
+          "subject_id": "src:pointlatitude",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "pointLatitude"
+          ],
+          "target_paths": [],
+          "source_display": "pointLatitude",
+          "target_display": "",
+          "mapping_type": "PASSTHROUGH",
+          "confidence": 0.8,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": "pointLatitude 19 fundingReference 19.1 funderName 5 ID DataCite-Property Dublin Core 19.2 funderIdentifier 19.2.a funderIdentifierType Not present in Dublin Core 19.2.b SchemeURI Not present in Dublin Core 19.3 awardNumber 19.3.a awardURI 19.4 awardTitle 20 RelatedItem For the details of the related ítem i.e. title etc., use preferred Citation format. 20.a relationTypeii isReferencedBy references isVersionOf hasVersion isVariantFormatOf isPartOf hasPart isObsoletedBy obsoletes isDerivedFrom Other relation types 20.b relatedItemType 20.c relatedItemIdentifier 20.d relatedItemIdentifierType Not present in Dublin Core 20.1 Title 20.1.a Type 20.2 Volume 6 ID DataCite-Property Dublin Core 20.3 Issue 20.4 Number 20.4.a Type 20.5 firstPage 20.6 lastPage 20.7 Year 20.8 Month 20.9 Day 20.10 Edition 20.11 Creator 20.11.a creatorName",
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:pointlatitude",
+            "object_id": "",
+            "record_id": "f270e39af3014b67",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "f7b3922c7fe6943b",
+          "subject_id": "src:identifier",
+          "object_id": "dst:dcterms_identifier",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "Identifier"
+          ],
+          "target_paths": [
+            "dcterms:identifier"
+          ],
+          "source_display": "Identifier",
+          "target_display": "dcterms:identifier",
+          "mapping_type": "DIRECT",
+          "confidence": 0.95,
+          "semantic_loss": false,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "deterministic",
+          "evidence": {
+            "subject_id": "src:identifier",
+            "object_id": "dst:dcterms_identifier",
+            "record_id": "f7b3922c7fe6943b",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "f91c79de5f9e0a83",
+          "subject_id": "src:schemeuri",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "SchemeURI"
+          ],
+          "target_paths": [],
+          "source_display": "SchemeURI",
+          "target_display": "",
+          "mapping_type": "MISSING",
+          "confidence": 0.95,
+          "semantic_loss": true,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "fallback",
+          "evidence": {
+            "subject_id": "src:schemeuri",
+            "object_id": "",
+            "record_id": "f91c79de5f9e0a83",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        },
+        {
+          "record_id": "f97f3802ed1ed527",
+          "subject_id": "src:familyname",
+          "object_id": "",
+          "mapping_justification": "semapv:ManualMappingCuration",
+          "source_paths": [
+            "familyName"
+          ],
+          "target_paths": [],
+          "source_display": "familyName",
+          "target_display": "",
+          "mapping_type": "MISSING",
+          "confidence": 0.95,
+          "semantic_loss": true,
+          "ambiguity": false,
+          "transform": {},
+          "notes": null,
+          "strategy": "fallback",
+          "evidence": {
+            "subject_id": "src:familyname",
+            "object_id": "",
+            "record_id": "f97f3802ed1ed527",
+            "mapping_justification": "semapv:ManualMappingCuration"
+          }
+        }
+      ]
+    },
+    {
       "id": "rdamsc_c11",
       "source": "rdamsc_c11",
       "target": "dst_rdamsc_c11",
+      "display_name": "dublin-core_TO_marc-machine-readable (Dublin Core -> MARC (Machine-Readable Cataloging",
       "rules": [
         {
           "record_id": "01290d0c82fa467a",
@@ -5641,6 +6311,7 @@
       "id": "rdamsc_c13",
       "source": "rdamsc_c13",
       "target": "dst_rdamsc_c13",
+      "display_name": "eml-ecological-metadata_TO_iso-19115 (EML (Ecological Metadata Language) -> ISO 19115",
       "rules": [
         {
           "record_id": "0267e62b353ad9ab",
@@ -6647,6 +7318,7 @@
       "id": "rdamsc_c14",
       "source": "rdamsc_c14",
       "target": "dst_rdamsc_c14",
+      "display_name": "eurisco-descriptors_TO_abcd-access-biological (EURISCO Descriptors -> ABCD (Access to Biological Collection Data",
       "rules": [
         {
           "record_id": "0619a503d60673a9",
@@ -7545,6 +8217,7 @@
       "id": "rdamsc_c18",
       "source": "rdamsc_c18",
       "target": "dst_rdamsc_c18",
+      "display_name": "hispid-herbarium-information_TO_abcd-access-biological (HISPID (Herbarium Information Standards and Protocols for Interchange of Data) -> ABCD (Access to Biological Collection Data",
       "rules": [
         {
           "record_id": "mapping_rule:0a563b4478d10e3d",
@@ -7929,6 +8602,7 @@
       "id": "rdamsc_c19",
       "source": "rdamsc_c19",
       "target": "dst_rdamsc_c19",
+      "display_name": "isa-tab_TO_mage-tab",
       "rules": [
         {
           "record_id": "mapping_rule:687393f142a308ce",
@@ -7994,6 +8668,7 @@
       "id": "rdamsc_c20",
       "source": "rdamsc_c20",
       "target": "dst_rdamsc_c20",
+      "display_name": "iso-19115_TO_ddi-data-documentation (ISO 19115 -> DDI (Data Documentation Initiative",
       "rules": [
         {
           "record_id": "015caed879120d6a",
@@ -9081,6 +9756,7 @@
       "id": "rdamsc_c21",
       "source": "rdamsc_c21",
       "target": "dst_rdamsc_c21",
+      "display_name": "marc-machine-readable_TO_dublin-core (MARC (Machine-Readable Cataloging) -> Dublin Core",
       "rules": [
         {
           "record_id": "02d40fdb37d3d5f6",
@@ -11327,6 +12003,7 @@
       "id": "rdamsc_c22",
       "source": "rdamsc_c22",
       "target": "dst_rdamsc_c22",
+      "display_name": "netcdf-attribute-convention_TO_iso-19115",
       "rules": [
         {
           "record_id": "08564bacb85de04b",
@@ -12601,6 +13278,7 @@
       "id": "rdamsc_c23",
       "source": "rdamsc_c23",
       "target": "dst_rdamsc_c23",
+      "display_name": "oecd-minimum-data_TO_abcd-access-biological (OECD Dataset Metadata -> ABCD (Access to Biological Collection Data",
       "rules": [
         {
           "record_id": "mapping_rule:0db28412352a6315",
@@ -13275,6 +13953,7 @@
       "id": "rdamsc_c24",
       "source": "rdamsc_c24",
       "target": "dst_rdamsc_c24",
+      "display_name": "spase-data-model_TO_dublin-core",
       "rules": [
         {
           "record_id": "1d38019f9ffc30e3",
@@ -13629,6 +14308,7 @@
       "id": "rdamsc_c26",
       "source": "rdamsc_c26",
       "target": "dst_rdamsc_c26",
+      "display_name": "dublin-core_TO_mods-metadata-object (Dublin Core -> MODS (Metadata Object Description Schema",
       "rules": [
         {
           "record_id": "1f624aee8ae0f3da",
@@ -14606,6 +15286,7 @@
       "id": "rdamsc_c27",
       "source": "rdamsc_c27",
       "target": "dst_rdamsc_c27",
+      "display_name": "mods-metadata-object_TO_dublin-core (MODS (Metadata Object Description Schema) -> Dublin Core",
       "rules": [
         {
           "record_id": "03d18981fe298144",
@@ -15313,6 +15994,7 @@
       "id": "rdamsc_c28",
       "source": "rdamsc_c28",
       "target": "dst_rdamsc_c28",
+      "display_name": "marc-machine-readable_TO_mods-metadata-object (MARC (Machine-Readable Cataloging) -> MODS (Metadata Object Description Schema",
       "rules": [
         {
           "record_id": "mapping_rule:09f410adc3c1d23d",
@@ -17988,6 +18670,7 @@
       "id": "rdamsc_c29",
       "source": "rdamsc_c29",
       "target": "dst_rdamsc_c29",
+      "display_name": "mods-metadata-object_TO_marc-machine-readable (MODS (Metadata Object Description Schema) -> MARC (Machine-Readable Cataloging",
       "rules": [
         {
           "record_id": "mapping_rule:017bf999839fd1ed",
@@ -20225,45 +20908,10 @@
       ]
     },
     {
-      "id": "rdamsc_c3",
-      "source": "rdamsc_c3",
-      "target": "dst_rdamsc_c3",
-      "rules": [
-        {
-          "record_id": "mapping_rule:3d34a9409e5d78a8",
-          "subject_id": "src:darwin_core",
-          "object_id": "dst:abcd",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "Darwin Core"
-          ],
-          "target_paths": [
-            "ABCD"
-          ],
-          "source_display": "Darwin Core",
-          "target_display": "ABCD",
-          "mapping_type": "DIRECT",
-          "confidence": 0.45,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {
-            "op": "copy"
-          },
-          "notes": "Relaxed LLM extraction",
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:darwin_core",
-            "object_id": "dst:abcd",
-            "record_id": "mapping_rule:3d34a9409e5d78a8",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        }
-      ]
-    },
-    {
       "id": "rdamsc_c30",
       "source": "rdamsc_c30",
       "target": "dst_rdamsc_c30",
+      "display_name": "iso-19115_TO_rif-cs-registry (ANZLIC Metadata Profile -> RIF-CS (Registry Interchange Format – Collections and Services",
       "rules": [
         {
           "record_id": "18dd664b3307dcc5",
@@ -20670,6 +21318,7 @@
       "id": "rdamsc_c32",
       "source": "rdamsc_c32",
       "target": "dst_rdamsc_c32",
+      "display_name": "dublin-core_TO_rif-cs-registry (Dublin Core -> RIF-CS (Registry Interchange Format – Collections and Services",
       "rules": [
         {
           "record_id": "331a7c9516847469",
@@ -20893,6 +21542,7 @@
       "id": "rdamsc_c33",
       "source": "rdamsc_c33",
       "target": "dst_rdamsc_c33",
+      "display_name": "LIDO to CIDOC CRM (LIDO (Lightweight Information Describing Objects) -> CIDOC CRM",
       "rules": [
         {
           "record_id": "0a68222a264a4001",
@@ -20927,6 +21577,7 @@
       "id": "rdamsc_c34",
       "source": "rdamsc_c34",
       "target": "dst_rdamsc_c34",
+      "display_name": "MIDAS-Heritage to CIDOC CRM",
       "rules": [
         {
           "record_id": "mapping_rule:0296aef93bd65558",
@@ -22558,6 +23209,7 @@
       "id": "rdamsc_c35",
       "source": "rdamsc_c35",
       "target": "dst_rdamsc_c35",
+      "display_name": "Dublin Core to CIDOC CRM",
       "rules": [
         {
           "record_id": "077e0b7ee45fff54",
@@ -23672,6 +24324,7 @@
       "id": "rdamsc_c36",
       "source": "rdamsc_c36",
       "target": "dst_rdamsc_c36",
+      "display_name": "EAD to CIDOC CRM (EAD (Encoded Archival Description) -> CIDOC CRM",
       "rules": [
         {
           "record_id": "mapping_rule:0d3e4272c7ec64c4",
@@ -23969,6 +24622,7 @@
       "id": "rdamsc_c37",
       "source": "rdamsc_c37",
       "target": "dst_rdamsc_c37",
+      "display_name": "MARC (Machine-Readable Cataloging) to CIDOC CRM (MARC (Machine-Readable Cataloging) -> CIDOC CRM",
       "rules": [
         {
           "record_id": "00a056f6d1b1971e",
@@ -25299,6 +25953,7 @@
       "id": "rdamsc_c38",
       "source": "rdamsc_c38",
       "target": "dst_rdamsc_c38",
+      "display_name": "CiteDCAT-AP (DataCite profile of DCAT-AP",
       "rules": [
         {
           "record_id": "mapping_rule:03f20f89aa63b9e3",
@@ -29937,635 +30592,6 @@
             "subject_id": "src:contactperson",
             "object_id": "dst:dcat_contactpoint",
             "record_id": "mapping_rule:ff2b0f407a7ef2e4",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        }
-      ]
-    },
-    {
-      "id": "rdamsc_c5",
-      "source": "rdamsc_c5",
-      "target": "dst_rdamsc_c5",
-      "rules": [
-        {
-          "record_id": "005fecf3474473e1",
-          "subject_id": "src:publisher",
-          "object_id": "dst:dcterms_publisher",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "Publisher"
-          ],
-          "target_paths": [
-            "dcterms:publisher"
-          ],
-          "source_display": "Publisher",
-          "target_display": "dcterms:publisher",
-          "mapping_type": "DIRECT",
-          "confidence": 0.95,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:publisher",
-            "object_id": "dst:dcterms_publisher",
-            "record_id": "005fecf3474473e1",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "173924a785b42333",
-          "subject_id": "src:pointlongitude",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "pointLongitude"
-          ],
-          "target_paths": [],
-          "source_display": "pointLongitude",
-          "target_display": "",
-          "mapping_type": "PASSTHROUGH",
-          "confidence": 0.8,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": "pointLongitude",
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:pointlongitude",
-            "object_id": "",
-            "record_id": "173924a785b42333",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "17e88ba01b3549e9",
-          "subject_id": "src:pointlatitude",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "pointLatitude"
-          ],
-          "target_paths": [],
-          "source_display": "pointLatitude",
-          "target_display": "",
-          "mapping_type": "PASSTHROUGH",
-          "confidence": 0.8,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": "pointLatitude 18.4.2 inPolygonPoint",
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:pointlatitude",
-            "object_id": "",
-            "record_id": "17e88ba01b3549e9",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "3bdf4c22bb21bb49",
-          "subject_id": "src:affiliationidentifier",
-          "object_id": "dst:dcterms_identifier",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "affiliationIdentifier"
-          ],
-          "target_paths": [
-            "dcterms:identifier"
-          ],
-          "source_display": "affiliationIdentifier",
-          "target_display": "dcterms:identifier",
-          "mapping_type": "DIRECT",
-          "confidence": 0.95,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:affiliationidentifier",
-            "object_id": "dst:dcterms_identifier",
-            "record_id": "3bdf4c22bb21bb49",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "3e1f5aae92298861",
-          "subject_id": "src:affiliationidentifierscheme",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "affiliationIdentifierScheme"
-          ],
-          "target_paths": [],
-          "source_display": "affiliationIdentifierScheme",
-          "target_display": "",
-          "mapping_type": "MISSING",
-          "confidence": 0.95,
-          "semantic_loss": true,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "fallback",
-          "evidence": {
-            "subject_id": "src:affiliationidentifierscheme",
-            "object_id": "",
-            "record_id": "3e1f5aae92298861",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "3f71cddd0be9fa3d",
-          "subject_id": "src:pointlongitude",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "pointLongitude"
-          ],
-          "target_paths": [],
-          "source_display": "pointLongitude",
-          "target_display": "",
-          "mapping_type": "PASSTHROUGH",
-          "confidence": 0.8,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": "pointLongitude",
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:pointlongitude",
-            "object_id": "",
-            "record_id": "3f71cddd0be9fa3d",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "446a351acb6e66e5",
-          "subject_id": "src:nameidentifierscheme",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "nameIdentifierScheme"
-          ],
-          "target_paths": [],
-          "source_display": "nameIdentifierScheme",
-          "target_display": "",
-          "mapping_type": "MISSING",
-          "confidence": 0.95,
-          "semantic_loss": true,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "fallback",
-          "evidence": {
-            "subject_id": "src:nameidentifierscheme",
-            "object_id": "",
-            "record_id": "446a351acb6e66e5",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "6baaa9379d4893ad",
-          "subject_id": "src:title",
-          "object_id": "dst:dcterms_title",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "Title"
-          ],
-          "target_paths": [
-            "dcterms:title"
-          ],
-          "source_display": "Title",
-          "target_display": "dcterms:title",
-          "mapping_type": "DIRECT",
-          "confidence": 0.95,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:title",
-            "object_id": "dst:dcterms_title",
-            "record_id": "6baaa9379d4893ad",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "6c089df9594b1f0f",
-          "subject_id": "src:nameidentifier",
-          "object_id": "dst:dcterms_identifier",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "nameIdentifier"
-          ],
-          "target_paths": [
-            "dcterms:identifier"
-          ],
-          "source_display": "nameIdentifier",
-          "target_display": "dcterms:identifier",
-          "mapping_type": "DIRECT",
-          "confidence": 0.95,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:nameidentifier",
-            "object_id": "dst:dcterms_identifier",
-            "record_id": "6c089df9594b1f0f",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "81247e2e1490cbf5",
-          "subject_id": "src:identifiertype",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "identifierType"
-          ],
-          "target_paths": [],
-          "source_display": "identifierType",
-          "target_display": "",
-          "mapping_type": "MISSING",
-          "confidence": 0.95,
-          "semantic_loss": true,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "fallback",
-          "evidence": {
-            "subject_id": "src:identifiertype",
-            "object_id": "",
-            "record_id": "81247e2e1490cbf5",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "82a55c8b1892460b",
-          "subject_id": "src:publicationyear",
-          "object_id": "dst:dcterms_issued",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "publicationYear"
-          ],
-          "target_paths": [
-            "dcterms:issued"
-          ],
-          "source_display": "publicationYear",
-          "target_display": "dcterms:issued",
-          "mapping_type": "DIRECT",
-          "confidence": 0.95,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:publicationyear",
-            "object_id": "dst:dcterms_issued",
-            "record_id": "82a55c8b1892460b",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "867bd2628f51b30e",
-          "subject_id": "src:schemeuri",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "schemeURI"
-          ],
-          "target_paths": [],
-          "source_display": "schemeURI",
-          "target_display": "",
-          "mapping_type": "MISSING",
-          "confidence": 0.95,
-          "semantic_loss": true,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "fallback",
-          "evidence": {
-            "subject_id": "src:schemeuri",
-            "object_id": "",
-            "record_id": "867bd2628f51b30e",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "8f3155c9b65307f6",
-          "subject_id": "src:titletype",
-          "object_id": "dst:dcterms_alternative",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "titleType"
-          ],
-          "target_paths": [
-            "dcterms:alternative"
-          ],
-          "source_display": "titleType",
-          "target_display": "dcterms:alternative",
-          "mapping_type": "DIRECT",
-          "confidence": 0.95,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:titletype",
-            "object_id": "dst:dcterms_alternative",
-            "record_id": "8f3155c9b65307f6",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "992cd839f8530df9",
-          "subject_id": "src:givenname",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "givenName"
-          ],
-          "target_paths": [],
-          "source_display": "givenName",
-          "target_display": "",
-          "mapping_type": "MISSING",
-          "confidence": 0.95,
-          "semantic_loss": true,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "fallback",
-          "evidence": {
-            "subject_id": "src:givenname",
-            "object_id": "",
-            "record_id": "992cd839f8530df9",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "ad9bf326d1c172e4",
-          "subject_id": "src:nametype",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "nameType"
-          ],
-          "target_paths": [],
-          "source_display": "nameType",
-          "target_display": "",
-          "mapping_type": "MISSING",
-          "confidence": 0.95,
-          "semantic_loss": true,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "fallback",
-          "evidence": {
-            "subject_id": "src:nametype",
-            "object_id": "",
-            "record_id": "ad9bf326d1c172e4",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "bd37ed32f340a21c",
-          "subject_id": "src:creator",
-          "object_id": "dst:dcterms_creator",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "Creator"
-          ],
-          "target_paths": [
-            "dcterms:creator"
-          ],
-          "source_display": "Creator",
-          "target_display": "dcterms:creator",
-          "mapping_type": "DIRECT",
-          "confidence": 0.95,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:creator",
-            "object_id": "dst:dcterms_creator",
-            "record_id": "bd37ed32f340a21c",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "c67d1dc445b31d7d",
-          "subject_id": "src:creatorname",
-          "object_id": "dst:dcterms_creator",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "creatorName"
-          ],
-          "target_paths": [
-            "dcterms:creator"
-          ],
-          "source_display": "creatorName",
-          "target_display": "dcterms:creator",
-          "mapping_type": "DIRECT",
-          "confidence": 0.95,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:creatorname",
-            "object_id": "dst:dcterms_creator",
-            "record_id": "c67d1dc445b31d7d",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "e41de3b14b21f58e",
-          "subject_id": "src:affiliation",
-          "object_id": "dst:dcterms_contributor",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "Affiliation"
-          ],
-          "target_paths": [
-            "dcterms:contributor"
-          ],
-          "source_display": "Affiliation",
-          "target_display": "dcterms:contributor",
-          "mapping_type": "DIRECT",
-          "confidence": 0.95,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:affiliation",
-            "object_id": "dst:dcterms_contributor",
-            "record_id": "e41de3b14b21f58e",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "e8d41435bf6dd496",
-          "subject_id": "src:subjectscheme",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "subjectScheme"
-          ],
-          "target_paths": [],
-          "source_display": "subjectScheme",
-          "target_display": "",
-          "mapping_type": "MISSING",
-          "confidence": 0.95,
-          "semantic_loss": true,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "fallback",
-          "evidence": {
-            "subject_id": "src:subjectscheme",
-            "object_id": "",
-            "record_id": "e8d41435bf6dd496",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "eb234d4c200b6c3d",
-          "subject_id": "src:subject",
-          "object_id": "dst:dcterms_subject",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "Subject"
-          ],
-          "target_paths": [
-            "dcterms:subject"
-          ],
-          "source_display": "Subject",
-          "target_display": "dcterms:subject",
-          "mapping_type": "DIRECT",
-          "confidence": 0.95,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:subject",
-            "object_id": "dst:dcterms_subject",
-            "record_id": "eb234d4c200b6c3d",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "f270e39af3014b67",
-          "subject_id": "src:pointlatitude",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "pointLatitude"
-          ],
-          "target_paths": [],
-          "source_display": "pointLatitude",
-          "target_display": "",
-          "mapping_type": "PASSTHROUGH",
-          "confidence": 0.8,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": "pointLatitude 19 fundingReference 19.1 funderName 5 ID DataCite-Property Dublin Core 19.2 funderIdentifier 19.2.a funderIdentifierType Not present in Dublin Core 19.2.b SchemeURI Not present in Dublin Core 19.3 awardNumber 19.3.a awardURI 19.4 awardTitle 20 RelatedItem For the details of the related ítem i.e. title etc., use preferred Citation format. 20.a relationTypeii isReferencedBy references isVersionOf hasVersion isVariantFormatOf isPartOf hasPart isObsoletedBy obsoletes isDerivedFrom Other relation types 20.b relatedItemType 20.c relatedItemIdentifier 20.d relatedItemIdentifierType Not present in Dublin Core 20.1 Title 20.1.a Type 20.2 Volume 6 ID DataCite-Property Dublin Core 20.3 Issue 20.4 Number 20.4.a Type 20.5 firstPage 20.6 lastPage 20.7 Year 20.8 Month 20.9 Day 20.10 Edition 20.11 Creator 20.11.a creatorName",
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:pointlatitude",
-            "object_id": "",
-            "record_id": "f270e39af3014b67",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "f7b3922c7fe6943b",
-          "subject_id": "src:identifier",
-          "object_id": "dst:dcterms_identifier",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "Identifier"
-          ],
-          "target_paths": [
-            "dcterms:identifier"
-          ],
-          "source_display": "Identifier",
-          "target_display": "dcterms:identifier",
-          "mapping_type": "DIRECT",
-          "confidence": 0.95,
-          "semantic_loss": false,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "deterministic",
-          "evidence": {
-            "subject_id": "src:identifier",
-            "object_id": "dst:dcterms_identifier",
-            "record_id": "f7b3922c7fe6943b",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "f91c79de5f9e0a83",
-          "subject_id": "src:schemeuri",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "SchemeURI"
-          ],
-          "target_paths": [],
-          "source_display": "SchemeURI",
-          "target_display": "",
-          "mapping_type": "MISSING",
-          "confidence": 0.95,
-          "semantic_loss": true,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "fallback",
-          "evidence": {
-            "subject_id": "src:schemeuri",
-            "object_id": "",
-            "record_id": "f91c79de5f9e0a83",
-            "mapping_justification": "semapv:ManualMappingCuration"
-          }
-        },
-        {
-          "record_id": "f97f3802ed1ed527",
-          "subject_id": "src:familyname",
-          "object_id": "",
-          "mapping_justification": "semapv:ManualMappingCuration",
-          "source_paths": [
-            "familyName"
-          ],
-          "target_paths": [],
-          "source_display": "familyName",
-          "target_display": "",
-          "mapping_type": "MISSING",
-          "confidence": 0.95,
-          "semantic_loss": true,
-          "ambiguity": false,
-          "transform": {},
-          "notes": null,
-          "strategy": "fallback",
-          "evidence": {
-            "subject_id": "src:familyname",
-            "object_id": "",
-            "record_id": "f97f3802ed1ed527",
             "mapping_justification": "semapv:ManualMappingCuration"
           }
         }

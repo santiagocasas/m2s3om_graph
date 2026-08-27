@@ -18,6 +18,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 SSSOM_DIR = ROOT / "exports" / "sssom"
 OUTPUT_PATH = ROOT / "web" / "public" / "data" / "crosswalk_graph.json"
+MIRROR_OUTPUT_PATH = ROOT / "web" / "data" / "crosswalk_graph.json"
 
 
 def _payload_from_comment(comment: str) -> dict[str, object]:
@@ -123,6 +124,26 @@ def derive_standard_ids(metadata: dict[str, object], crosswalk_stem: str) -> tup
     return source_id, source_name, target_id, target_name
 
 
+def derive_display_name(
+    metadata: dict[str, object],
+    source_name: str,
+    target_name: str,
+) -> str:
+    description = str(metadata.get("mapping_set_description", "") or "")
+    description = re.sub(r"\s*\([^()]*\)\s*$", "", description).strip().rstrip(")").strip()
+    description = re.sub(r"\s+", " ", description).strip()
+    if description:
+        return description
+    return f"{source_name} → {target_name}"
+
+
+def natural_sort_key(cid: str) -> tuple[tuple[int, object], ...]:
+    parts = [part for part in re.split(r"(\d+)", str(cid)) if part]
+    if not parts:
+        return ((1, ""),)
+    return tuple((0, int(part)) if part.isdigit() else (1, part) for part in parts)
+
+
 def validate_id(raw_id: str) -> None:
     if re.search(r"[^a-zA-Z0-9_]", raw_id):
         raise ValueError(
@@ -199,6 +220,7 @@ def export_crosswalk_json(
         crosswalk_stem = tsv_path.stem.replace(".sssom", "")
         metadata = parse_sssom_metadata(tsv_path)
         source_id, source_name, target_id, target_name = derive_standard_ids(metadata, crosswalk_stem)
+        display_name = derive_display_name(metadata, source_name, target_name)
 
         for candidate in (crosswalk_stem, source_id, target_id):
             try:
@@ -224,6 +246,7 @@ def export_crosswalk_json(
                 "id": crosswalk_stem,
                 "source": source_id,
                 "target": target_id,
+                "display_name": display_name,
                 "rules": sorted(
                     rules,
                     key=lambda rule: str(rule.get("record_id") or rule.get("subject_id") or ""),
@@ -236,11 +259,15 @@ def export_crosswalk_json(
 
     output = {
         "standards": sorted(standards_map.values(), key=lambda item: item["id"]),
-        "crosswalks": sorted(crosswalks, key=lambda item: item["id"]),
+        "crosswalks": sorted(crosswalks, key=lambda item: natural_sort_key(item["id"])),
     }
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
+    serialized = json.dumps(output, indent=2, ensure_ascii=False)
+    output_path.write_text(serialized, encoding="utf-8")
+    if MIRROR_OUTPUT_PATH != output_path:
+        MIRROR_OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+        MIRROR_OUTPUT_PATH.write_text(serialized, encoding="utf-8")
     return output_path
 
 

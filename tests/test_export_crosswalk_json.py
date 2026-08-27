@@ -26,6 +26,32 @@ def test_export_produces_expected_top_level_shape() -> None:
     assert isinstance(data['crosswalks'], list)
 
 
+def test_derive_display_name_strips_trailing_parenthetical() -> None:
+    display_name = MODULE.derive_display_name(
+        {'mapping_set_description': 'DataCite 4.4 to Dublin Core Terms (DataCite -> Dublin Core Terms)'},
+        'DataCite Metadata Schema',
+        'Dublin Core Terms',
+    )
+    assert display_name == 'DataCite 4.4 to Dublin Core Terms'
+
+
+def test_export_emits_display_name_for_every_crosswalk() -> None:
+    data = _load_output()
+    for crosswalk in data['crosswalks']:
+        display_name = crosswalk.get('display_name')
+        assert isinstance(display_name, str)
+        assert display_name.strip(), crosswalk['id']
+
+
+def test_display_name_for_datacite44_to_dcterms_is_human_readable() -> None:
+    data = _load_output()
+    crosswalk = next(item for item in data['crosswalks'] if item['id'] == 'datacite44_to_dcterms')
+    display_name = crosswalk['display_name']
+    assert 'DataCite' in display_name
+    assert 'Dublin Core' in display_name
+    assert not display_name.endswith(')')
+
+
 def test_export_all_rules_have_strategy_inferred_from_mapping_type() -> None:
     assert MODULE.infer_strategy({'mapping_type': 'conditional'}) == 'llm'
     assert MODULE.infer_strategy({'mapping_type': 'aggregation'}) == 'llm'
@@ -38,6 +64,43 @@ def test_export_all_rules_have_strategy_inferred_from_mapping_type() -> None:
         for rule in crosswalk['rules']:
             expected = MODULE.infer_strategy({'mapping_type': str(rule['mapping_type']).lower()})
             assert rule['strategy'] == expected
+
+
+def test_crosswalks_are_naturally_sorted() -> None:
+    data = _load_output()
+    ids = [crosswalk['id'] for crosswalk in data['crosswalks']]
+    assert ids == sorted(ids, key=MODULE.natural_sort_key)
+
+    rdamsc_ids = [cid for cid in ids if cid.startswith('rdamsc_c')]
+    assert rdamsc_ids == [
+        'rdamsc_c1',
+        'rdamsc_c3',
+        'rdamsc_c5',
+        'rdamsc_c11',
+        'rdamsc_c13',
+        'rdamsc_c14',
+        'rdamsc_c18',
+        'rdamsc_c19',
+        'rdamsc_c20',
+        'rdamsc_c21',
+        'rdamsc_c22',
+        'rdamsc_c23',
+        'rdamsc_c24',
+        'rdamsc_c26',
+        'rdamsc_c27',
+        'rdamsc_c28',
+        'rdamsc_c29',
+        'rdamsc_c30',
+        'rdamsc_c32',
+        'rdamsc_c33',
+        'rdamsc_c34',
+        'rdamsc_c35',
+        'rdamsc_c36',
+        'rdamsc_c37',
+        'rdamsc_c38',
+    ]
+    assert MODULE.natural_sort_key('rdamsc_c11') > MODULE.natural_sort_key('rdamsc_c2')
+    assert MODULE.natural_sort_key('rdamsc_c11') < MODULE.natural_sort_key('rdamsc_c12')
 
 
 def test_export_rejects_crosswalk_id_with_dashes_at_build_time(tmp_path: Path) -> None:
