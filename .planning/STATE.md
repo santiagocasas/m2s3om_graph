@@ -4,9 +4,9 @@ milestone: v2.1
 milestone_name: Unified Explorer — Graph + Stats Pages
 status: planning
 stopped_at: Phase 06 planning in progress
-last_updated: "2026-08-27T09:59:32.509Z"
+last_updated: "2026-08-27T13:44:27.986Z"
 last_activity: 2026-08-27
-last_activity_desc: Completed quick task 260827-gnm — compact labels and crosswalk heading
+last_activity_desc: Completed quick task 260827-lv1 — canonical explorer and graph labels
 progress:
   total_phases: 2
   completed_phases: 0
@@ -23,7 +23,7 @@ current_phase: 06
 Phase: 06 planning in progress
 Plan: Graph Page Integration
 Status: Planning
-Last activity: 2026-08-27 - Completed quick task 260827-gnm: Add compact dropdown labels and a crosswalk heading
+Last activity: 2026-08-27 - Completed quick task 260827-lv1: Use canonical metadata-standard labels in explorer and graph
 
 ## Project Reference
 
@@ -50,6 +50,7 @@ See: .planning/PROJECT.md (updated 2026-08-25)
 | 260826-kzw | Persist accepted candidate mappings across re-suggest and add client-side SSSOM TSV export per crosswalk; accepted rows stay visible, export button generates SSSOM TSV per crosswalk | 2026-08-26 | df3e3b2 | [260826-kzw-persist-accepted-candidate-mappings-acro](./quick/260826-kzw-persist-accepted-candidate-mappings-acro/) |
 | 260827-g0f | Show each RDAMSC crosswalk's human-readable name in the dropdown, diagnose and include the DataCite 4.4 to DCTerms catalog crosswalk if data supports it, and apply natural sorting so c1, c2, c3 precede c11, c12 | 2026-08-27 | c57c7c7 | [260827-g0f-show-each-rdamsc-crosswalk-s-human-reada](./quick/260827-g0f-show-each-rdamsc-crosswalk-s-human-reada/) |
 | 260827-gnm | Use concise acronym-only crosswalk labels in the dropdown while retaining RDAMSC codes, and add a descriptive current-crosswalk heading above the rules table | 2026-08-27 | 27214db | [260827-gnm-use-concise-acronym-only-crosswalk-label](./quick/260827-gnm-use-concise-acronym-only-crosswalk-label/) |
+| 260827-lv1 | Use canonical metadata-standard names with acronym expansions as secondary context in the crosswalk dropdown and heading, and replace RDAMSC code-only labels in the graph with canonical crosswalk names | 2026-08-27 | f8de73b | [260827-lv1-use-canonical-metadata-standard-names-wi](./quick/260827-lv1-use-canonical-metadata-standard-names-wi/) |
 
 ## Operator Next Steps
 
