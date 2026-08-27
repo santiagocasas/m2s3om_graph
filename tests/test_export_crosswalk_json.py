@@ -35,12 +35,69 @@ def test_derive_display_name_strips_trailing_parenthetical() -> None:
     assert display_name == 'DataCite 4.4 to Dublin Core Terms'
 
 
+@pytest.mark.parametrize(
+    ('description', 'expected'),
+    [
+        (
+            'abcd-access-biological_TO_darwin-core (ABCD (Access to Biological Collection Data) -> Darwin Core)',
+            ('ABCD', 'Access to Biological Collection Data', 'Darwin Core', ''),
+        ),
+        (
+            'dublin-core_TO_marc-machine-readable (Dublin Core -> MARC (Machine-Readable Cataloging))',
+            ('Dublin Core', '', 'MARC', 'Machine-Readable Cataloging'),
+        ),
+        (
+            'DataCite 4.4 to Dublin Core Terms (DataCite -> Dublin Core Terms)',
+            ('DataCite', '', 'Dublin Core Terms', ''),
+        ),
+        ('No parenthetical at all', ('', '', '', '')),
+    ],
+)
+def test_parse_description_names_handles_nested_parenthetical(
+    description: str,
+    expected: tuple[str, str, str, str],
+) -> None:
+    assert MODULE.parse_description_names(description) == expected
+
+
 def test_export_emits_display_name_for_every_crosswalk() -> None:
     data = _load_output()
     for crosswalk in data['crosswalks']:
         display_name = crosswalk.get('display_name')
         assert isinstance(display_name, str)
         assert display_name.strip(), crosswalk['id']
+
+
+def test_export_emits_canonical_acronym_and_expansion_fields() -> None:
+    data = _load_output()
+    for crosswalk in data['crosswalks']:
+        for key in ['source_acronym', 'source_expansion', 'target_acronym', 'target_expansion']:
+            assert isinstance(crosswalk.get(key), str), crosswalk['id']
+
+    rdamsc_c1 = next(item for item in data['crosswalks'] if item['id'] == 'rdamsc_c1')
+    rdamsc_c11 = next(item for item in data['crosswalks'] if item['id'] == 'rdamsc_c11')
+    datacite44_to_dcterms = next(item for item in data['crosswalks'] if item['id'] == 'datacite44_to_dcterms')
+
+    assert rdamsc_c1['source_acronym'] == 'ABCD'
+    assert rdamsc_c1['source_expansion'] == 'Access to Biological Collection Data'
+    assert rdamsc_c1['target_acronym'] == 'Darwin Core'
+    assert rdamsc_c1['target_expansion'] == ''
+
+    assert rdamsc_c11['source_acronym'] == 'Dublin Core'
+    assert rdamsc_c11['source_expansion'] == ''
+    assert rdamsc_c11['target_acronym'] == 'MARC'
+    assert rdamsc_c11['target_expansion'] == 'Machine-Readable Cataloging'
+
+    assert datacite44_to_dcterms['source_acronym'] == 'DataCite'
+    assert datacite44_to_dcterms['source_expansion'] == ''
+    assert datacite44_to_dcterms['target_acronym'] == 'Dublin Core Terms'
+    assert datacite44_to_dcterms['target_expansion'] == ''
+
+    assert not any(
+        crosswalk['source_acronym'].startswith(prefix) or crosswalk['target_acronym'].startswith(prefix)
+        for crosswalk in data['crosswalks']
+        for prefix in ('dst_', 'src_', 'rdamsc_c')
+    )
 
 
 def test_display_name_for_datacite44_to_dcterms_is_human_readable() -> None:
