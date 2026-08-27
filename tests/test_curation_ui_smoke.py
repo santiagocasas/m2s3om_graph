@@ -99,8 +99,12 @@ def test_index_html_has_no_writeback_notice() -> None:
 def test_index_html_has_crosswalk_heading_above_rules_table() -> None:
     html = Path('web/index.html').read_text(encoding='utf-8')
     assert 'id="current-crosswalk-title"' in html
+    assert 'id="current-crosswalk-subtitle"' in html
     assert 'class="crosswalk-title"' in html
-    assert html.index('id="current-crosswalk-title"') < html.index('id="rules-table-container"')
+    assert 'class="crosswalk-subtitle"' in Path('web/src/style.css').read_text(encoding='utf-8')
+    assert html.index('id="current-crosswalk-title"') < html.index('id="current-crosswalk-subtitle"') < html.index(
+        'id="rules-table-container"'
+    )
 
 
 def test_main_js_wires_export_button() -> None:
@@ -128,23 +132,26 @@ def _slice_top_level_function(text: str, start_marker: str) -> str:
     return text[start:end]
 
 
-def test_main_js_build_crosswalk_label_uses_compact_identifiers() -> None:
+def test_main_js_build_crosswalk_label_uses_canonical_acronyms() -> None:
     text = Path('web/src/main.js').read_text(encoding='utf-8')
     slice_text = _slice_top_level_function(text, 'export function buildCrosswalkLabel')
     assert 'display_name' not in slice_text
-    assert 'standardName' not in slice_text
-    assert '.toUpperCase()' in slice_text
+    assert 'source_acronym' in slice_text
+    assert 'target_acronym' in slice_text
+    assert '.toUpperCase()' not in slice_text.split('function buildCompactCrosswalkToken')[0]
     assert '→' in slice_text
     assert 'buildCompactCrosswalkToken' in text
-    assert 'replace(/^dst_/' in text
+    assert 'rdamsc_c' in slice_text
 
 
-def test_main_js_show_crosswalk_updates_heading_from_display_name() -> None:
+def test_main_js_show_crosswalk_updates_heading_and_subtitle() -> None:
     text = Path('web/src/main.js').read_text(encoding='utf-8')
     slice_text = _slice_top_level_function(text, 'async function showCrosswalk')
     assert 'currentCrosswalkTitleEl' in slice_text
+    assert 'currentCrosswalkSubtitleEl' in slice_text
+    assert 'formatCrosswalkSubtitle' in slice_text
     assert 'textContent' in slice_text
-    assert 'record?.display_name' in slice_text or 'record.display_name' in slice_text
+    assert 'record?.display_name' not in slice_text
     assert slice_text.index('textContent') < slice_text.index('renderRules(')
     assert 'buildCrosswalkLabel(record)' in slice_text
     assert 'updateExportButton()' in slice_text
