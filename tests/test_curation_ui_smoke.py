@@ -96,6 +96,13 @@ def test_index_html_has_no_writeback_notice() -> None:
     assert 'the explorer never writes back.' in html
 
 
+def test_index_html_has_crosswalk_heading_above_rules_table() -> None:
+    html = Path('web/index.html').read_text(encoding='utf-8')
+    assert 'id="current-crosswalk-title"' in html
+    assert 'class="crosswalk-title"' in html
+    assert html.index('id="current-crosswalk-title"') < html.index('id="rules-table-container"')
+
+
 def test_main_js_wires_export_button() -> None:
     text = Path('web/src/main.js').read_text(encoding='utf-8')
     assert "getElementById('export-tsv-btn')" in text
@@ -104,13 +111,43 @@ def test_main_js_wires_export_button() -> None:
     assert text.count('updateExportButton();') >= 2
 
 
-def test_main_js_populate_select_prefers_display_name_then_standards_fallback() -> None:
+def _slice_top_level_function(text: str, start_marker: str) -> str:
+    start = text.index(start_marker)
+    tail = text[start + len(start_marker) :]
+    next_markers = [
+        idx
+        for idx in (
+            tail.find('\nfunction '),
+            tail.find('\nasync function '),
+            tail.find('\nexport function '),
+            tail.find('\nexport async function '),
+        )
+        if idx != -1
+    ]
+    end = start + len(start_marker) + (min(next_markers) if next_markers else len(tail))
+    return text[start:end]
+
+
+def test_main_js_build_crosswalk_label_uses_compact_identifiers() -> None:
     text = Path('web/src/main.js').read_text(encoding='utf-8')
-    assert 'populateSelect(data.crosswalks, data.standards)' in text
-    assert 'display_name' in text
-    assert 'naturalKey' in text
-    assert 'standardName' in text
-    assert '→' in text
+    slice_text = _slice_top_level_function(text, 'export function buildCrosswalkLabel')
+    assert 'display_name' not in slice_text
+    assert 'standardName' not in slice_text
+    assert '.toUpperCase()' in slice_text
+    assert '→' in slice_text
+    assert 'buildCompactCrosswalkToken' in text
+    assert 'replace(/^dst_/' in text
+
+
+def test_main_js_show_crosswalk_updates_heading_from_display_name() -> None:
+    text = Path('web/src/main.js').read_text(encoding='utf-8')
+    slice_text = _slice_top_level_function(text, 'async function showCrosswalk')
+    assert 'currentCrosswalkTitleEl' in slice_text
+    assert 'textContent' in slice_text
+    assert 'record?.display_name' in slice_text or 'record.display_name' in slice_text
+    assert slice_text.index('textContent') < slice_text.index('renderRules(')
+    assert 'buildCrosswalkLabel(record)' in slice_text
+    assert 'updateExportButton()' in slice_text
 
 
 def test_curation_module_still_has_no_persistence() -> None:

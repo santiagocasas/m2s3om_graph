@@ -13,6 +13,7 @@ const tbody = document.querySelector('#rules-table tbody');
 
 const appContainer = document.getElementById('app');
 const nav = document.getElementById('nav');
+const currentCrosswalkTitleEl = document.getElementById('current-crosswalk-title');
 function navigate(page) {
   if (nav) {
     [...nav.children].forEach(btn => btn.classList.toggle('active', btn.dataset.page === page));
@@ -138,23 +139,35 @@ function compareNaturalKeys(left, right) {
   return 0;
 }
 
-function cleanStandardName(name) {
-  return String(name ?? '').replace(/\)+$/g, '').trim();
+function buildCompactCrosswalkToken(standardId) {
+  return String(standardId ?? '')
+    .trim()
+    .replace(/^standard:/, '')
+    .replace(/^dst_/, '')
+    .toUpperCase();
 }
 
-export function buildCrosswalkLabel(cw, standardName) {
-  const displayName = String(cw?.display_name ?? '').trim();
-  if (displayName) {
-    return displayName;
+export function buildCrosswalkLabel(cw) {
+  const sourceToken = buildCompactCrosswalkToken(cw?.source);
+  const targetToken = buildCompactCrosswalkToken(cw?.target);
+  const rawTargetToken = String(cw?.target ?? '').trim().replace(/^standard:/, '').toUpperCase();
+  const displayTargetToken =
+    sourceToken && targetToken === sourceToken && rawTargetToken.startsWith('DST_')
+      ? rawTargetToken
+      : targetToken;
+  const compactLabel =
+    sourceToken && displayTargetToken
+      ? `${sourceToken} → ${displayTargetToken}`
+      : `${String(cw?.source ?? '')} → ${String(cw?.target ?? '')}`;
+  const crosswalkId = String(cw?.id ?? '').trim();
+  const sourceId = String(cw?.source ?? '').trim();
+  const targetId = String(cw?.target ?? '').trim();
+
+  if (!crosswalkId || crosswalkId === `${sourceId}_to_${targetId}`) {
+    return compactLabel;
   }
 
-  const sourceName = cleanStandardName(standardName.get(cw?.source));
-  const targetName = cleanStandardName(standardName.get(cw?.target));
-  if (sourceName && targetName) {
-    return `${sourceName} → ${targetName} (${cw.id})`;
-  }
-
-  return `${cw.source} -> ${cw.target} (${cw.id})`;
+  return `${compactLabel} (${crosswalkId})`;
 }
 
 export function populateSelect(crosswalks, standards) {
@@ -164,7 +177,6 @@ export function populateSelect(crosswalks, standards) {
     return [];
   }
 
-  const standardName = new Map((standards || []).map((standard) => [standard.id, standard.name]));
   const orderedCrosswalks = [...crosswalks].sort((left, right) =>
     compareNaturalKeys(naturalKey(left.id), naturalKey(right.id)),
   );
@@ -172,7 +184,7 @@ export function populateSelect(crosswalks, standards) {
   for (const cw of orderedCrosswalks) {
     const opt = document.createElement('option');
     opt.value = cw.id;
-    opt.textContent = buildCrosswalkLabel(cw, standardName);
+    opt.textContent = buildCrosswalkLabel(cw);
     selectEl.appendChild(opt);
   }
 
@@ -182,6 +194,9 @@ export function populateSelect(crosswalks, standards) {
 async function showCrosswalk(db, crosswalkId) {
   if (!crosswalkId) {
     currentCrosswalkRecord = null;
+    if (currentCrosswalkTitleEl instanceof HTMLElement) {
+      currentCrosswalkTitleEl.textContent = '';
+    }
     renderRules([]);
     updateExportButton();
     return;
@@ -189,6 +204,11 @@ async function showCrosswalk(db, crosswalkId) {
   const result = await db.select(new RecordId('crosswalk', crosswalkId));
   const record = Array.isArray(result) ? result[0] : result;
   currentCrosswalkRecord = record ?? null;
+  if (currentCrosswalkTitleEl instanceof HTMLElement) {
+    currentCrosswalkTitleEl.textContent = record
+      ? String(record.display_name ?? '').trim() || buildCrosswalkLabel(record)
+      : '';
+  }
   renderRules(record?.rules ?? []);
   updateExportButton();
 }

@@ -80,6 +80,13 @@ header p {
   font-weight: 500;
 }
 
+.crosswalk-title {
+  color: var(--ink);
+  margin: 1rem 0 0.5rem;
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
