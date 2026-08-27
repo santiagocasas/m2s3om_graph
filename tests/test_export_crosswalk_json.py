@@ -213,3 +213,36 @@ def test_export_is_deterministic_across_runs(tmp_path: Path) -> None:
     first = MODULE.export_crosswalk_json(output_path=tmp_path / 'first.json')
     second = MODULE.export_crosswalk_json(output_path=tmp_path / 'second.json')
     assert first.read_bytes() == second.read_bytes()
+
+
+def _load_graph_output() -> dict[str, object]:
+    path = ROOT / 'exports' / 'graph' / 'crosswalk_graph.json'
+    return json.loads(path.read_text(encoding='utf-8'))
+
+
+def test_committed_graph_edges_expose_canonical_crosswalk_names() -> None:
+    graph = _load_graph_output()
+    for edge in graph['edges']:
+        metadata = edge['metadata']
+        assert isinstance(metadata['crosswalk_name'], str)
+        assert metadata['crosswalk_name']
+        assert '_TO_' not in metadata['crosswalk_name']
+        assert isinstance(metadata['crosswalk_expansion'], str)
+        assert isinstance(metadata['crosswalk_slug'], str)
+        assert edge['label'].startswith(metadata['crosswalk_name'])
+
+    rdamsc_c1 = next(edge for edge in graph['edges'] if edge['metadata']['crosswalk_id'] == 'rdamsc_c1')
+    rdamsc_c11 = next(edge for edge in graph['edges'] if edge['metadata']['crosswalk_id'] == 'rdamsc_c11')
+    datacite44_to_dcterms = next(
+        edge for edge in graph['edges'] if edge['metadata']['crosswalk_id'] == 'datacite44_to_dcterms'
+    )
+
+    assert rdamsc_c1['metadata']['crosswalk_name'] == 'ABCD → Darwin Core'
+    assert rdamsc_c11['metadata']['crosswalk_name'] == 'Dublin Core → MARC'
+    assert datacite44_to_dcterms['metadata']['crosswalk_name'] == 'DataCite → Dublin Core Terms'
+
+
+def test_committed_graph_mirror_matches_export_graph() -> None:
+    export_graph = (ROOT / 'exports' / 'graph' / 'crosswalk_graph.json').read_bytes()
+    web_graph = (ROOT / 'web' / 'data' / 'graph' / 'crosswalk_graph.json').read_bytes()
+    assert export_graph == web_graph
