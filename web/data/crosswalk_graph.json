@@ -214,6 +214,10 @@
       "id": "datacite44_to_dcterms",
       "source": "datacite44",
       "target": "dcterms",
+      "source_acronym": "DataCite",
+      "source_expansion": "",
+      "target_acronym": "Dublin Core Terms",
+      "target_expansion": "",
       "display_name": "DataCite 4.4 to Dublin Core Terms",
       "rules": [
         {
@@ -3573,6 +3577,10 @@
       "id": "rdamsc_c1",
       "source": "rdamsc_c1",
       "target": "dst_rdamsc_c1",
+      "source_acronym": "ABCD",
+      "source_expansion": "Access to Biological Collection Data",
+      "target_acronym": "Darwin Core",
+      "target_expansion": "",
       "display_name": "abcd-access-biological_TO_darwin-core (ABCD (Access to Biological Collection Data) -> Darwin Core",
       "rules": [
         {
@@ -4016,6 +4024,10 @@
       "id": "rdamsc_c3",
       "source": "rdamsc_c3",
       "target": "dst_rdamsc_c3",
+      "source_acronym": "Darwin Core",
+      "source_expansion": "",
+      "target_acronym": "ABCD",
+      "target_expansion": "Access to Biological Collection Data",
       "display_name": "darwin-core_TO_abcd-access-biological (Darwin Core -> ABCD (Access to Biological Collection Data",
       "rules": [
         {
@@ -4053,6 +4065,10 @@
       "id": "rdamsc_c5",
       "source": "rdamsc_c5",
       "target": "dst_rdamsc_c5",
+      "source_acronym": "DataCite Metadata Schema",
+      "source_expansion": "",
+      "target_acronym": "Dublin Core",
+      "target_expansion": "",
       "display_name": "DataCite to Dublin Core Mapping 4.4",
       "rules": [
         {
@@ -4683,6 +4699,10 @@
       "id": "rdamsc_c11",
       "source": "rdamsc_c11",
       "target": "dst_rdamsc_c11",
+      "source_acronym": "Dublin Core",
+      "source_expansion": "",
+      "target_acronym": "MARC",
+      "target_expansion": "Machine-Readable Cataloging",
       "display_name": "dublin-core_TO_marc-machine-readable (Dublin Core -> MARC (Machine-Readable Cataloging",
       "rules": [
         {
@@ -6311,6 +6331,10 @@
       "id": "rdamsc_c13",
       "source": "rdamsc_c13",
       "target": "dst_rdamsc_c13",
+      "source_acronym": "EML",
+      "source_expansion": "Ecological Metadata Language",
+      "target_acronym": "ISO 19115",
+      "target_expansion": "",
       "display_name": "eml-ecological-metadata_TO_iso-19115 (EML (Ecological Metadata Language) -> ISO 19115",
       "rules": [
         {
@@ -7318,6 +7342,10 @@
       "id": "rdamsc_c14",
       "source": "rdamsc_c14",
       "target": "dst_rdamsc_c14",
+      "source_acronym": "EURISCO Descriptors",
+      "source_expansion": "",
+      "target_acronym": "ABCD",
+      "target_expansion": "Access to Biological Collection Data",
       "display_name": "eurisco-descriptors_TO_abcd-access-biological (EURISCO Descriptors -> ABCD (Access to Biological Collection Data",
       "rules": [
         {
@@ -8217,6 +8245,10 @@
       "id": "rdamsc_c18",
       "source": "rdamsc_c18",
       "target": "dst_rdamsc_c18",
+      "source_acronym": "HISPID",
+      "source_expansion": "Herbarium Information Standards and Protocols for Interchange of Data",
+      "target_acronym": "ABCD",
+      "target_expansion": "Access to Biological Collection Data",
       "display_name": "hispid-herbarium-information_TO_abcd-access-biological (HISPID (Herbarium Information Standards and Protocols for Interchange of Data) -> ABCD (Access to Biological Collection Data",
       "rules": [
         {
@@ -8602,6 +8634,10 @@
       "id": "rdamsc_c19",
       "source": "rdamsc_c19",
       "target": "dst_rdamsc_c19",
+      "source_acronym": "ISA-Tab",
+      "source_expansion": "",
+      "target_acronym": "MAGE-TAB",
+      "target_expansion": "",
       "display_name": "isa-tab_TO_mage-tab",
       "rules": [
         {
@@ -8668,6 +8704,10 @@
       "id": "rdamsc_c20",
       "source": "rdamsc_c20",
       "target": "dst_rdamsc_c20",
+      "source_acronym": "ISO 19115",
+      "source_expansion": "",
+      "target_acronym": "DDI",
+      "target_expansion": "Data Documentation Initiative",
       "display_name": "iso-19115_TO_ddi-data-documentation (ISO 19115 -> DDI (Data Documentation Initiative",
       "rules": [
         {
@@ -9756,6 +9796,10 @@
       "id": "rdamsc_c21",
       "source": "rdamsc_c21",
       "target": "dst_rdamsc_c21",
+      "source_acronym": "MARC",
+      "source_expansion": "Machine-Readable Cataloging",
+      "target_acronym": "Dublin Core",
+      "target_expansion": "",
       "display_name": "marc-machine-readable_TO_dublin-core (MARC (Machine-Readable Cataloging) -> Dublin Core",
       "rules": [
         {
@@ -12003,6 +12047,10 @@
       "id": "rdamsc_c22",
       "source": "rdamsc_c22",
       "target": "dst_rdamsc_c22",
+      "source_acronym": "NetCDF Attribute Convention for Dataset Discovery",
+      "source_expansion": "",
+      "target_acronym": "ISO 19115",
+      "target_expansion": "",
       "display_name": "netcdf-attribute-convention_TO_iso-19115",
       "rules": [
         {
@@ -13278,6 +13326,10 @@
       "id": "rdamsc_c23",
       "source": "rdamsc_c23",
       "target": "dst_rdamsc_c23",
+      "source_acronym": "OECD Dataset Metadata",
+      "source_expansion": "",
+      "target_acronym": "ABCD",
+      "target_expansion": "Access to Biological Collection Data",
       "display_name": "oecd-minimum-data_TO_abcd-access-biological (OECD Dataset Metadata -> ABCD (Access to Biological Collection Data",
       "rules": [
         {
@@ -13953,6 +14005,10 @@
       "id": "rdamsc_c24",
       "source": "rdamsc_c24",
       "target": "dst_rdamsc_c24",
+      "source_acronym": "SPASE Data Model",
+      "source_expansion": "",
+      "target_acronym": "Dublin Core",
+      "target_expansion": "",
       "display_name": "spase-data-model_TO_dublin-core",
       "rules": [
         {
@@ -14308,6 +14364,10 @@
       "id": "rdamsc_c26",
       "source": "rdamsc_c26",
       "target": "dst_rdamsc_c26",
+      "source_acronym": "Dublin Core",
+      "source_expansion": "",
+      "target_acronym": "MODS",
+      "target_expansion": "Metadata Object Description Schema",
       "display_name": "dublin-core_TO_mods-metadata-object (Dublin Core -> MODS (Metadata Object Description Schema",
       "rules": [
         {
@@ -15286,6 +15346,10 @@
       "id": "rdamsc_c27",
       "source": "rdamsc_c27",
       "target": "dst_rdamsc_c27",
+      "source_acronym": "MODS",
+      "source_expansion": "Metadata Object Description Schema",
+      "target_acronym": "Dublin Core",
+      "target_expansion": "",
       "display_name": "mods-metadata-object_TO_dublin-core (MODS (Metadata Object Description Schema) -> Dublin Core",
       "rules": [
         {
@@ -15994,6 +16058,10 @@
       "id": "rdamsc_c28",
       "source": "rdamsc_c28",
       "target": "dst_rdamsc_c28",
+      "source_acronym": "MARC",
+      "source_expansion": "Machine-Readable Cataloging",
+      "target_acronym": "MODS",
+      "target_expansion": "Metadata Object Description Schema",
       "display_name": "marc-machine-readable_TO_mods-metadata-object (MARC (Machine-Readable Cataloging) -> MODS (Metadata Object Description Schema",
       "rules": [
         {
@@ -18670,6 +18738,10 @@
       "id": "rdamsc_c29",
       "source": "rdamsc_c29",
       "target": "dst_rdamsc_c29",
+      "source_acronym": "MODS",
+      "source_expansion": "Metadata Object Description Schema",
+      "target_acronym": "MARC",
+      "target_expansion": "Machine-Readable Cataloging",
       "display_name": "mods-metadata-object_TO_marc-machine-readable (MODS (Metadata Object Description Schema) -> MARC (Machine-Readable Cataloging",
       "rules": [
         {
@@ -20911,6 +20983,10 @@
       "id": "rdamsc_c30",
       "source": "rdamsc_c30",
       "target": "dst_rdamsc_c30",
+      "source_acronym": "ANZLIC Metadata Profile",
+      "source_expansion": "",
+      "target_acronym": "RIF-CS",
+      "target_expansion": "Registry Interchange Format – Collections and Services",
       "display_name": "iso-19115_TO_rif-cs-registry (ANZLIC Metadata Profile -> RIF-CS (Registry Interchange Format – Collections and Services",
       "rules": [
         {
@@ -21318,6 +21394,10 @@
       "id": "rdamsc_c32",
       "source": "rdamsc_c32",
       "target": "dst_rdamsc_c32",
+      "source_acronym": "Dublin Core",
+      "source_expansion": "",
+      "target_acronym": "RIF-CS",
+      "target_expansion": "Registry Interchange Format – Collections and Services",
       "display_name": "dublin-core_TO_rif-cs-registry (Dublin Core -> RIF-CS (Registry Interchange Format – Collections and Services",
       "rules": [
         {
@@ -21542,6 +21622,10 @@
       "id": "rdamsc_c33",
       "source": "rdamsc_c33",
       "target": "dst_rdamsc_c33",
+      "source_acronym": "LIDO",
+      "source_expansion": "Lightweight Information Describing Objects",
+      "target_acronym": "CIDOC CRM",
+      "target_expansion": "",
       "display_name": "LIDO to CIDOC CRM (LIDO (Lightweight Information Describing Objects) -> CIDOC CRM",
       "rules": [
         {
@@ -21577,6 +21661,10 @@
       "id": "rdamsc_c34",
       "source": "rdamsc_c34",
       "target": "dst_rdamsc_c34",
+      "source_acronym": "MIDAS-Heritage",
+      "source_expansion": "",
+      "target_acronym": "CIDOC CRM",
+      "target_expansion": "",
       "display_name": "MIDAS-Heritage to CIDOC CRM",
       "rules": [
         {
@@ -23209,6 +23297,10 @@
       "id": "rdamsc_c35",
       "source": "rdamsc_c35",
       "target": "dst_rdamsc_c35",
+      "source_acronym": "Dublin Core",
+      "source_expansion": "",
+      "target_acronym": "CIDOC CRM",
+      "target_expansion": "",
       "display_name": "Dublin Core to CIDOC CRM",
       "rules": [
         {
@@ -24324,6 +24416,10 @@
       "id": "rdamsc_c36",
       "source": "rdamsc_c36",
       "target": "dst_rdamsc_c36",
+      "source_acronym": "EAD",
+      "source_expansion": "Encoded Archival Description",
+      "target_acronym": "CIDOC CRM",
+      "target_expansion": "",
       "display_name": "EAD to CIDOC CRM (EAD (Encoded Archival Description) -> CIDOC CRM",
       "rules": [
         {
@@ -24622,6 +24718,10 @@
       "id": "rdamsc_c37",
       "source": "rdamsc_c37",
       "target": "dst_rdamsc_c37",
+      "source_acronym": "MARC",
+      "source_expansion": "Machine-Readable Cataloging",
+      "target_acronym": "CIDOC CRM",
+      "target_expansion": "",
       "display_name": "MARC (Machine-Readable Cataloging) to CIDOC CRM (MARC (Machine-Readable Cataloging) -> CIDOC CRM",
       "rules": [
         {
@@ -25953,6 +26053,10 @@
       "id": "rdamsc_c38",
       "source": "rdamsc_c38",
       "target": "dst_rdamsc_c38",
+      "source_acronym": "DataCite Metadata Schema",
+      "source_expansion": "",
+      "target_acronym": "DataCite Metadata Schema",
+      "target_expansion": "",
       "display_name": "CiteDCAT-AP (DataCite profile of DCAT-AP",
       "rules": [
         {

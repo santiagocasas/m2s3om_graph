@@ -15,6 +15,11 @@ from pathlib import Path
 
 import yaml
 
+try:
+    from scripts.helpers.description_parser import parse_description_names
+except ModuleNotFoundError:
+    from helpers.description_parser import parse_description_names
+
 ROOT = Path(__file__).resolve().parents[1]
 SSSOM_DIR = ROOT / "exports" / "sssom"
 OUTPUT_PATH = ROOT / "web" / "public" / "data" / "crosswalk_graph.json"
@@ -221,6 +226,13 @@ def export_crosswalk_json(
         metadata = parse_sssom_metadata(tsv_path)
         source_id, source_name, target_id, target_name = derive_standard_ids(metadata, crosswalk_stem)
         display_name = derive_display_name(metadata, source_name, target_name)
+        description = str(metadata.get("mapping_set_description", "") or "")
+        source_acronym, source_expansion, target_acronym, target_expansion = parse_description_names(description)
+
+        if not source_acronym:
+            source_acronym = source_name or source_id.removeprefix("src_").removeprefix("dst_")
+        if not target_acronym:
+            target_acronym = target_name or target_id.removeprefix("src_").removeprefix("dst_")
 
         for candidate in (crosswalk_stem, source_id, target_id):
             try:
@@ -246,6 +258,10 @@ def export_crosswalk_json(
                 "id": crosswalk_stem,
                 "source": source_id,
                 "target": target_id,
+                "source_acronym": source_acronym,
+                "source_expansion": source_expansion,
+                "target_acronym": target_acronym,
+                "target_expansion": target_expansion,
                 "display_name": display_name,
                 "rules": sorted(
                     rules,
