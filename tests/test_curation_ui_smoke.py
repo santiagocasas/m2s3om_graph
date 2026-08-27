@@ -101,7 +101,7 @@ def test_index_html_has_crosswalk_heading_above_rules_table() -> None:
     assert 'id="current-crosswalk-title"' in html
     assert 'id="current-crosswalk-subtitle"' in html
     assert 'class="crosswalk-title"' in html
-    assert 'class="crosswalk-subtitle"' in Path('web/src/style.css').read_text(encoding='utf-8')
+    assert '.crosswalk-subtitle' in Path('web/src/style.css').read_text(encoding='utf-8')
     assert html.index('id="current-crosswalk-title"') < html.index('id="current-crosswalk-subtitle"') < html.index(
         'id="rules-table-container"'
     )
@@ -138,7 +138,8 @@ def test_main_js_build_crosswalk_label_uses_canonical_acronyms() -> None:
     assert 'display_name' not in slice_text
     assert 'source_acronym' in slice_text
     assert 'target_acronym' in slice_text
-    assert '.toUpperCase()' not in slice_text.split('function buildCompactCrosswalkToken')[0]
+    assert slice_text.index('source_acronym') < slice_text.index('if (sourceAcronym && targetAcronym)')
+    assert slice_text.index('target_acronym') < slice_text.index('if (sourceAcronym && targetAcronym)')
     assert '→' in slice_text
     assert 'buildCompactCrosswalkToken' in text
     assert 'rdamsc_c' in slice_text

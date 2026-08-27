@@ -14,6 +14,7 @@ const tbody = document.querySelector('#rules-table tbody');
 const appContainer = document.getElementById('app');
 const nav = document.getElementById('nav');
 const currentCrosswalkTitleEl = document.getElementById('current-crosswalk-title');
+const currentCrosswalkSubtitleEl = document.getElementById('current-crosswalk-subtitle');
 function navigate(page) {
   if (nav) {
     [...nav.children].forEach(btn => btn.classList.toggle('active', btn.dataset.page === page));
@@ -148,6 +149,16 @@ function buildCompactCrosswalkToken(standardId) {
 }
 
 export function buildCrosswalkLabel(cw) {
+  const sourceAcronym = String(cw?.source_acronym ?? '').trim();
+  const targetAcronym = String(cw?.target_acronym ?? '').trim();
+  const crosswalkId = String(cw?.id ?? '').trim();
+  const rdamscId = /^rdamsc_c\d+$/i.test(crosswalkId);
+
+  if (sourceAcronym && targetAcronym) {
+    const canonicalLabel = `${sourceAcronym} → ${targetAcronym}`;
+    return rdamscId ? `${canonicalLabel} (${crosswalkId})` : canonicalLabel;
+  }
+
   const sourceToken = buildCompactCrosswalkToken(cw?.source);
   const targetToken = buildCompactCrosswalkToken(cw?.target);
   const rawTargetToken = String(cw?.target ?? '').trim().replace(/^standard:/, '').toUpperCase();
@@ -159,7 +170,6 @@ export function buildCrosswalkLabel(cw) {
     sourceToken && displayTargetToken
       ? `${sourceToken} → ${displayTargetToken}`
       : `${String(cw?.source ?? '')} → ${String(cw?.target ?? '')}`;
-  const crosswalkId = String(cw?.id ?? '').trim();
   const sourceId = String(cw?.source ?? '').trim();
   const targetId = String(cw?.target ?? '').trim();
 
@@ -168,6 +178,21 @@ export function buildCrosswalkLabel(cw) {
   }
 
   return `${compactLabel} (${crosswalkId})`;
+}
+
+function formatCrosswalkSubtitle(cw) {
+  const sourceAcronym = String(cw?.source_acronym ?? '').trim();
+  const sourceExpansion = String(cw?.source_expansion ?? '').trim();
+  const targetAcronym = String(cw?.target_acronym ?? '').trim();
+  const targetExpansion = String(cw?.target_expansion ?? '').trim();
+
+  if (!sourceAcronym && !targetAcronym) {
+    return '';
+  }
+
+  const sourceText = sourceExpansion ? `${sourceAcronym} (${sourceExpansion})` : sourceAcronym;
+  const targetText = targetExpansion ? `${targetAcronym} (${targetExpansion})` : targetAcronym;
+  return `${sourceText} → ${targetText}`;
 }
 
 export function populateSelect(crosswalks, standards) {
@@ -197,6 +222,9 @@ async function showCrosswalk(db, crosswalkId) {
     if (currentCrosswalkTitleEl instanceof HTMLElement) {
       currentCrosswalkTitleEl.textContent = '';
     }
+    if (currentCrosswalkSubtitleEl instanceof HTMLElement) {
+      currentCrosswalkSubtitleEl.textContent = '';
+    }
     renderRules([]);
     updateExportButton();
     return;
@@ -205,9 +233,10 @@ async function showCrosswalk(db, crosswalkId) {
   const record = Array.isArray(result) ? result[0] : result;
   currentCrosswalkRecord = record ?? null;
   if (currentCrosswalkTitleEl instanceof HTMLElement) {
-    currentCrosswalkTitleEl.textContent = record
-      ? String(record.display_name ?? '').trim() || buildCrosswalkLabel(record)
-      : '';
+    currentCrosswalkTitleEl.textContent = record ? buildCrosswalkLabel(record) : '';
+  }
+  if (currentCrosswalkSubtitleEl instanceof HTMLElement) {
+    currentCrosswalkSubtitleEl.textContent = record ? formatCrosswalkSubtitle(record) : '';
   }
   renderRules(record?.rules ?? []);
   updateExportButton();

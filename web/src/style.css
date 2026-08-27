@@ -87,6 +87,12 @@ header p {
   font-weight: 600;
 }
 
+.crosswalk-subtitle {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: -0.25rem 0 0.75rem;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
