@@ -24,6 +24,8 @@ function navigate(page) {
     document.getElementById('status')?.remove();
     document.getElementById('rules-table-container')?.remove();
     document.getElementById('no-writeback-notice')?.remove();
+    currentCrosswalkTitleEl?.remove();
+    currentCrosswalkSubtitleEl?.remove();
     renderConvertPage();
     return;
   }
@@ -32,6 +34,8 @@ function navigate(page) {
     document.getElementById('status')?.remove();
     document.getElementById('rules-table-container')?.remove();
     document.getElementById('no-writeback-notice')?.remove();
+    currentCrosswalkTitleEl?.remove();
+    currentCrosswalkSubtitleEl?.remove();
     initGraphPage();
     return;
   }

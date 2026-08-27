@@ -274,16 +274,19 @@ function parseGraphologyJson(json) {
   const elements = [];
 
   for (const n of nodes) {
-    if (!n || typeof n.id !== 'string') continue;
-    const attrs = n.attributes || {};
-    const label = attrs.label || n.id;
-    const kind = attrs.kind || attrs.type || '';
+    const id = n?.id || n?.key;
+    if (!n || typeof id !== 'string') continue;
+    // The checked-in export is flat; Graphology exports put the same fields in
+    // `attributes`. Supporting both keeps the embedded graph aligned with Pages.
+    const attrs = n.attributes || n;
+    const label = attrs.label || id;
+    const kind = attrs.kind || attrs.type || 'standard';
     const color = typeof attrs.color === 'string' && attrs.color ? attrs.color : '#64748b';
 
     elements.push({
       group: 'nodes',
       data: {
-        id: n.id,
+        id,
         label: label,
         truncatedLabel: truncateLabel(label),
         fullLabel: label,
@@ -294,7 +297,7 @@ function parseGraphologyJson(json) {
         origY: typeof attrs.y === 'number' ? attrs.y : 0,
         ...Object.fromEntries(
           Object.entries(attrs).filter(([k]) =>
-            !['label', 'fullLabel', 'kind', 'color', 'x', 'y', 'size', 'type'].includes(k)
+            !['id', 'key', 'label', 'fullLabel', 'kind', 'color', 'x', 'y', 'size', 'type'].includes(k)
           )
         ),
       },
@@ -304,8 +307,15 @@ function parseGraphologyJson(json) {
   for (let i = 0; i < edges.length; i++) {
     const e = edges[i] || {};
     if (typeof e.source !== 'string' || typeof e.target !== 'string') continue;
-    const eAttrs = e.attributes || {};
-    const key = typeof e.key === 'string' ? e.key : `e${i}`;
+    const metadata = e.metadata || {};
+    const eAttrs = e.attributes || e;
+    const key = typeof e.key === 'string' ? e.key : typeof e.id === 'string' ? e.id : `e${i}`;
+    const strategy = eAttrs.strategy || metadata.strategy || 'unknown';
+    const relationship = eAttrs.relationship || {
+      deterministic: 'Deterministic extraction',
+      llm: 'LLM-assisted extraction',
+      unknown: 'Crosswalk',
+    }[strategy] || 'Crosswalk';
 
     elements.push({
       group: 'edges',
@@ -315,8 +325,11 @@ function parseGraphologyJson(json) {
         target: e.target,
         color: typeof eAttrs.color === 'string' && eAttrs.color ? eAttrs.color : '#9ca3af',
         edgeSize: typeof eAttrs.size === 'number' ? Math.max(0.5, eAttrs.size) : 1.5,
+        strategy,
+        relationship,
+        ...metadata,
         ...Object.fromEntries(
-          Object.entries(eAttrs).filter(([k]) => !['color', 'size'].includes(k))
+          Object.entries(eAttrs).filter(([k]) => !['id', 'key', 'source', 'target', 'metadata', 'color', 'size'].includes(k))
         ),
       },
     });
