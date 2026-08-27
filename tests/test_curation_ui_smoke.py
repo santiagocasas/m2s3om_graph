@@ -37,7 +37,7 @@ def test_curation_module_does_not_import_surrealdb() -> None:
 def test_curation_uses_env_configurable_endpoint() -> None:
     text = Path('web/src/curation.js').read_text(encoding='utf-8')
     assert text.count('import.meta.env.VITE_SUGGEST_API_URL') == 1
-    assert 'http://localhost:8000/suggest' in text
+    assert "'/suggest'" in text
     assert re.search(r'huggingface\.co|hf\.space|codebase\.helmholtz\.cloud/[^\s\'\"]*suggest', text) is None
 
 
@@ -102,6 +102,15 @@ def test_main_js_wires_export_button() -> None:
     assert 'downloadAcceptedTsv' in text
     assert 'updateExportButton' in text
     assert text.count('updateExportButton();') >= 2
+
+
+def test_main_js_populate_select_prefers_display_name_then_standards_fallback() -> None:
+    text = Path('web/src/main.js').read_text(encoding='utf-8')
+    assert 'populateSelect(data.crosswalks, data.standards)' in text
+    assert 'display_name' in text
+    assert 'naturalKey' in text
+    assert 'standardName' in text
+    assert '→' in text
 
 
 def test_curation_module_still_has_no_persistence() -> None:
