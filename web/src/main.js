@@ -83,9 +83,9 @@ async function main() {
   statusEl.textContent = 'Loading crosswalk data...';
   const data = await loadGraphData(db, '/data/crosswalk_graph.json');
 
-  populateSelect(data.crosswalks);
+  const orderedCrosswalks = populateSelect(data.crosswalks, data.standards);
   statusEl.textContent =
-    `Loaded ${data.crosswalks.length} crosswalks across ${data.standards.length} standards. ` +
+    `Loaded ${orderedCrosswalks.length} crosswalks across ${data.standards.length} standards. ` +
     'Running entirely in your browser, no server involved.';
   statusEl.classList.remove('bad');
 
@@ -109,26 +109,74 @@ async function main() {
     tbody.dataset.curationBound = '1';
   }
 
-  if (data.crosswalks.length > 0) {
-    selectEl.value = data.crosswalks[0].id;
-    await showCrosswalk(db, data.crosswalks[0].id);
+  if (orderedCrosswalks.length > 0) {
+    selectEl.value = orderedCrosswalks[0].id;
+    await showCrosswalk(db, orderedCrosswalks[0].id);
   }
 
   updateExportButton();
 }
 
-function populateSelect(crosswalks) {
+export function naturalKey(id) {
+  const parts = String(id).split(/(\d+)/).filter(Boolean);
+  return parts.map((part) => (/^\d+$/.test(part) ? [0, Number(part)] : [1, part]));
+}
+
+function compareNaturalKeys(left, right) {
+  const maxLength = Math.max(left.length, right.length);
+  for (let index = 0; index < maxLength; index += 1) {
+    const leftPart = left[index];
+    const rightPart = right[index];
+    if (!leftPart) return -1;
+    if (!rightPart) return 1;
+    if (leftPart[0] !== rightPart[0]) {
+      return leftPart[0] - rightPart[0];
+    }
+    if (leftPart[1] < rightPart[1]) return -1;
+    if (leftPart[1] > rightPart[1]) return 1;
+  }
+  return 0;
+}
+
+function cleanStandardName(name) {
+  return String(name ?? '').replace(/\)+$/g, '').trim();
+}
+
+export function buildCrosswalkLabel(cw, standardName) {
+  const displayName = String(cw?.display_name ?? '').trim();
+  if (displayName) {
+    return displayName;
+  }
+
+  const sourceName = cleanStandardName(standardName.get(cw?.source));
+  const targetName = cleanStandardName(standardName.get(cw?.target));
+  if (sourceName && targetName) {
+    return `${sourceName} → ${targetName} (${cw.id})`;
+  }
+
+  return `${cw.source} -> ${cw.target} (${cw.id})`;
+}
+
+export function populateSelect(crosswalks, standards) {
   selectEl.innerHTML = '';
   if (crosswalks.length === 0) {
     renderRules([]);
-    return;
+    return [];
   }
-  for (const cw of crosswalks) {
+
+  const standardName = new Map((standards || []).map((standard) => [standard.id, standard.name]));
+  const orderedCrosswalks = [...crosswalks].sort((left, right) =>
+    compareNaturalKeys(naturalKey(left.id), naturalKey(right.id)),
+  );
+
+  for (const cw of orderedCrosswalks) {
     const opt = document.createElement('option');
     opt.value = cw.id;
-    opt.textContent = `${cw.source} -> ${cw.target} (${cw.id})`;
+    opt.textContent = buildCrosswalkLabel(cw, standardName);
     selectEl.appendChild(opt);
   }
+
+  return orderedCrosswalks;
 }
 
 async function showCrosswalk(db, crosswalkId) {
