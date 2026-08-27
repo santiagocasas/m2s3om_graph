@@ -13,6 +13,11 @@ from collections import defaultdict
 
 import yaml
 
+try:
+    from scripts.helpers.description_parser import parse_description_names
+except ModuleNotFoundError:
+    from helpers.description_parser import parse_description_names
+
 
 def parse_sssom_metadata(path: Path) -> dict:
     """Extract YAML metadata header from SSSOM file."""
@@ -70,25 +75,6 @@ def extract_standard_info(curie_map: dict, key: str) -> tuple[str, str]:
     return (standard_id, standard_name)
 
 
-def parse_description(description: str) -> tuple[str, str, str]:
-    """Parse mapping_set_description to extract crosswalk name and standard names.
-    
-    Format: "CrosswalkName (SourceStandard -> TargetStandard)"
-    Returns: (crosswalk_name, source_name, target_name)
-    """
-    pattern = re.compile(r"^(?P<crosswalk>.*?)\s*\((?P<source>.*?)\s*->\s*(?P<target>.*?)\)$")
-    match = pattern.match(description.strip())
-    
-    if match:
-        return (
-            match.group("crosswalk").strip(),
-            match.group("source").strip(),
-            match.group("target").strip(),
-        )
-    
-    return (description or "Unknown Crosswalk", "Source", "Target")
-
-
 def determine_extraction_strategy(crosswalk_id: str, metadata: dict) -> str:
     """Determine if crosswalk was extracted via deterministic or LLM method.
     
@@ -139,15 +125,23 @@ def export_graph_data(sssom_dir: Path, output_path: Path) -> dict:
         
         # Override with description if available
         description = metadata.get("mapping_set_description", "")
-        if description:
-            crosswalk_name, desc_source, desc_target = parse_description(description)
-            if desc_source != "Source":
-                source_name = desc_source
-            if desc_target != "Target":
-                target_name = desc_target
+        source_acronym, source_expansion, target_acronym, target_expansion = parse_description_names(str(description or ""))
+        crosswalk_slug = str(description or "").split("(", 1)[0].strip()
+        if source_acronym and target_acronym:
+            crosswalk_name = f"{source_acronym} → {target_acronym}"
         else:
-            crosswalk_name = crosswalk_id
-        
+            crosswalk_name = crosswalk_slug or crosswalk_id
+
+        if source_expansion:
+            source_name = f"{source_acronym} ({source_expansion})" if source_acronym else source_name
+        elif source_acronym:
+            source_name = source_acronym
+
+        if target_expansion:
+            target_name = f"{target_acronym} ({target_expansion})" if target_acronym else target_name
+        elif target_acronym:
+            target_name = target_acronym
+
         # Count rules
         rule_count = count_sssom_rules(sssom_file)
         
@@ -192,11 +186,17 @@ def export_graph_data(sssom_dir: Path, output_path: Path) -> dict:
             "source": source_id,
             "target": target_id,
             "size": max(1, rule_count / 20),  # Scale edge thickness
-            "label": f"{rule_count} rules",
+            "label": f"{crosswalk_name}: {rule_count} rules" if crosswalk_name else f"{rule_count} rules",
             "color": edge_color,
             "metadata": {
                 "crosswalk_id": crosswalk_id,
                 "crosswalk_name": crosswalk_name,
+                "crosswalk_expansion": (
+                    f"{source_acronym}{f' ({source_expansion})' if source_expansion else ''} → {target_acronym}{f' ({target_expansion})' if target_expansion else ''}"
+                    if source_acronym or target_acronym
+                    else ""
+                ),
+                "crosswalk_slug": crosswalk_slug,
                 "rule_count": rule_count,
                 "strategy": strategy,
                 "source_doc": metadata.get("mapping_set_source", ""),
