@@ -8,47 +8,39 @@ It now supports:
 - ingesting easy mapping artifact formats (PDF/HTML/TXT/XML/XSL),
 - extracting mapping rules with Blablador-backed AI assistance,
 - writing authoritative `.sssom.tsv` files to disk,
-- applying conversion rules from SSSOM in the Streamlit conversion tab.
+- applying conversion rules from SSSOM in the Vite web app.
 
 ## Quickstart
 
 ```bash
 uv sync
 uv run --with pytest pytest
-uv run streamlit run app/app.py
+cd web && npm install && npm run dev
 uv run python -m m2s3om_graph.cli.main demo-convert
 ```
 
-## Run with local SurrealDB (Docker)
+## Run the Vite web app locally
 
-Fastest way (starts SurrealDB + Streamlit in fast mode, no heavy bootstrap):
-
-```bash
-./scripts/run_app_local.sh
-```
-
-The Streamlit app now starts in an offline-first mode: it seeds ready crosswalks from committed SSSOM exports and skips RDAMSC catalog sync on startup unless you explicitly enable it.
-
-The launcher waits for SurrealDB sign-in readiness. If readiness fails, startup aborts with a clear message.
-
-Optional wait tuning:
+The web app runs entirely in the browser with embedded SurrealDB WASM. No server or SurrealDB Docker is required for browsing.
 
 ```bash
-M2S3OM_DB_WAIT_ATTEMPTS=60 M2S3OM_DB_WAIT_DELAY=1 ./scripts/run_app_local.sh
+uv sync
+cd web
+npm install
+npm run dev
 ```
 
-To run a quick catalog metadata sync on startup:
+Open http://localhost:5173. The app loads crosswalks from `web/public/data/crosswalk_graph.json` and runs offline-first.
+
+Build for production / GitLab Pages:
 
 ```bash
-M2S3OM_AUTO_SYNC_ON_START=1 \
-M2S3OM_SYNC_RDAMSC_CATALOG=1 ./scripts/run_app_local.sh
+cd web
+npm install
+npm run build
 ```
 
-To run full verbose bootstrap on startup:
-
-```bash
-M2S3OM_BOOTSTRAP_RDAMSC=1 ./scripts/run_app_local.sh
-```
+The production build is written to `web/dist/` and can be served as static files.
 
 Bootstrap logs are written to:
 
@@ -56,7 +48,11 @@ Bootstrap logs are written to:
 
 For benchmark/statistics workflows outside the app, see `BENCHMARKING.md`.
 
-In the app, use the **Pipeline** tab to re-run the full process (or a single mapping) and watch step-by-step logs.
+Pipeline runs are performed via CLI:
+
+```bash
+uv run python -m m2s3om_graph.cli.main sync-rdamsc --with-ingest
+```
 
 Manual mode:
 
@@ -101,7 +97,7 @@ SSSOM output directory defaults to:
 
 Use this section to avoid confusion between `pipeline-freeze` and `pipeline-stats`.
 
-If you already ran the pipeline (for example in Streamlit) and want commit-ready outputs,
+If you already ran the pipeline and want commit-ready outputs,
 run only:
 
 ```bash
@@ -143,7 +139,7 @@ Use it only when you intentionally want to regenerate outputs with current pipel
 - `src/m2s3om_graph/oai`: OAI-PMH client and metadata format discovery
 - `src/m2s3om_graph/db`: schema and repository layer
 - `src/m2s3om_graph/candidates`: AI-assisted candidate mapping suggestions (non-baseline)
-- `app/app.py`: Streamlit app with 3 working tabs (Crosswalks, Pipeline, Convert)
+- `web/`: Vite web app with Overview, Explore, Graph, Convert, Docs
 
 ## Hugging Face Spaces — Unified Vite + FastAPI App
 
@@ -179,10 +175,10 @@ This repository currently provides:
 - artifact ingestion converted to markdown via MarkItDown
 - markdown artifact/chunk ingestion into KG with provenance
 - deterministic conversion engine with ambiguity/loss flags
-- conversion driven by SSSOM rows in the conversion tab
+- conversion driven by SSSOM rows in the Vite Convert tab
 - institution-aware OAI-PMH conversion flow driven by `resources/OAIHarvester.config.yaml`
 - automatic format bridging from discovered OAI metadata prefixes to supported internal formats
 - `oai_openaire` treated as DataCite-compatible in the demo conversion workflow
 - OAI-PMH integration for one-record conversion workflows
 - AI-assisted candidate suggestions using Blablador-compatible endpoints (fallback heuristic)
-- benchmark/report generation kept in the CLI and exported pipeline artifacts rather than the Streamlit UI
+- benchmark/report generation kept in the CLI and exported pipeline artifacts

@@ -1,5 +1,6 @@
 @prefix agent: <https://example.org/prov/agent/> .
 @prefix aiprov: <https://w3id.org/aiprov/ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
@@ -50,6 +51,60 @@
     prov:wasAssociatedWith agent:santiago-casas ;
     aiprov:grantedRung verif:human-confirmed .
 
+<https://example.org/prov/activity/verify-src-datacite44> a aiprov:AuditPass ;
+    rdfs:label "DOI verification of src:datacite44 via openalex -> reference-resolved"@en ;
+    prov:endedAtTime "2026-09-18T10:03:34.459739+02:00"^^xsd:dateTime ;
+    prov:used <https://example.org/prov/source/datacite44> ;
+    prov:wasAssociatedWith agent:claude-fable-5-1 .
+
+<https://example.org/prov/activity/verify-src-fair2016> a aiprov:AuditPass ;
+    rdfs:label "DOI verification of src:fair2016 via crossref -> reference-resolved"@en ;
+    prov:endedAtTime "2026-09-18T10:03:32.299453+02:00"^^xsd:dateTime ;
+    prov:used <https://example.org/prov/source/fair2016> ;
+    prov:wasAssociatedWith agent:claude-fable-5-1 .
+
+<https://example.org/prov/activity/verify-src-sssom2022> a aiprov:AuditPass ;
+    rdfs:label "DOI verification of src:sssom2022 via crossref -> reference-resolved"@en ;
+    prov:endedAtTime "2026-09-18T10:03:18.757992+02:00"^^xsd:dateTime ;
+    prov:used <https://example.org/prov/source/sssom2022> ;
+    prov:wasAssociatedWith agent:claude-fable-5-1 .
+
+<https://example.org/prov/claim/c-p1-convert> a aiprov:Claim ;
+    rdfs:label "On a live DataCite record the DataCite->Dublin Core rules achieve 85.7% field coverage and 79.2% value overlap; 113 unit tests pass at 74% line coverage."@en ;
+    prov:wasAttributedTo agent:claude-fable-5-1 ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:verificationState verif:ai-checked .
+
+<https://example.org/prov/claim/c-p1-coverage> a aiprov:Claim ;
+    rdfs:label "19 of 37 RDAMSC crosswalks (51%) were processed end to end into SSSOM; 11 failed on unreachable artifacts and 7 yielded no extractable rules."@en ;
+    prov:wasAttributedTo agent:claude-fable-5-1 ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:verificationState verif:ai-checked .
+
+<https://example.org/prov/claim/c-p1-fetch> a aiprov:Claim ;
+    rdfs:label "32 of 45 artifact URLs (71%) were fetched successfully; failures cluster on service.ncddc.noaa.gov, gcmd.nasa.gov and schema.datacite.org."@en ;
+    prov:wasAttributedTo agent:claude-fable-5-1 ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:verificationState verif:ai-checked .
+
+<https://example.org/prov/claim/c-p1-graph> a aiprov:Claim ;
+    rdfs:label "Loaded into SurrealDB the SSSOM files yield 20 standard nodes and 23 crosswalk edges."@en ;
+    prov:wasAttributedTo agent:claude-fable-5-1 ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:verificationState verif:ai-checked .
+
+<https://example.org/prov/claim/c-p1-rows> a aiprov:Claim ;
+    rdfs:label "The frozen May-2026 export contains 993 SSSOM data rows: 800 exactMatch (80.6%), 152 relatedMatch (15.3%), 28 broadMatch (2.8%), 13 narrowMatch (1.3%)."@en ;
+    prov:wasAttributedTo agent:claude-fable-5-1 ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:verificationState verif:ai-checked .
+
+<https://example.org/prov/claim/c-p1-strategy> a aiprov:Claim ;
+    rdfs:label "20 crosswalks were extracted with the LLM and 2 deterministically (c36 EAD->CIDOC CRM via XSLT; c38 CiteDCAT-AP->DataCite with 160 rules from a table-heavy PDF); 8 of 20 LLM runs returned no rules and 3 documents were truncated at the 140k-character cap."@en ;
+    prov:wasAttributedTo agent:claude-fable-5-1 ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:verificationState verif:ai-checked .
+
 <https://example.org/prov/entity/-gitignore> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
     prov:wasGeneratedBy <https://example.org/prov/activity/a06-deployment-ci-guidance> ;
@@ -72,10 +127,14 @@
     aiprov:gitCommit "a592f22" .
 
 <https://example.org/prov/entity/01-introduction-tex> a aiprov:Artefact ;
-    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
-    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
-    aiprov:contentHash "sha256:44d39b22fc21da114ef47cd8a78b44673e59a29cb3dcdae9bbb8dcfb339ce550" ;
-    aiprov:filePath "paper/sections/01-introduction.tex" .
+    prov:wasAttributedTo agent:claude-fable-5-1,
+        agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding>,
+        <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:contentHash "sha256:44d39b22fc21da114ef47cd8a78b44673e59a29cb3dcdae9bbb8dcfb339ce550",
+        "sha256:a0d0eb3bb2e53aabad258eebe7f467b1de825790f0fe397b321e5e2bab889852" ;
+    aiprov:filePath "paper/sections/01-introduction.tex" ;
+    aiprov:gitCommit "401bbb042ee117c320ed94b90d0d5ff2a293ccec" .
 
 <https://example.org/prov/entity/02-CONTEXT-md> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
@@ -92,10 +151,14 @@
     aiprov:gitCommit "b757b16" .
 
 <https://example.org/prov/entity/02-background-tex> a aiprov:Artefact ;
-    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
-    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
-    aiprov:contentHash "sha256:88ec2b6ca484f902ae5470a2df3dba54043a096967ed24cc6ac863f4690f0e30" ;
-    aiprov:filePath "paper/sections/02-background.tex" .
+    prov:wasAttributedTo agent:claude-fable-5-1,
+        agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding>,
+        <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:contentHash "sha256:237912161728da01da07d082f46c2122f5dff21180ebcbad4364a64c9f6571ef",
+        "sha256:88ec2b6ca484f902ae5470a2df3dba54043a096967ed24cc6ac863f4690f0e30" ;
+    aiprov:filePath "paper/sections/02-background.tex" ;
+    aiprov:gitCommit "401bbb042ee117c320ed94b90d0d5ff2a293ccec" .
 
 <https://example.org/prov/entity/03-01-PLAN-md> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
@@ -119,16 +182,24 @@
     aiprov:gitCommit "b757b16" .
 
 <https://example.org/prov/entity/03-method-tex> a aiprov:Artefact ;
-    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
-    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
-    aiprov:contentHash "sha256:810dcde2adeeb46dd6b2e3489cc9a4896ed1acc78d16e358de74faa16c352b6d" ;
-    aiprov:filePath "paper/sections/03-method.tex" .
+    prov:wasAttributedTo agent:claude-fable-5-1,
+        agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding>,
+        <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:contentHash "sha256:810dcde2adeeb46dd6b2e3489cc9a4896ed1acc78d16e358de74faa16c352b6d",
+        "sha256:ffa8764049496d6bdc97df1f1892ae4f4acece4c4c54de874093a45c2b924866" ;
+    aiprov:filePath "paper/sections/03-method.tex" ;
+    aiprov:gitCommit "401bbb042ee117c320ed94b90d0d5ff2a293ccec" .
 
 <https://example.org/prov/entity/04-results-tex> a aiprov:Artefact ;
-    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
-    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
-    aiprov:contentHash "sha256:74e7916aec0acca30132e76a47933aed8b2f382bfa9f5db4647aeca8d3daff99" ;
-    aiprov:filePath "paper/sections/04-results.tex" .
+    prov:wasAttributedTo agent:claude-fable-5-1,
+        agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding>,
+        <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:contentHash "sha256:74986c2c27d789943cc954f12d449c999f61e7c79fa39193b970dc9320aa9ca1",
+        "sha256:74e7916aec0acca30132e76a47933aed8b2f382bfa9f5db4647aeca8d3daff99" ;
+    aiprov:filePath "paper/sections/04-results.tex" ;
+    aiprov:gitCommit "401bbb042ee117c320ed94b90d0d5ff2a293ccec" .
 
 <https://example.org/prov/entity/05-01-PLAN-NEW-md> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
@@ -159,16 +230,24 @@
     aiprov:gitCommit "f883d42" .
 
 <https://example.org/prov/entity/05-discussion-tex> a aiprov:Artefact ;
-    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
-    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
-    aiprov:contentHash "sha256:334b060c3551dc3da7ba681f656d98baed8593060d56eb23e80ef6b23087bb47" ;
-    aiprov:filePath "paper/sections/05-discussion.tex" .
+    prov:wasAttributedTo agent:claude-fable-5-1,
+        agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding>,
+        <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:contentHash "sha256:334b060c3551dc3da7ba681f656d98baed8593060d56eb23e80ef6b23087bb47",
+        "sha256:a79c62caf1faeb767f7e48b8d0893572a7093416911dea607bd4f50e4eab0c0a" ;
+    aiprov:filePath "paper/sections/05-discussion.tex" ;
+    aiprov:gitCommit "401bbb042ee117c320ed94b90d0d5ff2a293ccec" .
 
 <https://example.org/prov/entity/06-conclusion-tex> a aiprov:Artefact ;
-    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
-    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
-    aiprov:contentHash "sha256:c007ba06cd8528fedd2adeb1d931f1819cbcb392e9e50937f38786f910f5dd2b" ;
-    aiprov:filePath "paper/sections/06-conclusion.tex" .
+    prov:wasAttributedTo agent:claude-fable-5-1,
+        agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding>,
+        <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:contentHash "sha256:aa29ca55d2f8191a0dd1cf986bb433f778c0a4537cb1bea638fb9100046180bb",
+        "sha256:c007ba06cd8528fedd2adeb1d931f1819cbcb392e9e50937f38786f910f5dd2b" ;
+    aiprov:filePath "paper/sections/06-conclusion.tex" ;
+    aiprov:gitCommit "401bbb042ee117c320ed94b90d0d5ff2a293ccec" .
 
 <https://example.org/prov/entity/DISCUSSION-LOG-md> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
@@ -264,6 +343,13 @@
     aiprov:filePath "web/src/convert.js" ;
     aiprov:gitCommit "7fc32da" .
 
+<https://example.org/prov/entity/crosswalk_graph-pdf> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:claude-fable-5-1 ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:contentHash "sha256:1ee2d51f6e9ee47a02c2c215e172f1737f4aafebc6dd22fe852981f6d596466e" ;
+    aiprov:filePath "paper/figures/crosswalk_graph.pdf" ;
+    aiprov:gitCommit "401bbb042ee117c320ed94b90d0d5ff2a293ccec" .
+
 <https://example.org/prov/entity/disclosure-tex> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
     prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding>,
@@ -285,6 +371,13 @@
     aiprov:contentHash "sha256:8a19ee00889ec047a6c2ea95569c3064948da22222b52962003e6a6bae446e62" ;
     aiprov:filePath "scripts/export_crosswalk_json.py" ;
     aiprov:gitCommit "7fc32da" .
+
+<https://example.org/prov/entity/fig_pipeline_status-png> a aiprov:Artefact ;
+    prov:wasAttributedTo agent:claude-fable-5-1 ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:contentHash "sha256:4af1a844aaa705b1872906229ca9cdb224e6c3b203ead9192f63afcf5db39a27" ;
+    aiprov:filePath "paper/figures/fig_pipeline_status.png" ;
+    aiprov:gitCommit "401bbb042ee117c320ed94b90d0d5ff2a293ccec" .
 
 <https://example.org/prov/entity/graph-loader-js> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
@@ -331,10 +424,14 @@
     aiprov:gitCommit "7fc32da" .
 
 <https://example.org/prov/entity/main-tex> a aiprov:Artefact ;
-    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
-    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
-    aiprov:contentHash "sha256:f67f456673f80e9d6af225d47031617ead07a341dd7fce7882e5a53ff71d200a" ;
-    aiprov:filePath "paper/main.tex" .
+    prov:wasAttributedTo agent:claude-fable-5-1,
+        agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding>,
+        <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:contentHash "sha256:666ba79fda2380e806f9e78527923762a67e1518d115556056419b30076f89d6",
+        "sha256:f67f456673f80e9d6af225d47031617ead07a341dd7fce7882e5a53ff71d200a" ;
+    aiprov:filePath "paper/main.tex" ;
+    aiprov:gitCommit "401bbb042ee117c320ed94b90d0d5ff2a293ccec" .
 
 <https://example.org/prov/entity/package-json> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
@@ -376,10 +473,14 @@
     aiprov:gitCommit "a592f22" .
 
 <https://example.org/prov/entity/references-bib> a aiprov:Artefact ;
-    prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
-    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding> ;
-    aiprov:contentHash "sha256:b86caf87c59c24a84941662f3ff6f8e61ae8eedc4d194f07054e257aa5f63497" ;
-    aiprov:filePath "paper/references.bib" .
+    prov:wasAttributedTo agent:claude-fable-5-1,
+        agent:openai-gpt-5-6-luna ;
+    prov:wasGeneratedBy <https://example.org/prov/activity/a07-provenance-scaffolding>,
+        <https://example.org/prov/activity/a11-phase1-paper-draft> ;
+    aiprov:contentHash "sha256:b86caf87c59c24a84941662f3ff6f8e61ae8eedc4d194f07054e257aa5f63497",
+        "sha256:da80b79a481449850ae9a148f721c17f9521b5e846681ddd84fb482ad43b4789" ;
+    aiprov:filePath "paper/references.bib" ;
+    aiprov:gitCommit "401bbb042ee117c320ed94b90d0d5ff2a293ccec" .
 
 <https://example.org/prov/entity/requirements-txt> a aiprov:Artefact ;
     prov:wasAttributedTo agent:openai-gpt-5-6-luna ;
@@ -422,6 +523,26 @@
     aiprov:gitCommit "7753de3",
         "a592f22" .
 
+<https://example.org/prov/source/blablador> a aiprov:Source ;
+    rdfs:label "Blablador: Helmholtz LLM inference service"@en ;
+    dcterms:source <https://helmholtz-blablador.fz-juelich.de/> ;
+    aiprov:verificationState verif:reference-resolved .
+
+<https://example.org/prov/source/markitdown> a aiprov:Source ;
+    rdfs:label "MarkItDown"@en ;
+    dcterms:source <https://github.com/microsoft/markitdown> ;
+    aiprov:verificationState verif:reference-resolved .
+
+<https://example.org/prov/source/rdamsc> a aiprov:Source ;
+    rdfs:label "RDA Metadata Standards Catalog"@en ;
+    dcterms:source <https://rdamsc.bath.ac.uk/> ;
+    aiprov:verificationState verif:reference-resolved .
+
+<https://example.org/prov/source/surrealdb> a aiprov:Source ;
+    rdfs:label "SurrealDB"@en ;
+    dcterms:source <https://surrealdb.com/> ;
+    aiprov:verificationState verif:reference-resolved .
+
 verif:ai-confirmed a aiprov:VerificationState ;
     rdfs:label "AI-confirmed"@en ;
     rdfs:comment "An AI agent checked that the source CONTENT supports the associated claim (abstract/full-text cross-check). This is the highest rung an AI may grant; it is a machine judgement, not a human one."@en ;
@@ -437,13 +558,6 @@ verif:needs-research a aiprov:VerificationState ;
     rdfs:label "needs research"@en ;
     rdfs:comment "A check was attempted or demanded and did not succeed (e.g. DOI did not resolve). Must not be cited or relied upon until re-verified."@en ;
     aiprov:ladderPosition 1 .
-
-verif:reference-resolved a aiprov:VerificationState ;
-    rdfs:label "reference resolved"@en ;
-    rdfs:comment "The reference EXISTS: its DOI/URL resolved in a bibliographic registry (Crossref, OpenAlex, DataCite) and metadata was captured. Says nothing about whether the content supports anything."@en ;
-    skos:altLabel "lit-retrieved"@en,
-        "retrieved"@en ;
-    aiprov:ladderPosition 2 .
 
 verif:source-vendored a aiprov:VerificationState ;
     rdfs:label "source vendored"@en ;
@@ -679,11 +793,37 @@ aiprov:verificationState a owl:ObjectProperty ;
 <https://example.org/prov/source/-gitlab-ci-yml> a aiprov:Source ;
     aiprov:filePath ".gitlab-ci.yml" .
 
+<https://example.org/prov/source/CODEBASE_WALKTHROUGH-md> a aiprov:Source ;
+    aiprov:filePath "CODEBASE_WALKTHROUGH.md" .
+
 <https://example.org/prov/source/Dockerfile> a aiprov:Source ;
     aiprov:filePath "Dockerfile" .
 
+<https://example.org/prov/source/POSTER_BRIEF-md> a aiprov:Source ;
+    aiprov:filePath "POSTER_BRIEF.md" .
+
+<https://example.org/prov/source/README-md> a aiprov:Source ;
+    aiprov:filePath "README.md" .
+
+<https://example.org/prov/source/TALK_RESULTS_SNAPSHOT-md> a aiprov:Source ;
+    aiprov:filePath "TALK_RESULTS_SNAPSHOT.md" .
+
 <https://example.org/prov/source/convert-js> a aiprov:Source ;
     aiprov:filePath "web/src/convert.js" .
+
+<https://example.org/prov/source/datacite44> a aiprov:Source ;
+    rdfs:label "DataCite Metadata Schema for the Publication and Citation of Research Data and Other Research Outputs v4.4"@en ;
+    dcterms:date "2021" ;
+    dcterms:isPartOf "DataCite" ;
+    aiprov:doi "https://doi.org/10.14454/FXWS-0523"^^xsd:anyURI ;
+    aiprov:verificationState verif:reference-resolved .
+
+<https://example.org/prov/source/fair2016> a aiprov:Source ;
+    rdfs:label "The FAIR Guiding Principles for scientific data management and stewardship"@en ;
+    dcterms:date "2016" ;
+    dcterms:isPartOf "Scientific Data" ;
+    aiprov:doi "https://doi.org/10.1038/sdata.2016.18"^^xsd:anyURI ;
+    aiprov:verificationState verif:reference-resolved .
 
 <https://example.org/prov/source/main-js> a aiprov:Source ;
     aiprov:filePath "web/src/main.js" .
@@ -693,6 +833,13 @@ aiprov:verificationState a owl:ObjectProperty ;
 
 <https://example.org/prov/source/pyproject-toml> a aiprov:Source ;
     aiprov:filePath "pyproject.toml" .
+
+<https://example.org/prov/source/sssom2022> a aiprov:Source ;
+    rdfs:label "A Simple Standard for Sharing Ontological Mappings (SSSOM)"@en ;
+    dcterms:date "2022" ;
+    dcterms:isPartOf "Database" ;
+    aiprov:doi "https://doi.org/10.1093/database/baac035"^^xsd:anyURI ;
+    aiprov:verificationState verif:reference-resolved .
 
 aiprov:Build a owl:Class ;
     rdfs:comment "Deterministic build/compile/CI activity."@en ;
@@ -729,11 +876,6 @@ aiprov:Repair a owl:Class ;
     aiprov:usedTool "bash",
         "edit" .
 
-aiprov:AIAgent a owl:Class ;
-    rdfs:label "AI agent"@en ;
-    rdfs:comment "An LLM- or ML-driven agent participating in artefact production."@en ;
-    rdfs:subClassOf prov:SoftwareAgent .
-
 aiprov:Contribution a owl:Class ;
     rdfs:subClassOf prov:Entity .
 
@@ -743,6 +885,11 @@ aiprov:Contribution a owl:Class ;
     prov:wasAssociatedWith agent:openai-gpt-5-6-luna ;
     aiprov:usedTool "apply_patch",
         "bash" .
+
+aiprov:AIAgent a owl:Class ;
+    rdfs:label "AI agent"@en ;
+    rdfs:comment "An LLM- or ML-driven agent participating in artefact production."@en ;
+    rdfs:subClassOf prov:SoftwareAgent .
 
 <https://example.org/prov/activity/a03-npm-docker-workflow> a aiprov:AuthoringPass ;
     rdfs:label "AI-authored npm scripts, Vite proxy, and Docker development guidance"@en ;
@@ -763,19 +910,15 @@ agent:santiago-casas a aiprov:HumanAgent ;
     aiprov:usedTool "apply_patch",
         "bash" .
 
+verif:reference-resolved a aiprov:VerificationState ;
+    rdfs:label "reference resolved"@en ;
+    rdfs:comment "The reference EXISTS: its DOI/URL resolved in a bibliographic registry (Crossref, OpenAlex, DataCite) and metadata was captured. Says nothing about whether the content supports anything."@en ;
+    skos:altLabel "lit-retrieved"@en,
+        "retrieved"@en ;
+    aiprov:ladderPosition 2 .
+
 aiprov:AuthoringPass a owl:Class ;
     rdfs:comment "AI or human produces/edits an artefact."@en ;
-    rdfs:subClassOf prov:Activity .
-
-aiprov:Source a owl:Class ;
-    rdfs:subClassOf prov:Entity .
-
-aiprov:Claim a owl:Class ;
-    rdfs:comment "An assertion in any artefact that warrants attribution and verification."@en ;
-    rdfs:subClassOf prov:Entity .
-
-aiprov:AuditPass a owl:Class ;
-    rdfs:comment "AI or human reviews, verifies, or contests an artefact."@en ;
     rdfs:subClassOf prov:Activity .
 
 agent:claude-sonnet-5 a aiprov:AIAgent ;
@@ -804,12 +947,38 @@ verif:human-confirmed a aiprov:VerificationState ;
     rdfs:comment "A HUMAN checked that the source supports the claim (targeted spot-check, not necessarily a full read). Human-only: an AI agent must never grant this rung."@en ;
     aiprov:ladderPosition 5 .
 
+aiprov:AuditPass a owl:Class ;
+    rdfs:comment "AI or human reviews, verifies, or contests an artefact."@en ;
+    rdfs:subClassOf prov:Activity .
+
 <https://example.org/prov/activity/a04-deployment-fixtures> a aiprov:AuthoringPass ;
     rdfs:label "AI-authored deployment templates, fixtures, and local runner"@en ;
     prov:endedAtTime "2026-08-17T19:52:02.395155+02:00"^^xsd:dateTime ;
     prov:wasAssociatedWith agent:openai-gpt-5-6-luna ;
     aiprov:usedTool "apply_patch",
         "bash" .
+
+aiprov:Claim a owl:Class ;
+    rdfs:comment "An assertion in any artefact that warrants attribution and verification."@en ;
+    rdfs:subClassOf prov:Entity .
+
+<https://example.org/prov/activity/a11-phase1-paper-draft> a aiprov:AuthoringPass ;
+    rdfs:label "Draft two-page phase-1 paper (article twocolumn) from repo docs and WAW-LLM talk"@en ;
+    prov:endedAtTime "2026-09-18T10:05:10.871380+02:00"^^xsd:dateTime ;
+    prov:used <https://example.org/prov/source/CODEBASE_WALKTHROUGH-md>,
+        <https://example.org/prov/source/POSTER_BRIEF-md>,
+        <https://example.org/prov/source/README-md>,
+        <https://example.org/prov/source/TALK_RESULTS_SNAPSHOT-md> ;
+    prov:wasAssociatedWith agent:claude-fable-5-1 ;
+    aiprov:usedTool "opencode" .
+
+aiprov:Source a owl:Class ;
+    rdfs:subClassOf prov:Entity .
+
+agent:claude-fable-5-1 a aiprov:AIAgent ;
+    foaf:name "Claude (fable-5-1)" ;
+    aiprov:model "claude-fable-5-1"^^xsd:string ;
+    aiprov:provider "Anthropic"^^xsd:string .
 
 aiprov:Artefact a owl:Class ;
     rdfs:comment "Generalizes Manuscript/Section/Figure: any produced file or object."@en ;

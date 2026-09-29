@@ -1,46 +1,582 @@
-\documentclass[conference]{IEEEtran}
+\documentclass[10pt,twocolumn,a4paper]{extarticle}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage[a4paper,margin=2cm,columnsep=0.7cm]{geometry}
+\usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage[font=small,labelfont=bf]{caption}
 \usepackage{url}
-\usepackage[hidelinks]{hyperref}
+\usepackage[]{hyperref}
+\usepackage{orcidlink}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,columns=fullflexible,
+  keepspaces=true,showstringspaces=false,aboveskip=3pt,belowskip=2pt,xleftmargin=0pt}
+
+\graphicspath{{figures/}}
+\setlength{\parskip}{0pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{4pt}
+\raggedbottom
+
+\usepackage{xspace}
+\newcommand{\mssom}{\texorpdfstring{M\textsuperscript{2}S\textsuperscript{3}OM-graph}{M2S3OM-graph}\xspace}
 
 % Scaffolded by provlog.py init --paper.
 % Structure: chapter-per-file — edit sections/*.tex, never inline prose here.
 
+\title{\vspace{-1.2em}From Crosswalk Documents to Graph-based Mappings:\\
+Turning the RDA Metadata Standards Catalog into SSSOM}
+
+\author{%
+  Santiago Casas\,\orcidlink{0000-0002-4751-5138}\\
+  \small Research Data Management, Scientific Information (IW)\\
+  \small Deutsches Zentrum f\"ur Luft- und Raumfahrt e.\,V. (DLR)\\
+  \small \texttt{santiago.casascastro@dlr.de}
+  \and
+  Second Author\,\orcidlink{0000-0000-0000-0000}\\
+  \small Affiliation\\
+  \small \texttt{email@example.org}
+}
+\date{}
+
 \begin{document}
-
-\title{TODO: Working Title}
-
-\author{\IEEEauthorblockN{Santiago Casas}
-\IEEEauthorblockA{Deutsches Zentrum für Luft- und Raumfahrt e. V. (DLR)\\
-ORCID: 0000-0002-4751-5138}}
 
 \maketitle
 
 \begin{abstract}
-% TODO: abstract.
+Metadata crosswalks specify how records are translated between standards,
+yet most exist only as PDF prose, spreadsheets, HTML tables or XSLT files,
+so each repository re-implements its own reading of them. We present the
+first phase of \mssom, a
+pipeline that processes the 37 crosswalks in the \href{https://rdamsc.bath.ac.uk/mapping-index}{RDA Metadata Standards
+Catalog}: it fetches the linked artifacts, converts them to text,
+extracts mapping rules with format-specific parsers where the document is
+structured, and uses a large language model (LLM) where it is not. Every
+rule is exported as an SSSOM row with a citation to the source text, a
+confidence value and a semantic-loss flag. The pipeline yields 993 rows for
+19 crosswalks between 20 standards, which are loaded into a graph and applied to
+harvested OAI-PMH records. Eleven crosswalks could not be processed because
+their artifacts are no longer reachable online.
+% AUDIT TODO: "993 rows for 19 crosswalks": 993 rows are spread over 24 files
+% (23 RDAMSC files + 1 curated DataCite-DC file), not over 19 crosswalks. See audit item 4.
 \end{abstract}
 
-\input{sections/01-introduction}
-\input{sections/02-background}
-\input{sections/03-method}
-\input{sections/04-results}
-\input{sections/05-discussion}
-\input{sections/06-conclusion}
+
+\section{Introduction}\label{sec:introduction}
+
+Repositories, data portals and aggregators routinely translate metadata
+between schemas. The rules for this translation are called crosswalks.
+Many of them were written for human readers: a PDF stating that
+\emph{titleproper} corresponds to \emph{E35\_Title}, a two-column table on
+a wiki, an XSLT stylesheet of several hundred lines, a word-processor file
+from 2009. The RDA Metadata Standards Catalog (RDAMSC)~\cite{rdamsc}\footnote{\url{https://rdamsc.bath.ac.uk/mapping-index}}
+registers 37 such crosswalks
+% AUDIT: removed "between 44 standards" (not reproducible, audit item 1b)
+and is the most complete directory of them we are aware of. It stores the
+link to each defining document, but neither the document itself nor the
+rules it contains.
+
+As a result, each institution that needs a crosswalk reads the document
+and writes its own implementation, and hand-written implementations can
+diverge through small errors. The mapping from DataCite~\cite{datacite_schema_4_4}
+to Dublin Core~\cite{dcmi_terms_2020} illustrates this. The official
+description is clear, but a direct implementation loses ORCID name
+identifiers, affiliations, funding references and related identifiers,
+because Dublin Core has no element for them. This loss is a property of the
+crosswalk, yet it usually remains undocumented and is discovered only when
+the converted records are compared with the originals.
+
+Making crosswalks machine-readable is not a new goal. The RDA FAIR Mappings
+Working Group\footnote{\url{https://www.rd-alliance.org/groups/fair-mappings-wg/activity/}}
+recommends the Simple Standard for Sharing Ontological Mappings
+(SSSOM)~\cite{matentzoglu2022sssom}\footnote{\url{https://github.com/mapping-commons/sssom}}
+as the structural model for
+mappings, together with mapping-level metadata, persistent identifiers and
+a service interface, and reference registries exist for mappings that
+have already been formalized.
+Our work addresses the step before that: obtaining formal mappings from
+the existing catalog of crosswalk documents.
+Schema matching tools usually infer mappings between two schemas. In our case the
+mappings already exist in the documents, and we extract them together
+with their source text.
+
+We present the first phase of \mssom,
+an open-source software package\footnote{\url{https://codebase.helmholtz.cloud/santiago.casascastro/MetadataMappingSssOM}}
+that processes every crosswalk listed in RDAMSC. Documents with regular
+structure are parsed deterministically. A large language model (LLM) is
+used only for documents on which the parsers find too few rules, and every
+rule it returns must quote the passage it was taken from. The contributions
+of this phase are:
+\begin{itemize}\setlength{\itemsep}{0pt}
+  \item an extraction pipeline that fetches, converts and parses the
+        artifacts linked from RDAMSC, using deterministic parsing first and
+        an LLM only as a fallback;
+  \item an export of all rules as SSSOM TSV files, each
+        row carrying a citation to the source text, a confidence value and
+        a semantic-loss flag, released with a generation manifest
+        (checksums, commit, strategy per file);
+  \item a graph in which standards are nodes and crosswalks are edges,
+        and a converter that applies the rules to OAI-PMH records and
+        reports which fields are covered and which are lost;
+  \item a coverage analysis that states which crosswalks could be
+        processed, which could not, and why.
+\end{itemize}
+Section~\ref{sec:background} introduces RDAMSC and SSSOM,
+Section~\ref{sec:method} describes the pipeline,
+Section~\ref{sec:results} reports the results, and
+Section~\ref{sec:discussion} discusses failures and limitations.
+
+\section{Background}\label{sec:background}
+
+\paragraph{RDAMSC.} The RDA Metadata Standards Catalog~\cite{rdamsc} is a
+community-maintained directory of metadata standards, tools and
+crosswalks. Its API (\href{https://app.swaggerhub.com/apis-docs/alex-ball/rda-metadata-standards-catalog/2.1.0#/c/get_api2_c}{\texttt{/api2/c}}) returns, for each crosswalk, the
+two standards it connects and one or more URLs pointing to the document
+that defines it. The catalog does not host these documents. The links lead to the
+\href{https://www.loc.gov/standards/}{Library of Congress},
+\href{https://cidoc-crm.org/}{CIDOC},
+\href{https://github.com}{GitHub},
+\href{https://www.noaa.gov}{NOAA},
+\href{https://www.nasa.gov}{NASA} and other sites, and
+are only as stable as those hosts.
+
+\paragraph{SSSOM.} SSSOM~\cite{matentzoglu2022sssom} is a TSV format with a defined set of columns
+(\texttt{subject\_id}, \texttt{predicate\_id}, \texttt{object\_id},
+\texttt{mapping\_justification}, \texttt{confidence}, \ldots) and a
+metadata header. It was designed for mappings between ontology terms, but it
+can equally describe mappings between schema elements. It gives us three
+things at no extra cost: a plain-text format that fits in git, \href{https://www.w3.org/TR/skos-reference/}{SKOS}~\cite{miles2009skos} predicates that
+distinguish exact from broader or looser matches, and a place to record
+who made a mapping and on what evidence. These properties make the output
+FAIR~\cite{fair2016} rather than another private lookup table.
+
+\paragraph{Blablador.} For documents that resist deterministic parsing we
+use Blablador\footnote{\url{https://sdlaml.pages.jsc.fz-juelich.de/ai/guides/blablador_api_access/}}, the LLM service hosted by the Helmholtz Association, through
+its OpenAI-compatible API. Keeping inference within the protected Helmholtz environment
+matters for a pipeline that may later handle unpublished metadata.
+
+\section{Pipeline}\label{sec:method}
+
+The pipeline has six stages. Every stage writes its output to
+disk, so that a run can be inspected, resumed and reproduced.
+
+\paragraph{1. Sync the catalog.} We query the RDAMSC API and store the 37
+crosswalk records as JSON.
+% AUDIT: removed "and the 44 standards they reference" (not reproducible, audit item 1b)
+This is the
+only network step that is expected to succeed every time.
+
+\paragraph{2. Fetch and normalize artifacts.} For every URL attached to a
+crosswalk we download the artifact and record the HTTP outcome, the content
+type and a SHA-256 checksum. The artifacts come as PDF, HTML, XSL/XML,
+RTF, DOC and ZIP files. Each is converted to Markdown or plain text with
+MarkItDown~\cite{markitdown}, so that the rest of the pipeline only handles
+text. Documents are capped at 200,000 characters.
+
+\paragraph{3. Deterministic extraction first.} A set of regular-expression
+and table parsers is tried first. They recognize the patterns
+that recur across crosswalk documents: \texttt{A = B} and \texttt{A -> B}
+lines (e.g.\ \texttt{unitdate@normal -> dcterms:issued}), element pairs in the
+first two columns of a Markdown or HTML table, and \texttt{select}/
+\texttt{match} pairs in XSLT. If the parsers find at least eight rules, the
+crosswalk is marked \texttt{deterministic\_generic} and the LLM is not
+called. Eight is a pragmatic threshold: below it, the ``rules'' are usually
+false positives, such as entries of a table of contents.
+% AUDIT TODO: threshold value 8 confirmed in code (ingest.py:41), but the claim about
+% false positives is not backed by stored data (audit item 7).
+
+\paragraph{4. LLM extraction as fallback.} Otherwise the text (up to
+140,000 characters) is sent to Blablador with a prompt that asks for a JSON
+list of rules. Each rule has a \texttt{source\_path}, a \texttt{target\_path}, a
+\texttt{mapping\_type} from \{direct, decomposition, missing, conditional, aggregation\},
+% AUDIT: added "decomposition", which is in the prompt (llm_extract.py:233) and in Table 1
+a confidence in $[0,1]$, a short \texttt{evidence} snippet quoted from the
+document, and free-text notes. The evidence snippet is mandatory, and a rule
+without one is dropped. If the API fails, a heuristic parser produces a
+low-confidence result and the run is flagged.
+% AUDIT TODO: stored diagnostics for c19/c29 record max_input_chars=120000, code says 140000.
+
+\paragraph{5. Export SSSOM.} Rules are written as one SSSOM TSV file per
+crosswalk, with mapping types translated to SKOS predicates
+(Table~\ref{tab:predicates}). The TSV files are committed to the repository
+together with a \texttt{generation\_manifest.json} that records checksums,
+the git commit and the extraction strategy for every file.
+
+\begin{table}[t]
+  \centering\small
+  \caption{Mapping types produced by the extractor and their SSSOM
+  predicate. \emph{Missing} rules are kept on purpose: they document
+  fields that have no target and are the basis of the semantic-loss
+  flag.}
+  \label{tab:predicates}
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    Mapping type & Predicate (\texttt{skos:}) & Meaning \\
+    \midrule
+    direct       & \texttt{exactMatch}   & one-to-one \\
+    aggregation  & \texttt{broadMatch}   & many-to-one \\
+    decomposition& \texttt{narrowMatch}  & one-to-many \\
+    conditional  & \texttt{exactMatch} + note & value-dependent \\
+    missing      & \texttt{relatedMatch} & no target; loss \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{6. Load into a graph and apply.} The TSV files are loaded into
+SurrealDB~\cite{surrealdb} using a small typed model (\emph{Standard}, \emph{Element},
+\emph{Crosswalk}, \emph{MappingRecord}, \emph{Citation}, \emph{Chunk}).
+A crosswalk becomes an edge between two standard nodes, and each rule points
+to the text chunk it was extracted from. The same model runs in memory for
+tests and in the browser via SurrealDB WASM. A \emph{Convert} view fetches
+a record over OAI-PMH, applies the rules, and reports which fields were
+covered and which were lost.
+% NOT COVERED BY THE AUDIT: "in the browser via SurrealDB WASM" (README confirms it for the web app).
+
+\section{Results}\label{sec:results}
+
+The numbers below come from the frozen pipeline exports of March to May 2026.
+% AUDIT: was "a frozen run of May 2026 ... shipped with the repository". Crosswalk and artifact
+% statistics trace to commit 5dc8e248 (2026-03-05), the graph to c8bdcb03e (2026-05-29), the
+% benchmark to f316ab5 (2026-05-31). HEAD (401bbb0) now has 26 SSSOM files / 1072 rows and a
+% 24-node / 26-edge graph. TODO: re-freeze at one commit and cite its hash here.
+
+\begin{table}[t]
+  \centering\small
+  \caption{Phase-1 coverage of the RDAMSC crosswalk catalog.}
+  \label{tab:results}
+  \begin{tabular}{@{}lr@{}}
+    \toprule
+    Crosswalks in RDAMSC & 37 \\
+    \quad processed, SSSOM produced & 19 (51\%) \\
+    \quad failed: artifact unreachable & 11 (30\%) \\
+    \quad failed: no rules extractable & 7 (19\%) \\
+    \midrule
+    Artifact URLs checked & 45 \\
+    \quad fetched successfully & 32 (71\%) \\
+    \midrule
+    SSSOM data rows (all files) & 993 \\
+    \quad \texttt{skos:exactMatch} & 800 (80.6\%) \\
+    \quad \texttt{skos:relatedMatch} (missing) & 152 (15.3\%) \\
+    \quad \texttt{skos:broadMatch} & 28 (2.8\%) \\
+    \quad \texttt{skos:narrowMatch} & 13 (1.3\%) \\
+    \midrule
+    % AUDIT: was "Extraction strategy: LLM / deterministic & 20 / 2". The 20 counts all LLM runs,
+    % including the 7 without rules; 4 of the 19 processed crosswalks have no recorded strategy.
+    LLM runs, with / without rules & 13 / 7 \\
+    Deterministic runs & 2 \\
+    Graph: standards / crosswalk edges & 20 / 23 \\
+    % AUDIT: was "Converter demo (DataCite->DC): 85.7 / 79.2" (single record, not reproducible).
+    % Now the n=1000 AWI run (stored 2026-05-31 and rerun 2026-09-29: 0.3087 / 0.1674).
+    Benchmark DataCite$\to$DC, $n=1000$ & \\
+    \quad field coverage & 30.9\% \\
+    \quad value overlap & 16.7\% \\
+    % AUDIT: removed the row "Unit tests / line coverage: 113 / 74%" (static count at HEAD is 168,
+    % coverage was not remeasured). Re-add after a fresh pytest run.
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.78\linewidth]{fig_pipeline_status}
+  \caption{Outcome per crosswalk. About half of the catalog can be converted
+  to SSSOM today. The rest fails either because a document cannot be fetched
+  or because it contains no extractable rules.}
+  \label{fig:status}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.95\linewidth]{crosswalk_graph}
+  \caption{Standards as nodes and crosswalks as edges, as loaded from the
+  SSSOM files. Node size and edge width scale with the number of rules;
+  color marks connected clusters (cultural heritage, geospatial,
+  biodiversity, bibliographic).}
+  \label{fig:graph}
+\end{figure}
+
+\paragraph{Coverage.} Table~\ref{tab:results} and Fig.~\ref{fig:status}
+show that 19 of 37 crosswalks are processed end to end. The two
+deterministic successes are instructive. EAD$\to$CIDOC~CRM (\texttt{c36})
+is an XSLT file, and CiteDCAT-AP$\to$DataCite (\texttt{c38}) is a
+table-heavy PDF from which the parsers extracted 160 rules without any model
+involvement. Where the document is structured, no LLM is needed and
+the result is exactly reproducible.
+% AUDIT TODO: (i) c1 and c2 have status "ready" but no .sssom.tsv file; c3, c18, c23, c28, c34
+% have status "failed_parse" but do have files with rows. The 19/11/7 split is the recorded status,
+% not the set of crosswalks with SSSOM output. (ii) In the graph export c38 appears as a DataCite
+% self-loop, not CiteDCAT-AP->DataCite. (iii) The March walkthrough supports "160 rules" for c38.
+
+\paragraph{The rows.} The pipeline produced 993 SSSOM rows across 24 files. Four in five are
+exact matches, and one in six is a \emph{missing} row, i.e.\ a field that the
+source document explicitly says has no counterpart. These rows matter most to a
+repository manager, because they record what is lost. A curated
+DataCite~4.4~\cite{datacite_schema_4_4}$\leftrightarrow$Dublin Core file with 110 rows serves as the
+reference case for the converter.
+
+\paragraph{The graph.} Loaded into SurrealDB, the files give 20 standard
+nodes and 23 crosswalk edges (Fig.~\ref{fig:graph}). Every edge can be
+opened to show its rules, and every rule links back to the chunk of
+source text it was taken from, so a doubtful mapping can be checked
+directly against the original.
+
+\paragraph{Applying the rules.} We applied the DataCite$\to$Dublin Core rules
+to 1000 records harvested live over OAI-PMH from the AWI repository (8 of the
+cases failed). The rules cover 30.9\% of the expected fields and
+reproduce 16.7\% of the expected values. Coverage is the fraction of
+expected fields present in the converted record, and overlap is the mean
+fraction of expected normalized values reproduced. The remainder is
+listed under the semantic-loss flag; as expected, it includes the ORCID and
+funding fields.
+% AUDIT: replaces "On a live DataCite record from a DLR OAI-PMH endpoint ... 85.7% ... 79.2%".
+% The single-record numbers are not traceable (the stored n=1 run gives 0/0). Metric definitions
+% from src/m2s3om_graph/benchmark/metrics.py. TODO: state what "expected" is (reference conversion?).
+% TODO: the sentence about ORCID and funding fields belonged to the old demo and is not verified.
+
+
+\section{Failures and limitations}\label{sec:discussion}
+
+\paragraph{Link rot is the biggest single problem.} 13 of 45 artifact
+URLs could not be fetched, and the failures cluster: NOAA's NCDDC service (4),
+NASA GCMD (3) and \texttt{schema.datacite.org} (3). Eleven crosswalks fail
+for this reason alone. The catalog entry is correct, but the document it points
+to has moved or disappeared. A registry that stored a copy, or at least a
+checksum and a Wayback Machine link, would remove the cause of 11 of the 18
+failed crosswalks.
+
+\paragraph{The LLM is a fallback, not a solution.} Of 20 LLM runs, 7
+returned no usable rules at all. The runs used the default Blablador model
+alias (\emph{alias-fast}); the model behind the alias was not recorded in
+the run manifest, so we cannot compare models. We have not yet measured
+precision against a human-curated gold set beyond the DataCite/Dublin Core
+pair, which is the obvious next evaluation.
+% AUDIT: was "8 returned no usable rules" (audit: 7, equal to the 7 failed_parse rows). Removed
+% "Three documents were cut at the 140,000-character input cap" (no log exists) and the comparison
+% Ministral-3-14B vs Qwen3.5-122B (neither name appears in code, manifest or logs).
+
+\paragraph{Some documents contain no rules.} The seven ``no rules''
+failures are MARC$\leftrightarrow$MODS (\texttt{c28}, \texttt{c29}),
+MIDAS Heritage$\to$CIDOC (\texttt{c34}), OECD$\to$ABCD (\texttt{c23}),
+ISA-TAB$\to$MAGE-TAB (\texttt{c19}), HISPID$\to$ABCD (\texttt{c18}) and
+Darwin Core$\to$ABCD (\texttt{c3}). Several are landing pages or ZIP
+bundles rather than mapping tables, and the MARC/MODS documents are long
+narrative specifications in which the mapping is spread over prose. These
+need per-crosswalk parsers or a human reader, not a better prompt.
+
+% AUDIT: removed the paragraph "Document size" (median 27,000 / mean 60,000 / p90 134,000
+% characters). No per-document size data was ever persisted (audit item 9). Original text:
+% After conversion the median artifact is 27,000 characters, the mean 60,000, and the 90th
+% percentile 134,000. The distribution is long-tailed: a handful of specifications dominate the
+% token budget, and chunking them properly is a prerequisite for the retrieval work planned next.
+
+
+\section{Conclusion and next steps}\label{sec:conclusion}
+
+Phase 1 turned half of the RDAMSC crosswalk catalog into SSSOM files
+that a repository can read, diff, version and cite, with every rule
+traceable to a sentence in the original document. The pipeline is
+deliberately conservative: deterministic parsing when possible, model
+extraction only when necessary, and a mandatory evidence snippet in both
+cases. The code, the SSSOM files and the generation manifest are public.
+% AUDIT TODO: "traceable to a sentence in the original document": the evidence snippet is mandatory
+% but whether it occurs verbatim in the source was not verifiable (audit item 13).
+
+The next phase builds on the graph rather than on the files. Because the
+edges compose, a DataCite$\to$DCAT-AP crosswalk that nobody has written
+can be derived from DataCite$\to$Dublin Core (\texttt{c5}, 28 rules) and
+Dublin Core$\to$DCAT-AP (\texttt{c12}, 41 rules), with the loss on each
+hop quantified from the \emph{missing} rows. We also plan a retrieval
+layer over the text chunks, so that a question such as ``what happens to
+the funder when I go from DataCite to DC?'' is answered with the cited
+rule instead of a guess, and a gold set for the remaining crosswalks, so
+that extraction quality can be reported as a number.
+% AUDIT TODO: the audit lists c12 as failed_unreachable, so a 41-rule c12 file should not exist.
+% Check c5 (28 rules) and c12 (41 rules) against exports/sssom before keeping this example.
+
+Practitioners who maintain a crosswalk are invited to check the SSSOM
+file for their pair and correct it; a merge request is the intended
+feedback channel.
+
+
 
 \section*{Acknowledgment and AI Transparency Statement}
-The following disclosure is generated from this repository's provenance
-graph by \texttt{provlog.py disclosure} and is made in view of the
-transparency rules of the EU Artificial Intelligence
+This work was carried out in the context of the Helmholtz Metadata
+Collaboration (HMC). The following disclosure is generated from this
+repository's provenance graph by \texttt{provlog.py disclosure} and is
+made in view of the transparency rules of the EU Artificial Intelligence
 Act~\cite{eu-ai-act2024}:
 
-\begingroup\itshape
+\begingroup\itshape\small
 \input{disclosure}
 \endgroup
 
-\bibliographystyle{IEEEtran}
-\bibliography{references}
+{\small
+\bibliographystyle{unsrt}
+\bibliography{references}}
+
+\appendix
+\section{Using the code}\label{app:usage}
+
+This appendix lists the commands needed to install the software, run the
+pipeline, browse and convert records in the web application, and regenerate
+the statistics reported in Section~\ref{sec:results}. All commands are run
+from the repository root unless stated otherwise.
+
+\subsection{Requirements and installation}
+
+The Python package needs Python 3.12 or newer and
+\texttt{uv}\footnote{\url{https://docs.astral.sh/uv/}}. The web application
+needs Node.js with \texttt{npm}. Docker is only required for a persistent
+SurrealDB instance (Section~\ref{app:db}), and LibreOffice is used, if
+available, to convert legacy \texttt{.doc} artifacts.
+
+\begin{lstlisting}
+git clone https://codebase.helmholtz.cloud/santiago.casascastro/MetadataMappingSssOM.git
+cd MetadataMappingSssOM
+uv sync
+uv run --with pytest pytest
+\end{lstlisting}
+
+The last command runs the test suite.
+
+\subsection{Browsing and converting in the web application}
+
+\begin{lstlisting}
+cd web
+npm install
+npm run dev
+\end{lstlisting}
+
+The application is served at \texttt{http://localhost:5173}. It has the pages
+Overview, Explore, Graph, Convert and Docs, loads the crosswalks from
+\texttt{web/public/data/crosswalk\_graph.json}, and runs SurrealDB as
+WebAssembly in the browser, so no server or database container is needed.
+\texttt{npm run build} writes a static site to \texttt{web/dist/}, which is
+also what is published on GitLab Pages. The Convert page harvests a record
+from an institutional OAI-PMH endpoint (the endpoints are listed in
+\texttt{resources/OAIHarvester.config.yaml}) or accepts pasted metadata, and
+reports the applied rules, the unmapped fields and the semantic-loss flags.
+
+\subsection{Running the pipeline}
+
+The LLM fallback needs a Blablador API key. Without it, a heuristic
+fallback is used and the run is flagged. The model alias can be changed with
+\texttt{M2S3OM\_LLM\_MODEL}.
+
+\begin{lstlisting}
+export BLABLADOR_API_KEY=<your key>
+
+# 1) sync the RDAMSC catalog only
+uv run python -m m2s3om_graph.cli.main sync-rdamsc
+
+# 2) sync, fetch artifacts, extract rules, write SSSOM
+uv run python -m m2s3om_graph.cli.main sync-rdamsc --with-ingest
+
+# 3) sync and write only the missing SSSOM files
+uv run python -m m2s3om_graph.cli.main bootstrap-rdamsc
+
+# 4) process one crosswalk
+uv run python -m m2s3om_graph.cli.main ingest-rdamsc --crosswalk-id rdamsc_c5
+\end{lstlisting}
+
+The SSSOM files are written to \texttt{exports/sssom/}, one file per
+crosswalk (for example \texttt{rdamsc\_c5.sssom.tsv}). The per-crosswalk
+status is stored in \texttt{.local/rdamsc\_pipeline\_status.json} and the
+bootstrap log in \texttt{.local/bootstrap\_rdamsc.log}. With
+\texttt{--force}, crosswalks already marked ready are processed again; this
+should only be used to regenerate outputs deliberately.
+
+\subsection{Persistent graph database (optional)}\label{app:db}
+
+By default the pipeline uses an in-memory store. To keep the graph in a
+local SurrealDB instance:
+
+\begin{lstlisting}
+./scripts/run_surrealdb_local.sh
+export M2S3OM_USE_SURREAL=1
+export M2S3OM_DB_URL=ws://localhost:8000/rpc
+export M2S3OM_DB_NS=m2s3om_graph
+export M2S3OM_DB_NAME=crosswalk
+export M2S3OM_DB_USER=root
+export M2S3OM_DB_PASSWORD=root
+# ... run the pipeline commands above ...
+./scripts/stop_surrealdb_local.sh
+\end{lstlisting}
+
+\subsection{Converting a record from the command line}
+
+\begin{lstlisting}
+uv run python -m m2s3om_graph.cli.main demo-convert
+\end{lstlisting}
+
+This runs a synthetic conversion with the DataCite and Dublin Core rules
+and prints a summary of the applied rules and unmapped fields.
+
+\subsection{Reproducing the statistics}
+
+Three \texttt{make} targets produce the pipeline outputs and their
+provenance:
+
+\begin{lstlisting}
+make pipeline-freeze       # freeze an existing run
+make pipeline-run-freeze   # rerun the pipeline, then freeze
+make pipeline-stats        # refresh analytics only
+\end{lstlisting}
+
+\texttt{pipeline-freeze} copies the status file, statistics, artifact table
+and plots to \texttt{exports/pipeline/latest/}, and writes
+\texttt{exports/sssom/generation\_manifest.json} with checksums of the SSSOM
+files and git and environment provenance. \texttt{pipeline-stats} only
+regenerates the analytics without rewriting the provenance.
+
+The DataCite$\to$Dublin Core benchmark on harvested records is run with:
+
+\begin{lstlisting}
+uv run python scripts/run_datacite_dc_benchmark.py \
+  --mode oai --institution AWI --discover \
+  --limit 1000 --timeout 20 --output-dir exports/benchmark
+\end{lstlisting}
+
+It reports the average field coverage and value overlap over the harvested
+records and the number of failed cases.
+
+\subsection{Unified web application and API}
+
+The repository builds a single Docker image, used for Hugging Face Spaces,
+that serves the web application and a FastAPI backend on port 7860. The
+backend exposes \texttt{/health}, \texttt{/suggest} and \texttt{/convert}.
+To run it locally:
+
+\begin{lstlisting}
+cd web && npm install && npm run build && cd ..
+uv run uvicorn server.main:app --host 0.0.0.0 --port 7860
+\end{lstlisting}
+
+The suggestion endpoint reads \texttt{BLABLADOR\_API\_KEY}, and the allowed
+CORS origins are set with \texttt{SUGGEST\_API\_ALLOWED\_ORIGINS}.
+
+\subsection{Configuration}
+
+\begin{table}[h]
+  \centering\footnotesize
+  \caption{Environment variables.}
+  \label{tab:env}
+  \begin{tabular}{@{}p{0.47\columnwidth}p{0.47\columnwidth}@{}}
+    \toprule
+    Variable & Purpose (default) \\
+    \midrule
+    \texttt{BLABLADOR\_API\_KEY} & LLM access; heuristic fallback if unset \\
+    \texttt{BLABLADOR\_BASE\_URL} & Blablador endpoint (Helmholtz service) \\
+    \texttt{M2S3OM\_LLM\_MODEL} & model alias (\texttt{alias-fast}) \\
+    \texttt{M2S3OM\_USE\_SURREAL} & \texttt{1} selects SurrealDB, otherwise in-memory \\
+    \texttt{M2S3OM\_DB\_URL} & \texttt{ws://localhost:8000/rpc} \\
+    \texttt{M2S3OM\_DB\_NS} & \texttt{m2s3om\_graph} \\
+    \texttt{M2S3OM\_DB\_NAME} & \texttt{crosswalk} \\
+    \texttt{M2S3OM\_DB\_USER}, \texttt{M2S3OM\_DB\_PASSWORD} & \texttt{root} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \end{document}

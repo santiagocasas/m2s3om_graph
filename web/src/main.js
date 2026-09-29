@@ -39,6 +39,26 @@ function navigate(page) {
     initGraphPage();
     return;
   }
+  if (page === 'overview') {
+    document.getElementById('controls')?.remove();
+    document.getElementById('status')?.remove();
+    document.getElementById('rules-table-container')?.remove();
+    document.getElementById('no-writeback-notice')?.remove();
+    currentCrosswalkTitleEl?.remove();
+    currentCrosswalkSubtitleEl?.remove();
+    renderOverviewPage();
+    return;
+  }
+  if (page === 'documentation') {
+    document.getElementById('controls')?.remove();
+    document.getElementById('status')?.remove();
+    document.getElementById('rules-table-container')?.remove();
+    document.getElementById('no-writeback-notice')?.remove();
+    currentCrosswalkTitleEl?.remove();
+    currentCrosswalkSubtitleEl?.remove();
+    renderDocumentationPage();
+    return;
+  }
   // Reset explorer view
   location.reload();
 }
@@ -53,6 +73,86 @@ if (nav) {
 let currentCrosswalkRecord = null;
 const candidateRows = new WeakMap();
 const candidateData = new WeakMap();
+
+function renderOverviewPage() {
+  if (appContainer) {
+    appContainer.innerHTML = `
+      <section class="panel">
+        <div class="eyebrow">Evidence-based metadata crosswalk workbench</div>
+        <h2>Turning scattered metadata mapping documents into reusable crosswalks.</h2>
+        <p class="lead">m2s3om_graph harvests mapping records from the RDA Metadata Standards Catalog, retrieves the original mapping artifacts, extracts field-level rules, and publishes them as transparent SSSOM crosswalks that can be inspected, visualized, and applied to real metadata records.</p>
+        <div class="metrics-grid">
+          <div class="metric"><strong>37</strong><span>RDAMSC crosswalks processed</span></div>
+          <div class="metric"><strong>23 (62.2%)</strong><span>ready with SSSOM output</span></div>
+          <div class="metric"><strong>1072</strong><span>actual SSSOM mapping rows</span></div>
+          <div class="metric"><strong>11/24</strong><span>artifacts fetched</span></div>
+        </div>
+        <div class="callout"><strong>Why it matters:</strong> metadata standards are well documented, but crosswalks are often buried in PDFs, XSL files, web pages, and legacy tables. This project makes those mappings explicit, versioned, machine-readable, and connected in a graph.</div>
+      </section>
+      <section class="section cards">
+        <div class="card"><h3>Evidence pipeline</h3><p>Each mapping is tied back to source artifacts and frozen pipeline outputs, so a crosswalk can be audited rather than treated as an opaque model answer.</p></div>
+        <div class="card"><h3>Hybrid extraction</h3><p><strong>2</strong> deterministic and <strong>21</strong> LLM-assisted graph edges show how rule extraction can combine stable patterns with language-model assistance.</p></div>
+        <div class="card"><h3>Crosswalk network</h3><p><strong>20</strong> standards in the crosswalk network</p><p><strong>23</strong> crosswalk edges in the network</p><p>The graph view highlights domains, standard families, and high-volume mappings for exploration and presentation.</p></div>
+      </section>
+    `;
+  }
+}
+
+function renderDocumentationPage() {
+  if (appContainer) {
+    appContainer.innerHTML = `
+      <section class="panel">
+        <div class="eyebrow">How to use the project</div>
+        <h2>Documentation</h2>
+        <p class="lead">The project has three practical layers: a Vite-based web app for browsing and converting metadata, a reproducible RDAMSC pipeline for extracting SSSOM crosswalks, and a GitLab Pages site built from the same Vite app for communicating the results.</p>
+      </section>
+      <section class="section two-col">
+        <div class="card">
+          <h3>1. Install and run the web app</h3>
+          <p>Run the Vite explorer locally. It starts from the committed SSSOM files and the embedded SurrealDB WASM, so the app runs entirely in the browser without re-ingesting the catalog.</p>
+          <pre><code>uv sync
+cd web
+npm install
+npm run dev</code></pre>
+          <p>Open <code>http://localhost:5173</code> and use the tabs: <strong>Overview</strong>, <strong>Explore</strong>, <strong>Graph</strong>, <strong>Convert</strong>, and <strong>Docs</strong>.</p>
+        </div>
+        <div class="card">
+          <h3>2. Run a fast conversion smoke test</h3>
+          <p>This checks the package entrypoint and applies the bundled mapping rules to a synthetic record.</p>
+          <pre><code>uv run python -m m2s3om_graph.cli.main demo-convert</code></pre>
+          <p>The command reports how many rules were applied and which source fields remained unmapped.</p>
+        </div>
+      </section>
+      <section class="section two-col">
+        <div class="card">
+          <h3>3. Regenerate frozen statistics</h3>
+          <p>If the RDAMSC pipeline has already run, freeze the current status, plots, CSVs, and SSSOM provenance into <code>exports/pipeline/latest/</code>.</p>
+          <pre><code>make pipeline-freeze</code></pre>
+          <p>Use the explicit command below when you need to point at non-default status, log, or output locations.</p>
+          <pre><code>uv run python scripts/rdamsc_pipeline_stats.py freeze   --status-file .local/rdamsc_pipeline_status.json   --output-dir exports/pipeline/latest   --sssom-dir exports/sssom   --pipeline-log .local/bootstrap_rdamsc.log   --plots</code></pre>
+        </div>
+        <div class="card">
+          <h3>4. Build and serve the Vite app for GitLab Pages</h3>
+          <p>The Pages site is now the Vite app. Build it and serve the static output.</p>
+          <pre><code>cd web
+npm install
+npm run build
+python -m http.server 8000 --directory dist</code></pre>
+          <p>Open <code>http://localhost:8000</code> to inspect the built site before pushing changes.</p>
+        </div>
+      </section>
+      <section class="section cards">
+        <div class="card"><h3>Crosswalk extraction</h3><p>The pipeline synchronizes RDAMSC mapping records, downloads source artifacts, converts them to text/markdown, extracts mapping rules with deterministic and LLM-assisted strategies, and exports SSSOM TSV files.</p></div>
+        <div class="card"><h3>Conversion engine</h3><p>Records are parsed into an intermediate representation, matched against SSSOM rules, and serialized back to supported target formats such as Dublin Core or DataCite XML.</p></div>
+        <div class="card"><h3>Graph visualization</h3><p>The crosswalk network groups standards by topic, merges known aliases for visualization, weights edges by mapped field count, and can be exported as SVG or PNG for posters and slides.</p></div>
+      </section>
+      <section class="section card">
+        <h3>Further reading</h3>
+        <p>Use <code>README.md</code> for commands, <code>CODEBASE_WALKTHROUGH.md</code> for architecture, <code>POSTER_BRIEF.md</code> for the public-facing story, <code>TALK_RESULTS_SNAPSHOT.md</code> for frozen numbers, and <code>BENCHMARKING.md</code> for evaluation workflows.</p>
+      </section>
+    `;
+  }
+}
 
 function updateExportButton() {
   const count = curation.getAcceptedCandidates().length;

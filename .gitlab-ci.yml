@@ -23,11 +23,12 @@ pages:
   before_script:
   - apt-get update && apt-get install -y --no-install-recommends python3 python3-pip
   script:
-  - python3 scripts/build_pages.py
   - python3 scripts/export_crosswalk_json.py
   - cd web && npm ci && npm run build && cd ..
-  - mkdir -p public/explorer && cp -r web/dist/. public/explorer/
-  - mkdir -p public/explorer/data && cp web/public/data/crosswalk_graph.json public/explorer/data/crosswalk_graph.json
+  - mkdir -p public
+  - cp -r web/dist/* public/
+  - mkdir -p public/data
+  - cp web/public/data/crosswalk_graph.json public/data/crosswalk_graph.json
   artifacts:
     paths:
     - public

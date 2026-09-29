@@ -327,3 +327,86 @@ em {
   color: var(--muted);
   font-style: italic;
 }
+
+/* Overview / Documentation pages */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  margin: 1rem 0;
+}
+.eyebrow {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+.metric {
+  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+.metric strong {
+  display: block;
+  font-size: 1.4rem;
+  color: var(--brand);
+}
+.metric span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.callout {
+  background: #fff7e6;
+  border-left: 3px solid var(--accent);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-top: 0.75rem;
+}
+.section {
+  margin: 1.5rem 0;
+}
+.two-col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1rem;
+}
+.card h3 {
+  margin-top: 0;
+}
+pre {
+  background: #0b1020;
+  color: #e6e9f2;
+  padding: 0.75rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+}
+pre code {
+  color: inherit;
+}
+.lead {
+  color: var(--muted);
+  font-size: 1rem;
+}
+
