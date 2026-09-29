@@ -1,0 +1,66 @@
+{
+  "generated_at": "2026-09-29T13:30:19.556890+00:00",
+  "total_urls": 49,
+  "fetched": 22,
+  "failed": 27,
+  "failed_by_host": {
+    "www.loc.gov": 10,
+    "service.ncddc.noaa.gov": 5,
+    "gcmd.nasa.gov": 3,
+    "www.ands.org.au": 3,
+    "schema.datacite.org": 3,
+    "www.w3.org": 1,
+    "wiki.esipfed.org": 1,
+    "www.ddialliance.org": 1
+  },
+  "failed_by_reason": {
+    "http_403": 14,
+    "connection_reset": 5,
+    "http_404": 5,
+    "connection_error": 3
+  },
+  "crosswalks_all_fetched": [
+    "rdamsc_c1",
+    "rdamsc_c13",
+    "rdamsc_c14",
+    "rdamsc_c18",
+    "rdamsc_c19",
+    "rdamsc_c20",
+    "rdamsc_c23",
+    "rdamsc_c24",
+    "rdamsc_c3",
+    "rdamsc_c33",
+    "rdamsc_c34",
+    "rdamsc_c35",
+    "rdamsc_c36",
+    "rdamsc_c37",
+    "rdamsc_c38",
+    "rdamsc_c5"
+  ],
+  "crosswalks_some_fetched": [
+    "rdamsc_c22"
+  ],
+  "crosswalks_none_fetched": [
+    "rdamsc_c10",
+    "rdamsc_c11",
+    "rdamsc_c12",
+    "rdamsc_c15",
+    "rdamsc_c16",
+    "rdamsc_c17",
+    "rdamsc_c2",
+    "rdamsc_c21",
+    "rdamsc_c26",
+    "rdamsc_c27",
+    "rdamsc_c28",
+    "rdamsc_c29",
+    "rdamsc_c30",
+    "rdamsc_c31",
+    "rdamsc_c32",
+    "rdamsc_c4",
+    "rdamsc_c6",
+    "rdamsc_c7",
+    "rdamsc_c8",
+    "rdamsc_c9"
+  ],
+  "crosswalks_checked": 37
+}

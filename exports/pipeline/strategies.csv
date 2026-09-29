@@ -1,0 +1,38 @@
+crosswalk_id,strategy,source_commit,notes
+rdamsc_c1,deterministic_generic,732c25d,Content=deterministic markdown-table boilerplate; CSV strategy blank at 5dc8e248 (file absent then)
+rdamsc_c2,NONE (no file),n/a,Unreachable at all observed snapshots incl. live 2026-09-29 check; no extraction ever ran
+rdamsc_c3,llm_relaxed,732c25d,"1 row, content=Relaxed LLM extraction; CSV said llm(failed) at 5dc8e248, succeeded by 732c25d"
+rdamsc_c4,NONE (no file),n/a,failed_unreachable at 5dc8e248 and live 2026-09-29 (schema.datacite.org kernel-2.2 PDF now 404s)
+rdamsc_c5,curated/structured (PDF ingestion path),c9575e4,20/24 rows notes:null matching datacite44_to_dcterms curated pattern; 4/24 rows LLM_RICH
+rdamsc_c6,NONE (no file),n/a,failed_unreachable; same dead schema.datacite.org kernel-2.2 PDF as c4
+rdamsc_c7,NONE (no file),n/a,failed_unreachable; same dead schema.datacite.org kernel-2.2 PDF as c4
+rdamsc_c8,NONE (no file),n/a,failed_unreachable; ddialliance.org 404 in live check
+rdamsc_c9,NONE (no file),n/a,failed_unreachable; gcmd.nasa.gov connection_error
+rdamsc_c10,NONE (no file),n/a,failed_unreachable; gcmd.nasa.gov connection_error
+rdamsc_c11,deterministic (LOC crosswalk),c9575e4,Content=deterministic boilerplate; CSV never recorded a strategy value for this row at any snapshot
+rdamsc_c12,NONE (no file),n/a,failed_unreachable; w3.org/TR/prov-dc/ 403 in live check; crosswalk is Dublin Core->PROV
+rdamsc_c13,llm,f4e040e,Content=LLM_RICH; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c14,llm,f4e040e,Content=LLM_RICH; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c15,NONE (no file),n/a,failed_unreachable; NOAA NCDDC connection_reset (both URLs)
+rdamsc_c16,NONE (no file),n/a,failed_unreachable; gcmd.nasa.gov connection_error
+rdamsc_c17,NONE (no file),n/a,failed_unreachable; NOAA NCDDC connection_reset (both URLs)
+rdamsc_c18,deterministic_generic,732c25d,"Content=deterministic markdown-table; CSV said llm(failed) at 5dc8e248, succeeded by 732c25d"
+rdamsc_c19,llm_relaxed,a592f22,"2 rows, content=Relaxed LLM extraction; added alongside deployment 'fixtures' commit"
+rdamsc_c20,llm,f4e040e,Content=LLM_RICH; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c21,llm,f4e040e,Content=LLM_RICH; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c22,llm,f4e040e,Content=LLM_RICH; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c23,llm,732c25d,Content=LLM_RICH; CSV strategy=llm at all snapshots incl. 5dc8e248 despite file absent then (succeeded by 732c25d)
+rdamsc_c24,llm,f4e040e,Content=LLM_RICH; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c26,llm,f4e040e,Content=LLM_RICH; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c27,llm,f4e040e,Content=LLM_RICH; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c28,deterministic_generic (mixed assignment+markdown-table),732c25d,Content=deterministic (76 assignment-pattern + 16 markdown-table); CSV said llm(failed) at 5dc8e248
+rdamsc_c29,llm,a592f22,"Content=LLM_RICH; CSV said llm(failed,no_rules) at 5dc8e248, succeeded by a592f22 'fixtures' commit"
+rdamsc_c30,llm,f4e040e,Content=LLM_RICH; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c31,NONE (no file),n/a,failed_unreachable at 5dc8e248; ands.org.au 403 in live check; stray strategy=llm value at HEAD CSV despite no file (bookkeeping artifact)
+rdamsc_c32,llm_relaxed,f4e040e,8 rows; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c33,llm_relaxed,f4e040e,1 row; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c34,deterministic_generic,732c25d,Content=deterministic markdown-table (many NaN subject_label defects); CSV said llm(failed) at 5dc8e248
+rdamsc_c35,llm,f4e040e,Content=LLM_RICH; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c36,deterministic (assignment-pattern),f4e040e,Content=deterministic; CSV strategy=deterministic_generic at 5dc8e248/a1e6f99 (one of only 2 correctly-labeled-at-source-commit rows)
+rdamsc_c37,llm,f4e040e,Content=LLM_RICH; CSV strategy=llm at 5dc8e248/a1e6f99
+rdamsc_c38,deterministic (markdown-table),5dc8e24,Content=deterministic; CSV strategy=deterministic_generic at 5dc8e248/a1e6f99

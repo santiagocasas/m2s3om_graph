@@ -1,0 +1,39 @@
+{
+  "_status": "DRAFT, needs review",
+  "_note": "No topic table was supplied in the request this file responds to ('the draft table in the notes below' was not actually present in the message). As a starting point, this file reuses the domain/topic categorization already present on the `type` field of the 20 nodes in data/crosswalks.human.json (the older, pre-Aug-27 graph export), which already used exactly the 7 topic names requested. The 4 node ids that exist in the current exports/graph/crosswalk_graph.json (24 nodes) but did NOT exist in that older 20-node file were assigned by best-effort domain judgement and are marked accordingly below. DO NOT use this for the paper until reviewed and approved.",
+  "_topics": [
+    "Aeronautics/Space/Transport",
+    "Earth and Environment",
+    "FAIR data commons",
+    "Health",
+    "Information",
+    "Matter and Heritage",
+    "Projects and Registries"
+  ],
+  "assignments": {
+    "datacite_4_4":       { "label": "DataCite",                              "topic": "FAIR data commons",       "source": "inherited from rdamsc_m11 in data/crosswalks.human.json (duplicate node, see AUDIT_REPORT_2026-09-29_freeze.md item 6 / Part A.3)" },
+    "dublin_core_terms":  { "label": "Dublin Core Terms",                     "topic": "FAIR data commons",       "source": "inherited from rdamsc_m15 in data/crosswalks.human.json (duplicate node, see same)" },
+    "rdamsc_m1":          { "label": "ABCD",                                  "topic": "Health",                  "source": "data/crosswalks.human.json" },
+    "rdamsc_m9":          { "label": "Darwin Core",                           "topic": "Health",                  "source": "data/crosswalks.human.json" },
+    "rdamsc_m15":         { "label": "Dublin Core",                           "topic": "FAIR data commons",       "source": "data/crosswalks.human.json" },
+    "rdamsc_m88":         { "label": "MARC (Machine-Readable Cataloging)",    "topic": "Information",             "source": "data/crosswalks.human.json" },
+    "rdamsc_m16":         { "label": "EML (Ecological Metadata Language)",    "topic": "Earth and Environment",   "source": "data/crosswalks.human.json" },
+    "rdamsc_m22":         { "label": "ISO 19115",                             "topic": "Earth and Environment",   "source": "data/crosswalks.human.json" },
+    "rdamsc_m85":         { "label": "EURISCO Descriptors",                   "topic": "Health",                  "source": "data/crosswalks.human.json" },
+    "rdamsc_m64":         { "label": "HISPID",                                "topic": "Health",                  "source": "data/crosswalks.human.json" },
+    "rdamsc_m21":         { "label": "ISA-Tab",                               "topic": "Health",                  "source": "DRAFT best-effort: not present in data/crosswalks.human.json; ISA-Tab is a life-sciences investigation/study/assay format, grouped with the other Health-bucketed biodiversity/life-science standards (ABCD, Darwin Core, EURISCO, HISPID) in the existing scheme -- NEEDS REVIEW" },
+    "rdamsc_m87":         { "label": "MAGE-TAB",                              "topic": "Health",                  "source": "DRAFT best-effort: not present in data/crosswalks.human.json; MAGE-TAB is a microarray/gene-expression format, paired with ISA-Tab via crosswalk c19 -- NEEDS REVIEW" },
+    "rdamsc_m13":         { "label": "DDI (Data Documentation Initiative)",   "topic": "Information",             "source": "data/crosswalks.human.json" },
+    "rdamsc_m89":         { "label": "NetCDF Attribute Convention for Dataset Discovery", "topic": "Earth and Environment", "source": "data/crosswalks.human.json" },
+    "rdamsc_m90":         { "label": "OECD Dataset Metadata",                 "topic": "Information",             "source": "data/crosswalks.human.json" },
+    "rdamsc_m39":         { "label": "SPASE Data Model",                     "topic": "Aeronautics/Space/Transport", "source": "data/crosswalks.human.json (stored as 'Aeronautics Space Transport'; normalized to the 7-topic spelling requested here)" },
+    "rdamsc_m97":         { "label": "MODS (Metadata Object Description Schema)", "topic": "Information",         "source": "data/crosswalks.human.json" },
+    "rdamsc_m46":         { "label": "ANZLIC Metadata Profile",               "topic": "Earth and Environment",   "source": "data/crosswalks.human.json" },
+    "rdamsc_m98":         { "label": "RIF-CS",                                "topic": "Projects and Registries", "source": "data/crosswalks.human.json" },
+    "rdamsc_m109":        { "label": "LIDO",                                  "topic": "Matter and Heritage",     "source": "data/crosswalks.human.json" },
+    "rdamsc_m114":        { "label": "CIDOC CRM",                             "topic": "Matter and Heritage",     "source": "data/crosswalks.human.json" },
+    "rdamsc_m24":         { "label": "MIDAS-Heritage",                        "topic": "Matter and Heritage",     "source": "data/crosswalks.human.json" },
+    "rdamsc_m96":         { "label": "EAD (Encoded Archival Description)",    "topic": "Information",             "source": "data/crosswalks.human.json" },
+    "rdamsc_m11":         { "label": "DataCite Metadata Schema",              "topic": "FAIR data commons",       "source": "data/crosswalks.human.json" }
+  }
+}

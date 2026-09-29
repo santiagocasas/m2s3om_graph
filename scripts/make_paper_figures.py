@@ -187,10 +187,7 @@ def load_data(snap: Snapshot) -> dict:
 
 
 def save(fig, stem: str, snap: Snapshot) -> list[str]:
-    stamp = "" if snap.is_head else f"_{snap.short}"
-    base = OUT / f"{stem}{stamp}"
-    fig.subplots_adjust(top=min(fig.subplotpars.top, 0.88))
-    fig.text(0.99, 0.99, f"Source: {snap.commit} · {snap.date}", ha="right", va="top", fontsize=5, color="#555555")
+    base = OUT / f"{stem}_{snap.short}"
     fig.savefig(base.with_suffix(".pdf"), bbox_inches="tight")
     fig.savefig(base.with_suffix(".png"), dpi=300, bbox_inches="tight")
     plt.close(fig)
@@ -282,7 +279,6 @@ def make_figures(d: dict, snap: Snapshot) -> tuple[list[str], list[str]]:
         axs[1, 1].axis("on"); axs[1, 1].barh([0,1], [d["benchmark"]["coverage"], d["benchmark"]["overlap"]], color=[COLORS["coverage"], COLORS["overlap"]]); axs[1,1].set_title("Benchmark")
     else:
         axs[1, 1].text(.5, .5, "Benchmark unavailable", ha="center", va="center")
-    fig.text(.5, .51, f"{snap.short} · {snap.date}", ha="center", fontsize=7)
     files += save(fig, "fig_overview", snap)
     return files, failures
 
@@ -327,7 +323,7 @@ def report(d: dict, snap: Snapshot, files: list[str]) -> str:
         lines.append(f"| {label} | {paper} | {got} | {'MATCH' if got == paper else 'MISMATCH'} |")
     lines += ["", "## Status/file inconsistencies (reported without correction)", "", f"Ready status but no `rdamsc_*.sssom.tsv`: {', '.join(d['ready_no_file']) or 'none'}.", "", f"SSSOM file present but status is non-ready: {', '.join(d['file_not_ready']) or 'none'}.", "", "## Figures", ""]
     lines += [f"- `{f}`" for f in files]
-    lines += ["", "Source note: all inputs are read-only and read from the selected Git commit using `git show <commit>:<path>` (including `--commit HEAD`). Benchmark failures are shown as 'not recorded' where no matching failures field or `.failures.json` exists.", ""]
+    lines += ["", f"Suggested caption attribution: `Data from repository snapshot {snap.short} ({snap.date}; full commit {snap.commit}).` Figure filenames carry the short commit hash; use this attribution in the manuscript caption when identifying the snapshot.", "", "Source note: all inputs are read-only and read from the selected Git commit using `git show <commit>:<path>` (including `--commit HEAD`). Benchmark failures are shown as 'not recorded' where no matching failures field or `.failures.json` exists.", ""]
     return "\n".join(lines)
 
 
