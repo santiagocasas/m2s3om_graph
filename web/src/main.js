@@ -187,7 +187,7 @@ async function main() {
   }
 
   statusEl.textContent = 'Loading crosswalk data...';
-  const data = await loadGraphData(db, '/data/crosswalk_graph.json');
+  const data = await loadGraphData(db, `${import.meta.env.BASE_URL}data/crosswalk_graph.json`);
 
   const orderedCrosswalks = populateSelect(data.crosswalks, data.standards);
   statusEl.textContent =

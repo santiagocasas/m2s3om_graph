@@ -21,9 +21,7 @@ export default defineConfig({
       'top-level-await': true,
     },
   },
-  // Relative base so the build works when served from a GitLab Pages
-  // subpath (e.g. https://<user>.codebase.helmholtz.cloud/<project>/),
-  // not just from a domain root.
+  // Relative base works from both GitLab and GitHub project Pages subpaths.
   base: './',
   build: {
     outDir: 'dist',
